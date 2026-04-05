@@ -1,27 +1,15 @@
 /* ================================================
-   T010 — src/pages/Login/LoginForm.jsx
-   Form đăng nhập: input, button, error, test accounts
+   LoginForm — compact form inside floating card
    ================================================ */
 
 import { useState } from 'react'
 
-/**
- * Danh sách tài khoản test nhanh
- * Không dùng emoji — text label rõ ràng
- */
 const TEST_ACCOUNTS = [
   { username: 'admin',     password: 'admin123',  label: 'Admin'          },
-  { username: 'dr.nam',    password: 'doctor123', label: 'Bác sĩ'         },
-  { username: 'tech.hung', password: 'tech123',   label: 'Kỹ thuật viên'  },
+  { username: 'dr.nam',    password: 'doctor123', label: 'Bac si'         },
+  { username: 'tech.hung', password: 'tech123',   label: 'Ky thuat vien' },
 ]
 
-/**
- * LoginForm
- * Props:
- *  - onSubmit(username, password): async function
- *  - loading: boolean
- *  - error: string | null
- */
 export default function LoginForm({ onSubmit, loading, error }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -38,153 +26,192 @@ export default function LoginForm({ onSubmit, loading, error }) {
   }
 
   return (
-    <div style={{
-      flex: 1,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: 'var(--space-12)',
-    }}>
-      <div style={{ width: '100%', maxWidth: 380 }}>
+    <div>
+      {/* Form */}
+      <form id="login-form" onSubmit={handleSubmit}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
-        {/* Heading */}
-        <div style={{ marginBottom: 'var(--space-8)' }}>
-          <h2 style={{
-            fontSize: 'var(--text-xl)',
-            fontWeight: 'var(--font-bold)',
-            color: 'var(--text-primary)',
-            marginBottom: 'var(--space-1)',
-          }}>
-            Đăng nhập hệ thống
-          </h2>
-          <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>
-            Nhập thông tin tài khoản để tiếp tục
-          </p>
+          {/* Username */}
+          <div>
+            <label style={{
+              display: 'block',
+              fontSize: 12,
+              fontWeight: 600,
+              color: 'rgba(255,255,255,0.6)',
+              marginBottom: 6,
+            }}>
+              Tai khoan
+            </label>
+            <input
+              id="input-username"
+              type="text"
+              placeholder="Nhap username"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              autoComplete="username"
+              autoFocus
+              disabled={loading}
+              style={{
+                width: '100%',
+                padding: '10px 14px',
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.12)',
+                borderRadius: 10,
+                color: '#e0e6ed',
+                fontSize: 14,
+                outline: 'none',
+                transition: 'all 0.2s',
+                boxSizing: 'border-box',
+              }}
+              onFocus={e => {
+                e.target.style.borderColor = '#4CAF50'
+                e.target.style.boxShadow = '0 0 0 3px rgba(76,175,80,0.12)'
+              }}
+              onBlur={e => {
+                e.target.style.borderColor = 'rgba(255,255,255,0.12)'
+                e.target.style.boxShadow = 'none'
+              }}
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label style={{
+              display: 'block',
+              fontSize: 12,
+              fontWeight: 600,
+              color: 'rgba(255,255,255,0.6)',
+              marginBottom: 6,
+            }}>
+              Mat khau
+            </label>
+            <input
+              id="input-password"
+              type="password"
+              placeholder="Nhap mat khau"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              autoComplete="current-password"
+              disabled={loading}
+              style={{
+                width: '100%',
+                padding: '10px 14px',
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.12)',
+                borderRadius: 10,
+                color: '#e0e6ed',
+                fontSize: 14,
+                outline: 'none',
+                transition: 'all 0.2s',
+                boxSizing: 'border-box',
+              }}
+              onFocus={e => {
+                e.target.style.borderColor = '#4CAF50'
+                e.target.style.boxShadow = '0 0 0 3px rgba(76,175,80,0.12)'
+              }}
+              onBlur={e => {
+                e.target.style.borderColor = 'rgba(255,255,255,0.12)'
+                e.target.style.boxShadow = 'none'
+              }}
+            />
+          </div>
+
+          {/* Error */}
+          {error && (
+            <div style={{
+              padding: '8px 12px',
+              borderRadius: 8,
+              background: 'rgba(239,83,80,0.12)',
+              border: '1px solid rgba(239,83,80,0.25)',
+              color: '#ef5350',
+              fontSize: 13,
+            }}>
+              {error}
+            </div>
+          )}
+
+          {/* Submit */}
+          <button
+            id="btn-login-submit"
+            type="submit"
+            disabled={loading || !username.trim() || !password}
+            style={{
+              width: '100%',
+              padding: '12px',
+              border: 'none',
+              borderRadius: 10,
+              fontSize: 14,
+              fontWeight: 700,
+              cursor: 'pointer',
+              color: '#fff',
+              background: loading ? '#333' : 'linear-gradient(135deg, #4CAF50, #2E7D32)',
+              transition: 'all 0.2s',
+              marginTop: 4,
+              opacity: (!username.trim() || !password) ? 0.5 : 1,
+            }}
+          >
+            {loading ? 'Dang dang nhap...' : 'Dang nhap'}
+          </button>
+
         </div>
+      </form>
 
-        {/* Form */}
-        <form id="login-form" onSubmit={handleSubmit}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+      {/* Divider */}
+      <div style={{
+        height: 1,
+        background: 'rgba(255,255,255,0.08)',
+        margin: '20px 0',
+      }} />
 
-            {/* Username */}
-            <div className="form-group">
-              <label
-                className="form-label form-label--required"
-                htmlFor="input-username"
-              >
-                Tài khoản
-              </label>
-              <input
-                id="input-username"
-                type="text"
-                className={`form-input${error ? ' form-input--error' : ''}`}
-                placeholder="Nhập username"
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-                autoComplete="username"
-                autoFocus
-                disabled={loading}
-              />
-            </div>
+      {/* Test accounts */}
+      <div>
+        <p style={{
+          fontSize: 10,
+          color: 'rgba(255,255,255,0.35)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          marginBottom: 8,
+        }}>
+          Test nhanh
+        </p>
 
-            {/* Password */}
-            <div className="form-group">
-              <label
-                className="form-label form-label--required"
-                htmlFor="input-password"
-              >
-                Mật khẩu
-              </label>
-              <input
-                id="input-password"
-                type="password"
-                className={`form-input${error ? ' form-input--error' : ''}`}
-                placeholder="Nhập mật khẩu"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                autoComplete="current-password"
-                disabled={loading}
-              />
-            </div>
-
-            {/* Error message */}
-            {error && (
-              <div id="login-error" className="alert alert--error">
-                {error}
-              </div>
-            )}
-
-            {/* Submit button */}
+        <div style={{ display: 'flex', gap: 6 }}>
+          {TEST_ACCOUNTS.map(account => (
             <button
-              id="btn-login-submit"
-              type="submit"
-              className="btn btn-primary btn-block btn-lg"
-              disabled={loading || !username.trim() || !password}
-              style={{ marginTop: 'var(--space-2)' }}
+              key={account.username}
+              type="button"
+              onClick={() => fillTestAccount(account)}
+              disabled={loading}
+              style={{
+                flex: 1,
+                padding: '6px 4px',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: 8,
+                background: 'rgba(255,255,255,0.04)',
+                color: 'rgba(255,255,255,0.6)',
+                fontSize: 11,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                textAlign: 'center',
+              }}
+              onMouseEnter={e => {
+                e.target.style.borderColor = 'rgba(76,175,80,0.4)'
+                e.target.style.background = 'rgba(76,175,80,0.08)'
+              }}
+              onMouseLeave={e => {
+                e.target.style.borderColor = 'rgba(255,255,255,0.1)'
+                e.target.style.background = 'rgba(255,255,255,0.04)'
+              }}
             >
-              {loading ? (
-                <>
-                  <span className="spinner" style={{ width: 16, height: 16 }} />
-                  Đang đăng nhập...
-                </>
-              ) : (
-                'Đăng nhập'
-              )}
+              <div style={{ fontFamily: 'monospace', fontSize: 12, color: '#4CAF50', marginBottom: 2 }}>
+                {account.username}
+              </div>
+              <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.35)' }}>
+                {account.label}
+              </div>
             </button>
-
-          </div>
-        </form>
-
-        {/* Divider */}
-        <div className="divider" style={{ margin: 'var(--space-6) 0' }} />
-
-        {/* Test accounts */}
-        <div>
-          <p style={{
-            fontSize: 'var(--text-xs)',
-            color: 'var(--text-muted)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.08em',
-            marginBottom: 'var(--space-3)',
-          }}>
-            Tài khoản test nhanh
-          </p>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
-            {TEST_ACCOUNTS.map((account) => (
-              <button
-                key={account.username}
-                id={`btn-test-${account.username}`}
-                type="button"
-                className="btn btn-secondary"
-                onClick={() => fillTestAccount(account)}
-                disabled={loading}
-                style={{
-                  justifyContent: 'space-between',
-                  padding: 'var(--space-2) var(--space-4)',
-                }}
-              >
-                <span style={{
-                  fontFamily: 'monospace',
-                  fontSize: 'var(--text-sm)',
-                  color: 'var(--accent)',
-                }}>
-                  {account.username}
-                </span>
-                <span style={{
-                  fontSize: 'var(--text-xs)',
-                  color: 'var(--text-muted)',
-                  background: 'var(--bg-elevated)',
-                  padding: '2px 8px',
-                  borderRadius: 'var(--radius-full)',
-                }}>
-                  {account.label}
-                </span>
-              </button>
-            ))}
-          </div>
+          ))}
         </div>
-
       </div>
     </div>
   )

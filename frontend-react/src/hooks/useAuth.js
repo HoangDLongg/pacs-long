@@ -73,19 +73,25 @@ export function useAuth() {
     setLoading(true)
 
     try {
-      // 1. Lấy token
-      const { access_token } = await loginApi(username, password)
+      // 1. Login — backend trả { token, user }
+      const result = await loginApi(username, password)
+      const jwt = result.token || result.access_token
+      const me = result.user
 
-      // 2. Lấy thông tin user
-      const me = await getMeApi(access_token)
+      if (!jwt) {
+        throw new Error('Không nhận được token từ server')
+      }
+
+      // 2. Nếu backend không trả user, gọi /me
+      const userInfo = me || await getMeApi(jwt)
 
       // 3. Lưu vào localStorage
-      localStorage.setItem(TOKEN_KEY, access_token)
-      localStorage.setItem(USER_KEY, JSON.stringify(me))
+      localStorage.setItem(TOKEN_KEY, jwt)
+      localStorage.setItem(USER_KEY, JSON.stringify(userInfo))
 
       // 4. Cập nhật state
-      setToken(access_token)
-      setUser(me)
+      setToken(jwt)
+      setUser(userInfo)
     } catch (err) {
       setError(err.message)
       throw err // để LoginForm catch và hiện lỗi

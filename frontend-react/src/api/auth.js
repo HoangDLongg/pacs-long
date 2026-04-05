@@ -8,27 +8,28 @@ const BASE_URL = '/api'
 
 /**
  * Đăng nhập — POST /api/auth/login
- * Backend nhận OAuth2 form (application/x-www-form-urlencoded)
- * @returns {{ access_token: string, token_type: string }}
+ * Backend nhận JSON { username, password }
+ * @returns {{ token: string, user: object }}
  */
 export async function loginApi(username, password) {
-  const body = new URLSearchParams({
-    username,
-    password,
-    grant_type: 'password',
-  })
-
   const response = await fetch(`${BASE_URL}/auth/login`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: body.toString(),
+    body: JSON.stringify({ username, password }),
   })
 
   if (!response.ok) {
     const data = await response.json().catch(() => ({}))
-    throw new Error(data.detail || 'Sai tài khoản hoặc mật khẩu')
+    const detail = data.detail
+    // detail can be string or array of objects
+    const msg = typeof detail === 'string'
+      ? detail
+      : Array.isArray(detail)
+        ? detail.map(d => d.msg).join(', ')
+        : 'Sai tài khoản hoặc mật khẩu'
+    throw new Error(msg)
   }
 
   return response.json()
