@@ -1,0 +1,30 @@
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: pacs_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: pacs_db
+      POSTGRES_USER: pacs_user
+      POSTGRES_PASSWORD: pacs_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/database/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+
+  orthanc:
+    image: orthancteam/orthanc:latest
+    container_name: pacs_orthanc
+    restart: always
+    ports:
+      - "8042:8042"   # Web UI + REST API
+      - "4242:4242"   # DICOM protocol
+    volumes:
+      - ./orthanc/orthanc.json:/etc/orthanc/orthanc.json:ro
+      - orthanc_data:/var/lib/orthanc/db
+
+volumes:
+  postgres_data:
+  orthanc_data:

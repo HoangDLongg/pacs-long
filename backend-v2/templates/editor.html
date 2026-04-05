@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>DICOM Name Editor — PACS++</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0a0f1a;
+            color: #e0e6ed;
+            padding: 24px;
+        }
+
+        h1 {}
+
+        .subtitle {
+            text-align: center;
+            color: #7a8ba0;
+            margin-bottom: 24px;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        button {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-scan {
+            background: linear-gradient(135deg, #4fc3f7, #0288d1);
+            color: white;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #66bb6a, #2e7d32);
+            color: white;
+        }
+
+        .btn-save:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(79, 195, 247, 0.3);
+        }
+
+        .status {
+            text-align: center;
+            padding: 12px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .status.info {
+            background: rgba(79, 195, 247, 0.1);
+            color: #4fc3f7;
+        }
+
+        .status.success {
+            background: rgba(102, 187, 106, 0.1);
+            color: #66bb6a;
+        }
+
+        .status.error {
+            background: rgba(239, 83, 80, 0.1);
+            color: #ef5350;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #111827;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: #1a2332;
+        }
+
+        th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #7a8ba0;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-top: 1px solid #1e293b;
+        }
+
+        tr:hover {
+            background: rgba(79, 195, 247, 0.05);
+        }
+
+        .patient-id {
+            font-family: monospace;
+            color: #4fc3f7;
+            font-weight: 600;
+        }
+
+        .old-name {
+            color: #ef5350;
+        }
+
+        input.new-name {
+            width: 100%;
+            padding: 8px 12px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #e0e6ed;
+            font-size: 14px;
+        }
+
+        input.new-name:focus {
+            outline: none;
+            border-color: #4fc3f7;
+            box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.1);
+        }
+
+        .file-count {
+            background: #1e293b;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .modality-badge {
+            background: rgba(124, 77, 255, 0.15);
+            color: #b388ff;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7a8ba0;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid #1e293b;
+            border-top: 3px solid #4fc3f7;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .stats {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-card {
+            background: #111827;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4fc3f7;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #7a8ba0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>DICOM Name Editor</h1>
+    <p class="subtitle">Quét folder DICOM → xem tên cũ → nhập tên mới → lưu</p>
+
+    <div class="toolbar">
+        <button class="btn-scan" onclick="scan()"> Quét folder DICOM</button>
+        <button class="btn-save" id="btnSave" onclick="saveAll()" disabled>Lưu tất cả</button>
+    </div>
+
+    <div id="status" class="status info" style="display:none;"></div>
+
+    <div id="stats" class="stats" style="display:none;">
+        <div class="stat-card">
+            <div class="stat-num" id="statTotal">0</div>
+            <div class="stat-label">Bệnh nhân</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num" id="statFiles">0</div>
+            <div class="stat-label">File .dcm</div>
+        </div>
+    </div>
+
+    <div id="content"></div>
+
+    <script>
+        const API = 'http://localhost:8000/api/editor';
+        let patients = [];
+
+        async function scan() {
+            const content = document.getElementById('content');
+            const status = document.getElementById('status');
+
+            content.innerHTML = '<div class="loading"><span class="spinner"></span> Đang quét folder DICOM... (có thể mất vài phút)</div>';
+            status.style.display = 'none';
+
+            try {
+                const res = await fetch(`${API}/scan`);
+                const data = await res.json();
+                patients = data.patients;
+
+                // Stats
+                const totalFiles = patients.reduce((s, p) => s + p.file_count, 0);
+                document.getElementById('statTotal').textContent = patients.length;
+                document.getElementById('statFiles').textContent = totalFiles.toLocaleString();
+                document.getElementById('stats').style.display = 'flex';
+
+                // Table
+                let html = `<table>
+                    <thead><tr>
+                        <th>#</th>
+                        <th>Patient ID</th>
+                        <th>Tên hiện tại</th>
+                        <th>Tên mới (nhập vào)</th>
+                        <th>Modality</th>
+                        <th>Files</th>
+                    </tr></thead><tbody>`;
+
+                patients.forEach((p, i) => {
+                    html += `<tr>
+                        <td>${i + 1}</td>
+                        <td class="patient-id">${p.patient_id}</td>
+                        <td class="old-name">${p.current_name || '(trống)'}</td>
+                        <td><input class="new-name" id="name_${i}" placeholder="Nhập tên Việt Nam..." value="${p.new_name || ''}"></td>
+                        <td><span class="modality-badge">${p.modality}</span></td>
+                        <td><span class="file-count">${p.file_count} files</span></td>
+                    </tr>`;
+                });
+
+                html += '</tbody></table>';
+                content.innerHTML = html;
+                document.getElementById('btnSave').disabled = false;
+
+                showStatus('info', `Tìm thấy ${patients.length} bệnh nhân, ${totalFiles.toLocaleString()} files`);
+
+            } catch (e) {
+                showStatus('error', 'Lỗi kết nối server: ' + e.message);
+            }
+        }
+
+        async function saveAll() {
+            const edits = [];
+
+            patients.forEach((p, i) => {
+                const input = document.getElementById(`name_${i}`);
+                const newName = input.value.trim();
+                if (newName) {
+                    edits.push({ patient_id: p.patient_id, new_name: newName });
+                }
+            });
+
+            if (edits.length === 0) {
+                showStatus('error', 'Chưa nhập tên mới nào!');
+                return;
+            }
+
+            showStatus('info', `Đang sửa ${edits.length} bệnh nhân... vui lòng chờ`);
+            document.getElementById('btnSave').disabled = true;
+
+            try {
+                const res = await fetch(`${API}/edit-bulk`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ edits: edits })
+                });
+                const data = await res.json();
+                showStatus('success', `Đã sửa ${data.total_files} files cho ${edits.length} bệnh nhân!`);
+
+                // Re-scan to verify
+                setTimeout(() => scan(), 1000);
+
+            } catch (e) {
+                showStatus('error', 'Lỗi: ' + e.message);
+                document.getElementById('btnSave').disabled = false;
+            }
+        }
+
+        function showStatus(type, msg) {
+            const el = document.getElementById('status');
+            el.className = `status ${type}`;
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>

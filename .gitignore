@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+
+# Node.js
+node_modules/
+dist/
+.vite/
+
+# Dataset (quá lớn — 9GB)
+dataset/
+
+# Docker volumes
+postgres_data/
+orthanc_data/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Specify
+.specify/

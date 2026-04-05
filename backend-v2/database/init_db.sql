@@ -1,0 +1,62 @@
+-- Bật extension vector (cho tìm kiếm AI)
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- ========== BẢNG 1: patients (bệnh nhân) ==========
+CREATE TABLE IF NOT EXISTS patients (
+    id              SERIAL PRIMARY KEY,
+    patient_id      VARCHAR(50) UNIQUE NOT NULL,
+    full_name       VARCHAR(100) NOT NULL,
+    birth_date      DATE,
+    gender          CHAR(1) CHECK (gender IN ('M', 'F')),
+    phone           VARCHAR(20),
+    address         TEXT,
+    created_at      TIMESTAMP DEFAULT NOW()
+);
+
+-- ========== BẢNG 2: users (tài khoản) ==========
+CREATE TABLE IF NOT EXISTS users (
+    id                  SERIAL PRIMARY KEY,
+    username            VARCHAR(50) UNIQUE NOT NULL,
+    password_hash       VARCHAR(255) NOT NULL,
+    full_name           VARCHAR(100),
+    role                VARCHAR(20) NOT NULL CHECK (role IN ('admin', 'doctor', 'technician', 'patient')),
+    is_active           BOOLEAN DEFAULT TRUE,
+    linked_patient_id   INT REFERENCES patients(id),
+    created_at          TIMESTAMP DEFAULT NOW()
+);
+
+-- ========== BẢNG 3: studies (ca chụp) ==========
+CREATE TABLE IF NOT EXISTS studies (
+    id              SERIAL PRIMARY KEY,
+    study_uid       VARCHAR(200) UNIQUE NOT NULL,
+    patient_id      INT REFERENCES patients(id),
+    study_date      DATE NOT NULL,
+    modality        VARCHAR(10) CHECK (modality IN ('CR', 'CT', 'MR', 'US', 'DX', 'MG')),
+    body_part       VARCHAR(50),
+    description     TEXT,
+    status          VARCHAR(20) DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'REPORTED', 'VERIFIED')),
+    technician_id   INT REFERENCES users(id),
+    orthanc_id      VARCHAR(200),
+    num_instances   INT DEFAULT 0,
+    created_at      TIMESTAMP DEFAULT NOW()
+);
+
+-- ========== BẢNG 4: diagnostic_reports (báo cáo) ==========
+CREATE TABLE IF NOT EXISTS diagnostic_reports (
+    id              SERIAL PRIMARY KEY,
+    study_id        INT REFERENCES studies(id) UNIQUE,
+    doctor_id       INT REFERENCES users(id),
+    findings        TEXT NOT NULL,
+    conclusion      TEXT NOT NULL,
+    recommendation  TEXT,
+    report_date     TIMESTAMP DEFAULT NOW(),
+    embedding       vector(1024),
+    created_at      TIMESTAMP DEFAULT NOW(),
+    updated_at      TIMESTAMP DEFAULT NOW()
+);
+
+-- ========== INDEXES ==========
+CREATE INDEX IF NOT EXISTS idx_studies_patient ON studies(patient_id);
+CREATE INDEX IF NOT EXISTS idx_studies_date ON studies(study_date);
+CREATE INDEX IF NOT EXISTS idx_studies_status ON studies(status);
+CREATE INDEX IF NOT EXISTS idx_users_linked_patient ON users(linked_patient_id);

@@ -1,0 +1,168 @@
+/* ================================================
+   T006 — components.css
+   US1 ONLY: Button, Form Input, Alert
+   (Các component khác thêm vào ở US tiếp theo)
+   ================================================ */
+
+/* ===== BUTTON ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background var(--transition-fast),
+              border-color var(--transition-fast),
+              box-shadow var(--transition-fast);
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Primary — green brand */
+.btn-primary {
+  background-color: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+  border-color: var(--accent-hover);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+/* Secondary — ghost with border */
+.btn-secondary {
+  background-color: transparent;
+  color: var(--text-secondary);
+  border-color: var(--border-strong);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+/* Full width helper */
+.btn-block {
+  width: 100%;
+}
+
+/* Large size */
+.btn-lg {
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--text-base);
+}
+
+
+/* ===== FORM ===== */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
+}
+
+.form-label--required::after {
+  content: ' *';
+  color: var(--danger);
+}
+
+.form-input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  transition: border-color var(--transition-fast),
+              box-shadow var(--transition-fast);
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.form-input--error {
+  border-color: var(--danger);
+}
+
+.form-input--error:focus {
+  box-shadow: 0 0 0 3px var(--danger-subtle);
+}
+
+
+/* ===== ALERT ===== */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  border: 1px solid transparent;
+}
+
+.alert--error {
+  background: var(--danger-subtle);
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.alert--success {
+  background: var(--success-subtle);
+  color: var(--success);
+  border-color: rgba(56, 142, 60, 0.25);
+}
+
+.alert--warning {
+  background: var(--warning-subtle);
+  color: var(--warning);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+
+/* ===== DIVIDER ===== */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: var(--space-5) 0;
+}
+
+/* ===== SPINNER ===== */
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-strong);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}

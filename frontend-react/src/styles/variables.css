@@ -1,0 +1,91 @@
+/* ================================================
+   T004 — variables.css
+   PACS++ Design Tokens — Hospital Green Theme
+   Màu lấy từ logo: Green Minimalist Medical
+   ================================================ */
+
+:root {
+  /* === Brand Colors (từ logo) === */
+  --color-brand-dark: #2d6a2d;
+  /* dark green cross */
+  --color-brand-mid: #388e3c;
+  /* mid green */
+  --color-brand-light: #6abf29;
+  /* light green dots */
+
+  /* === Accent === */
+  --accent: #2d7d32;
+  --accent-hover: #1b5e20;
+  --accent-subtle: rgba(45, 125, 50, 0.1);
+  --accent-border: rgba(45, 125, 50, 0.3);
+
+  /* === Background (Hospital Dark) === */
+  --bg-base: #09111f;
+  --bg-surface: #94aed4;
+  --bg-elevated: #132035;
+  --bg-overlay: #1a2a45;
+
+  /* === Text === */
+  --text-primary: #0a366d;
+  --text-secondary: #94afc7;
+  --text-muted: #4d6a8a;
+  --text-disabled: #2a3f5a;
+
+  /* === Status === */
+  --success: #388e3c;
+  --success-subtle: rgba(56, 142, 60, 0.12);
+  --warning: #f59e0b;
+  --warning-subtle: rgba(245, 158, 11, 0.12);
+  --danger: #ef4444;
+  --danger-subtle: rgba(239, 68, 68, 0.12);
+
+  /* === Border === */
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.13);
+  --border-accent: rgba(45, 125, 50, 0.35);
+
+  /* === Typography === */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* === Spacing === */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+
+  /* === Radius === */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* === Shadows === */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+
+  /* === Transitions === */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+
+  /* === Layout === */
+  --sidebar-w: 240px;
+  --topbar-h: 56px;
+}
