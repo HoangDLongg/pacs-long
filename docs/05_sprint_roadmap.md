@@ -7,92 +7,90 @@
 | Docker Compose: PostgreSQL 16 + pgvector | ✅ Done |
 | Docker Compose: Orthanc 24.5.3 | ✅ Done |
 | FastAPI backend khởi động thành công (:8000) | ✅ Done |
-| JWT Auth, Worklist, Dicom, Report, Search, Ask API | ✅ Done |
-| Seed data: 5 users, 30 bệnh nhân, 44 ca chụp | ✅ Done |
-| NL2SQL engine: Rule-based + Ollama + Gemini fallback | ✅ Done |
-| BGE-M3 embedding model tích hợp pgvector | ✅ Done |
-| Cấu hình Ollama (qwen2.5-coder:7b) thay Gemini | ✅ Done |
+| Cấu hình Ollama (qwen2.5-coder:7b) | ✅ Done |
 
 ---
 
-## Sprint 1 — React + Vite Frontend Migration 🚧 ĐANG LÀM
+## Sprint 1 — Backend v2 + Login + Data Pipeline ✅ HOÀN THÀNH
+
+| Hạng mục | Trạng thái |
+|---|---|
+| Backend-v2 rewrite (14 files) | ✅ Done |
+| JWT Auth (bcrypt + python-jose) | ✅ Done |
+| Worklist API (list + filter + stats) | ✅ Done |
+| DICOM Upload API (Orthanc integration) | ✅ Done |
+| Report CRUD API | ✅ Done |
+| Database schema: 4 bảng + pgvector | ✅ Done |
+| Seed data: 5 staff + 21 patient accounts (26 users) | ✅ Done |
+| DICOM Name Editor tool (web UI) | ✅ Done |
+| Bulk upload 13,499 DICOM files → Orthanc | ✅ Done |
+| 21 bệnh nhân, 75 ca chụp loaded | ✅ Done |
+| React Vite setup + Login page | ✅ Done |
+| Hospital Dark Theme CSS design system | ✅ Done |
+
+### Dữ liệu hiện tại trong DB
+
+| Bảng | Số lượng |
+|---|---|
+| patients | 21 |
+| users | 26 (5 staff + 21 patient) |
+| studies | 75 |
+| DICOM files trên Orthanc | 13,495 |
+
+---
+
+## Sprint 2 — Frontend React Pages 🚧 ĐANG LÀM
 
 ### Mục tiêu
-Thay thế HTML thuần bằng React SPA chuyên nghiệp, đầy đủ tính năng.
+Build 6 trang còn lại cho React SPA.
 
-### Cách tiếp cận (đã quyết định)
+| Hạng mục | Ưu tiên | Trạng thái |
+|---|---|---|
+| Layout: Sidebar + Topbar + AppLayout | P0 | ⬜ |
+| Shared components (StatusBadge, StatCard, FilterBar...) | P0 | ⬜ |
+| API layer (worklist.js, dicom.js, report.js, patient.js) | P0 | ⬜ |
+| Worklist page (dashboard + table + filter) | P0 | ⬜ |
+| Viewer page (Cornerstone.js DICOM viewer) | P0 | ⬜ |
+| Report page (create + update + readonly) | P0 | ⬜ |
+| MyStudies page (patient portal) | P1 | ⬜ |
+| Admin page (user management) | P1 | ⬜ |
+| Search page (UI only — logic cần Sprint 3) | P2 | ⬜ |
 
-> **Dùng Vite** thay vì CDN Babel — tránh mọi vấn đề scope/transpile của CDN approach.
+### Backend APIs cần bổ sung cho Sprint 2
 
-```bash
-# Tạo project Vite trong thư mục frontend
-cd pacs_rag_system
-npx create-vite@latest frontend-react -- --template react
-cd frontend-react
-npm install
-npm install react-router-dom
-npm run dev   # dev server :5173, proxy /api → :8000
-```
-
-### Deliverables Sprint 1
-
-| Hạng mục | Ưu tiên |
+| Endpoint | Cho trang |
 |---|---|
-| Vite project setup + proxy config | P0 |
-| Design system CSS (4 files) | P0 |
-| Auth utility + API layer | P0 |
-| AppLayout + Sidebar + Topbar | P0 |
-| Login page | P0 |
-| Worklist page (stat cards + table) | P0 |
-| Report page (create + update) | P1 |
-| Search page (4 tabs) | P1 |
-| Viewer page (Orthanc iframe) | P1 |
-| Admin page | P2 |
-
-### Tiêu chí Done Sprint 1
-- [ ] Đăng nhập thành công với admin/admin123
-- [ ] Sidebar collapse/expand hoạt động
-- [ ] Worklist load danh sách 44 ca chụp từ API
-- [ ] Filter theo date, modality, status
-- [ ] Tạo/cập nhật báo cáo từ doctor account
-- [ ] Tìm kiếm keyword trả kết quả
+| GET /api/my-studies | MyStudies (patient) |
+| GET /api/admin/users | Admin |
+| GET /api/admin/system | Admin |
 
 ---
 
-## Sprint 2 — DICOM Viewer + PDF Report
+## Sprint 3 — RAG Engine Integration
 
 | Hạng mục | Mô tả |
 |---|---|
-| Cornerstone.js integration | Xem ảnh DICOM trực tiếp, không cần Orthanc web UI |
-| Viewport tools | Window/Level (WW/WL), Zoom, Pan, Reset |
-| Multi-frame support | Scroll qua các frame CT/MR |
-| ReportLab PDF polish | Template chuyên nghiệp với logo bệnh viện |
-| Print stylesheet | In báo cáo trực tiếp từ browser |
+| BGE-M3 embedding trong backend-v2 | Text → vector 1024d |
+| Dense search (pgvector cosine) | Tìm báo cáo tương tự |
+| BM25 keyword search | Tìm theo từ khóa |
+| Hybrid search (Dense + BM25 + RRF) | Kết hợp 2 phương pháp |
+| NL2SQL (Ollama/Gemini) | Câu hỏi → SQL query |
+| Tích hợp micro-services (6800, 6803, 6804, 6805) | Kết nối RAG pipeline |
+| Search page hoàn chỉnh | 4 tab search + NL2SQL |
 
 ---
 
-## Sprint 3 — AI Features
+## Sprint 4 — Polish + Documentation
 
 | Hạng mục | Mô tả |
 |---|---|
-| RAG UI nâng cao | Highlight match trong kết quả |
-| Chat interface | Chat box hỏi đáp Real-time streaming |
-| Semantic search auto-suggest | Gợi ý câu hỏi khi gõ |
-| Report template | Gợi ý findings từ RAG khi bác sĩ đang gõ |
-| Analytics dashboard | Biểu đồ thống kê theo tháng/modality |
-
----
-
-## Sprint 4 — Admin + Polish
-
-| Hạng mục | Mô tả |
-|---|---|
-| User management CRUD | Thêm/sửa/khoá user |
-| Role-based audit log | Log mọi action |
-| Responsive mobile | Sidebar collapse auto trên màn nhỏ |
-| Dark/light mode toggle | |
-| Loading skeleton | Thay spinner bằng skeleton animation |
+| PDF export (ReportLab) | Xuất báo cáo PDF |
+| Admin CRUD users | Thêm/sửa/khoá user |
+| Responsive layout | Sidebar auto-collapse |
+| Loading skeleton | Animation chuyên nghiệp |
 | Error boundary | Bắt lỗi React toàn cục |
+| Unit tests (Pytest) | Backend test coverage |
+| Final documentation | Báo cáo luận văn |
 
 ---
 
@@ -103,17 +101,12 @@ npm run dev   # dev server :5173, proxy /api → :8000
 cd pacs_rag_system
 docker compose up -d
 
-# 2. Khởi động Ollama (terminal riêng)
-ollama serve
-# Nếu chưa có model:
-ollama pull qwen2.5-coder:7b
-
-# 3. Khởi động Backend
-cd backend
+# 2. Khởi động Backend
+cd backend-v2
 .\venv\Scripts\activate
 python main.py  # Port 8000
 
-# 4. Khởi động Frontend (dev mode)
+# 3. Khởi động Frontend (dev mode)
 cd ..\frontend-react
 npm run dev  # Port 5173
 
@@ -121,38 +114,55 @@ npm run dev  # Port 5173
 # Frontend: http://localhost:5173
 # Backend API docs: http://localhost:8000/docs
 # Orthanc: http://localhost:8042
+# DICOM Editor: http://localhost:8000/editor
 ```
 
 ---
 
-## Cấu trúc thư mục dự án tổng thể
+## Test Accounts
+
+| Username | Password | Role |
+|---|---|---|
+| admin | admin123 | Admin |
+| dr.nam | doctor123 | Doctor |
+| dr.lan | doctor123 | Doctor |
+| tech.hung | tech123 | Technician |
+| tech.mai | tech123 | Technician |
+
+Patient accounts: `{PatientID}` / `{PatientID}@`
+
+---
+
+## Cấu trúc thư mục
 
 ```
 pacs_rag_system/
-├── docker-compose.yml          # PostgreSQL + Orthanc
+├── docker-compose.yml
 ├── .gitignore
+├── README.md
 │
-├── backend/                    # FastAPI
+├── backend-v2/                 # FastAPI (Python 3.12)
 │   ├── main.py
 │   ├── config.py
 │   ├── requirements.txt
-│   ├── .env                    # KHÔNG commit
-│   ├── api/
-│   ├── core/
-│   ├── database/
-│   ├── scripts/
-│   └── frontend/               # Sau khi build Vite: copy dist/ vào đây
+│   ├── .env
+│   ├── api/                    # 5 routers
+│   ├── core/                   # Auth, DICOM parser, Orthanc client
+│   ├── database/               # Connection pool + schema SQL
+│   ├── scripts/                # Seed, bulk upload, edit names
+│   └── templates/              # DICOM editor web tool
 │
-└── frontend-react/             # React + Vite (Sprint 1)
-    ├── index.html
-    ├── vite.config.js
-    ├── package.json
-    └── src/
-        ├── main.jsx
-        ├── App.jsx
-        ├── styles/
-        ├── api/
-        ├── hooks/
-        ├── components/
-        └── pages/
+├── frontend-react/             # React 18 + Vite 5
+│   ├── vite.config.js          # Proxy /api → :8000
+│   └── src/
+│       ├── api/                # API wrappers
+│       ├── hooks/              # useAuth
+│       ├── components/         # Shared + Layout
+│       ├── pages/              # 7 pages
+│       └── styles/             # Hospital dark theme CSS
+│
+├── orthanc/                    # Orthanc config
+│   └── orthanc.json
+│
+└── docs/                       # 8 tài liệu thiết kế
 ```

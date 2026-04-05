@@ -9,8 +9,9 @@ erDiagram
         varchar username UK
         varchar password_hash
         varchar full_name
-        varchar role "admin|doctor|technician"
+        varchar role "admin|doctor|technician|patient"
         boolean is_active
+        integer linked_patient_id FK
         timestamp created_at
     }
 
@@ -57,6 +58,7 @@ erDiagram
     USERS ||--o{ DIAGNOSTIC_REPORTS : "doctor_id (đọc báo cáo)"
     PATIENTS ||--o{ STUDIES : "patient_id (1 BN nhiều ca chụp)"
     STUDIES ||--o| DIAGNOSTIC_REPORTS : "study_id (1 ca 1 báo cáo)"
+    USERS ||--o| PATIENTS : "linked_patient_id (patient account)"
 ```
 
 ---
@@ -71,8 +73,9 @@ erDiagram
 | `username` | VARCHAR(50) | UNIQUE, NOT NULL | Tên đăng nhập |
 | `password_hash` | VARCHAR(255) | NOT NULL | Bcrypt hash |
 | `full_name` | VARCHAR(100) | NOT NULL | Họ tên đầy đủ |
-| `role` | VARCHAR(20) | CHECK | `admin/doctor/technician` |
+| `role` | VARCHAR(20) | CHECK | `admin/doctor/technician/patient` |
 | `is_active` | BOOLEAN | DEFAULT TRUE | Khoá tài khoản |
+| `linked_patient_id` | INTEGER | FK → patients | Null nếu không phải patient |
 | `created_at` | TIMESTAMP | DEFAULT NOW() | Ngày tạo |
 
 **Index:** `idx_users_username` trên `username`
@@ -147,6 +150,7 @@ users (1) ──────────── (nhiều) studies       [technici
 users (1) ──────────── (nhiều) reports       [doctor_id]
 patients (1) ────────── (nhiều) studies      [patient_id]
 studies (1) ─────────── (0 hoặc 1) reports  [study_id UNIQUE]
+users (1) ──────────── (0 hoặc 1) patients  [linked_patient_id]
 ```
 
 ## Ghi chú kỹ thuật

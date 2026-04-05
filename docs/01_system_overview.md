@@ -74,6 +74,7 @@
 | `admin` | Quản trị viên | Toàn quyền |
 | `doctor` | Bác sĩ | Xem worklist, đọc báo cáo, tìm kiếm |
 | `technician` | Kỹ thuật viên | Xem worklist, upload DICOM |
+| `patient` | Bệnh nhân | Xem ca chụp và báo cáo của mình |
 
 ---
 
