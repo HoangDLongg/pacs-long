@@ -1,21 +1,25 @@
 /* ================================================
-   T013 — src/App.jsx
-   App router — US1 scope only
-   /login → LoginPage
-   /worklist (placeholder) → PlaceholderPage
-   /* → redirect /login
+   F05 — src/App.jsx
+   App router — All routes + AppLayout + RoleGuard
    ================================================ */
 
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { useAuth } from '@/hooks/useAuth'
-import LoginPage      from '@/pages/Login/index'
-import PlaceholderPage from '@/pages/Placeholder'
-import LoadingScreen  from '@/components/LoadingScreen'
+import { useAuth }     from '@/hooks/useAuth'
+import LoadingScreen   from '@/components/LoadingScreen'
+import AppLayout       from '@/components/layout/AppLayout'
+import RoleGuard       from '@/components/shared/RoleGuard'
+
+// Pages
+import LoginPage       from '@/pages/Login/index'
+import WorklistPage    from '@/pages/Worklist/index'
+import ViewerPage      from '@/pages/Viewer/index'
+import ReportPage      from '@/pages/Report/index'
+import SearchPage      from '@/pages/Search/index'
+import MyStudiesPage   from '@/pages/MyStudies/index'
+import AdminPage       from '@/pages/Admin/index'
 
 /**
- * ProtectedRoute
- * Nếu chưa đăng nhập → redirect /login
- * Nếu đang check auth (loading) → hiện loading screen
+ * ProtectedRoute — redirect /login nếu chưa đăng nhập
  */
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth()
@@ -25,6 +29,16 @@ function ProtectedRoute({ children }) {
   return children
 }
 
+/**
+ * DefaultRedirect — redirect theo role sau login
+ */
+function DefaultRedirect() {
+  const { user } = useAuth()
+
+  if (user?.role === 'patient') return <Navigate to="/my-studies" replace />
+  return <Navigate to="/worklist" replace />
+}
+
 export default function App() {
   return (
     <HashRouter>
@@ -32,18 +46,63 @@ export default function App() {
         {/* Public */}
         <Route path="/login" element={<LoginPage />} />
 
-        {/* Protected — US1: placeholder cho /worklist */}
+        {/* Protected — wrapped in AppLayout */}
         <Route
-          path="/worklist"
           element={
             <ProtectedRoute>
-              <PlaceholderPage />
+              <AppLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          {/* Worklist — admin, doctor, technician */}
+          <Route
+            path="/worklist"
+            element={
+              <RoleGuard roles={['admin', 'doctor', 'technician']}>
+                <WorklistPage />
+              </RoleGuard>
+            }
+          />
 
-        {/* Mọi route khác → /login */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+          {/* Viewer — all roles */}
+          <Route path="/viewer/:id" element={<ViewerPage />} />
+
+          {/* Report — all roles (edit/readonly xử lý trong page) */}
+          <Route path="/report/:id" element={<ReportPage />} />
+
+          {/* Search — admin, doctor */}
+          <Route
+            path="/search"
+            element={
+              <RoleGuard roles={['admin', 'doctor']}>
+                <SearchPage />
+              </RoleGuard>
+            }
+          />
+
+          {/* My Studies — patient only */}
+          <Route
+            path="/my-studies"
+            element={
+              <RoleGuard roles={['patient']}>
+                <MyStudiesPage />
+              </RoleGuard>
+            }
+          />
+
+          {/* Admin — admin only */}
+          <Route
+            path="/admin"
+            element={
+              <RoleGuard roles={['admin']}>
+                <AdminPage />
+              </RoleGuard>
+            }
+          />
+        </Route>
+
+        {/* Default — redirect theo role */}
+        <Route path="*" element={<DefaultRedirect />} />
       </Routes>
     </HashRouter>
   )

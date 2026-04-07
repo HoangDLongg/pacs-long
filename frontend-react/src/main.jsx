@@ -6,10 +6,11 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
-// CSS — thứ tự quan trọng: variables trước, rồi base, rồi components
+// CSS — thứ tự quan trọng: variables → base → components → layout
 import '@/styles/variables.css'
 import '@/styles/base.css'
 import '@/styles/components.css'
+import '@/styles/layout.css'
 
 import App from './App'
 

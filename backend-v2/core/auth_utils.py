@@ -27,7 +27,7 @@ class AuthUtils:
     def create_token(cls, user_id: int, username: str, role: str) -> str:
         """Tạo JWT token — chứa user info, hết hạn sau 8 giờ"""
         payload = {
-            "sub": user_id,
+            "sub": str(user_id),
             "username": username,
             "role": role,
             "exp": datetime.utcnow() + timedelta(hours=JWT_EXPIRE_HOURS)
