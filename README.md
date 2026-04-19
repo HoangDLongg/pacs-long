@@ -390,7 +390,7 @@ Patient: {PatientID} / {PatientID}@
 - [x] Sprint 1: Backend core (Auth, Worklist, DICOM, Report APIs)
 - [x] Sprint 1: Data pipeline (DICOM name editor + bulk upload 13K files)
 - [x] Sprint 1: Login page (React)
-- [ ] Sprint 2: Frontend pages (Worklist, Viewer, Report, Admin, MyStudies)
+- [x] Sprint 2: Frontend pages (Worklist, Viewer, Report, Admin, MyStudies)
 - [ ] Sprint 3: RAG Engine (BGE-M3 embedding, Dense/Hybrid search, NL2SQL)
 - [ ] Sprint 4: Polish, testing, documentation
 

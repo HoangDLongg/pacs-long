@@ -12,7 +12,7 @@ services:
       POSTGRES_PASSWORD: pacs_pass
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./backend/database/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+      - ./backend-v2/database/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
 
   orthanc:
     image: orthancteam/orthanc:latest

@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS studies (
     created_at      TIMESTAMP DEFAULT NOW()
 );
 
--- ========== BẢNG 4: diagnostic_reports (báo cáo) ==========
+-- ========== BẢNG 4: diagnostic_reports (báo cáo chẩn đoán) ==========
 CREATE TABLE IF NOT EXISTS diagnostic_reports (
     id              SERIAL PRIMARY KEY,
     study_id        INT REFERENCES studies(id) UNIQUE,
@@ -55,8 +55,21 @@ CREATE TABLE IF NOT EXISTS diagnostic_reports (
     updated_at      TIMESTAMP DEFAULT NOW()
 );
 
+-- ========== BẢNG 5: refresh_tokens (JWT rotation) ==========
+CREATE TABLE IF NOT EXISTS refresh_tokens (
+    id          SERIAL PRIMARY KEY,
+    user_id     INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    token_hash  VARCHAR(255) UNIQUE NOT NULL,
+    expires_at  TIMESTAMPTZ NOT NULL,
+    revoked     BOOLEAN DEFAULT FALSE,
+    created_at  TIMESTAMPTZ DEFAULT NOW(),
+    updated_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- ========== INDEXES ==========
-CREATE INDEX IF NOT EXISTS idx_studies_patient ON studies(patient_id);
-CREATE INDEX IF NOT EXISTS idx_studies_date ON studies(study_date);
-CREATE INDEX IF NOT EXISTS idx_studies_status ON studies(status);
-CREATE INDEX IF NOT EXISTS idx_users_linked_patient ON users(linked_patient_id);
+CREATE INDEX IF NOT EXISTS idx_studies_patient       ON studies(patient_id);
+CREATE INDEX IF NOT EXISTS idx_studies_date          ON studies(study_date);
+CREATE INDEX IF NOT EXISTS idx_studies_status        ON studies(status);
+CREATE INDEX IF NOT EXISTS idx_users_linked_patient  ON users(linked_patient_id);
+CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user   ON refresh_tokens(user_id);
+CREATE INDEX IF NOT EXISTS idx_refresh_tokens_expires ON refresh_tokens(expires_at);

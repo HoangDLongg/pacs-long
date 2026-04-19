@@ -35,8 +35,34 @@ class OrthancClient:
         return response.json()
 
     @classmethod
+    def find_study_by_uid(cls, study_instance_uid: str) -> str | None:
+        """Tìm Orthanc study ID bằng DICOM StudyInstanceUID
+        Dùng Orthanc Tools/Find API — reliable hơn dùng ParentStudy ID
+        Returns: Orthanc study ID string hoặc None nếu không tìm thấy
+        """
+        try:
+            response = requests.post(
+                f"{ORTHANC_URL}/tools/find",
+                json={
+                    "Level": "Study",
+                    "Query": {"StudyInstanceUID": study_instance_uid},
+                    "Limit": 1
+                },
+                timeout=10
+            )
+            response.raise_for_status()
+            results = response.json()
+            return results[0] if results else None
+        except Exception as e:
+            print(f"[WARN] Orthanc find_study_by_uid failed: {e}")
+            return None
+
+    @classmethod
     def get_instance_file(cls, instance_id: str) -> bytes:
         """Download 1 file DICOM binary từ Orthanc"""
-        response = requests.get(f"{ORTHANC_URL}/instances/{instance_id}/file")
+        response = requests.get(
+            f"{ORTHANC_URL}/instances/{instance_id}/file",
+            timeout=30
+        )
         response.raise_for_status()
         return response.content
