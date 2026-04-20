@@ -145,59 +145,42 @@ export default function ViewerPage() {
 
     const viewport = renderingEngine.getViewport(VIEWPORT_ID)
 
-    // Set stack + auto-VOI cho ảnh thiếu Window Center/Width (CR, MG)
-    viewport.setStack(imageIds, 0).then(() => {
+    // Set stack + auto-VOI
+    viewport.setStack(imageIds, 0).then(async () => {
       if (cancelled) return
       console.log(`[Cornerstone3D] Loaded ${imageIds.length} images`)
 
-      // Auto-VOI: kiểm tra DICOM gốc có WC/WW không
+      // Auto-VOI: lấy pixel data trực tiếp từ canvas/vtk image
       try {
-        const { metaData } = csEnums
-        // Dùng cornerstonejs metaData provider để check WC/WW gốc
-        const voiLut = csMetaData.get('voiLutModule', imageIds[0])
-        const hasRealWC = voiLut?.windowCenter !== undefined && voiLut?.windowCenter !== null
-        const hasRealWW = voiLut?.windowWidth !== undefined && voiLut?.windowWidth !== null
+        // Approach: đọc pixel data từ vtkImageData (đã decode sẵn)
+        const vtkImageData = viewport.getImageData()?.imageData
+        if (vtkImageData) {
+          const scalars = vtkImageData.getPointData().getScalars()
+          if (scalars) {
+            const data = scalars.getData()
+            const range = scalars.getRange()
+            const pxMin = range[0], pxMax = range[1]
+            const pxRange = pxMax - pxMin
 
-        console.log(`[Cornerstone3D] DICOM voiLutModule:`, voiLut)
+            // Check current VOI
+            const props = viewport.getProperties()
+            const curLower = props.voiRange?.lower ?? 0
+            const curUpper = props.voiRange?.upper ?? 65535
+            const curRange = curUpper - curLower
 
-        if (!hasRealWC || !hasRealWW) {
-          // File DICOM không có WC/WW → tính từ pixel data
-          console.log('[Cornerstone3D] No DICOM WC/WW → computing from pixel data...')
+            console.log(`[CS3D] Pixel range: ${pxMin}-${pxMax}, Current VOI: ${curLower}-${curUpper}`)
 
-          // Lấy pixel data từ image đã load trong cache
-          const imageLoadObj = csCache.getImageLoadObject(imageIds[0])
-          if (imageLoadObj?.promise) {
-            imageLoadObj.promise.then(image => {
-              if (cancelled) return
-              const pixelData = image.getPixelData()
-              if (pixelData && pixelData.length > 0) {
-                let pxMin = pixelData[0], pxMax = pixelData[0]
-                // Sample every 4th pixel for performance trên ảnh lớn
-                const step = pixelData.length > 1000000 ? 4 : 1
-                for (let i = 1; i < pixelData.length; i += step) {
-                  if (pixelData[i] < pxMin) pxMin = pixelData[i]
-                  if (pixelData[i] > pxMax) pxMax = pixelData[i]
-                }
-                if (pxMax > pxMin) {
-                  viewport.setProperties({
-                    voiRange: { lower: pxMin, upper: pxMax },
-                  })
-                  console.log(`[Cornerstone3D] Auto-VOI applied: ${pxMin}-${pxMax}`)
-                }
-              }
-
-              // MONOCHROME1 → invert
-              if (image.photometricInterpretation === 'MONOCHROME1') {
-                viewport.setProperties({ invert: true })
-                console.log('[Cornerstone3D] Auto-inverted for MONOCHROME1')
-              }
-
-              viewport.render()
-            })
+            // Nếu VOI quá rộng so với pixel data → fix
+            if (pxRange > 0 && curRange > pxRange * 3) {
+              viewport.setProperties({
+                voiRange: { lower: pxMin, upper: pxMax },
+              })
+              console.log(`[CS3D] Auto-VOI applied: ${pxMin}-${pxMax}`)
+            }
           }
         }
       } catch (e) {
-        console.warn('[Cornerstone3D] Auto-VOI failed:', e)
+        console.warn('[CS3D] Auto-VOI failed:', e)
       }
 
       viewport.resetCamera()
@@ -364,6 +347,14 @@ export default function ViewerPage() {
             )}
           </div>
         )}
+
+        <button
+          className="btn btn--primary btn--sm"
+          onClick={() => navigate(`/report/${id}`)}
+          style={{ marginLeft: 'auto' }}
+        >
+          Báo cáo
+        </button>
       </div>
 
       {/* ---- Toolbar ---- */}

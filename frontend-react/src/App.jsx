@@ -17,6 +17,7 @@ import ReportPage      from '@/pages/Report/index'
 import SearchPage      from '@/pages/Search/index'
 import MyStudiesPage   from '@/pages/MyStudies/index'
 import AdminPage       from '@/pages/Admin/index'
+import ComparePage     from '@/pages/Compare/index'
 
 /**
  * ProtectedRoute — redirect /login nếu chưa đăng nhập
@@ -66,6 +67,9 @@ export default function App() {
 
           {/* Viewer — all roles */}
           <Route path="/viewer/:id" element={<ViewerPage />} />
+
+          {/* Compare — 2 studies side-by-side */}
+          <Route path="/compare/:leftId/:rightId" element={<ComparePage />} />
 
           {/* Report — all roles (edit/readonly xử lý trong page) */}
           <Route path="/report/:id" element={<ReportPage />} />

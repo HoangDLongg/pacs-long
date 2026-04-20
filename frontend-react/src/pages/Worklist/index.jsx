@@ -28,6 +28,7 @@ export default function WorklistPage() {
   const [error, setError]         = useState(null)
   const [page, setPage]           = useState(1)
   const [showUpload, setShowUpload] = useState(false)
+  const [compareIds, setCompareIds] = useState([])  // multi-select cho compare
 
   // Fetch data
   const fetchData = useCallback(async () => {
@@ -83,12 +84,37 @@ export default function WorklistPage() {
 
   const canUpload = user?.role === 'admin' || user?.role === 'technician'
 
+  // Toggle compare selection
+  function toggleCompare(studyId) {
+    setCompareIds(prev => {
+      if (prev.includes(studyId)) return prev.filter(id => id !== studyId)
+      if (prev.length >= 2) return [prev[1], studyId]  // giữ 2 cái mới nhất
+      return [...prev, studyId]
+    })
+  }
+
   return (
     <div className="fade-in">
       {/* Page header */}
       <div className="page-header">
-        <h2 className="page-header__title">Worklist</h2>
-        <p className="page-header__subtitle">Danh sach ca chup — {studies.length} ca</p>
+        <div>
+          <h2 className="page-header__title">Worklist</h2>
+          <p className="page-header__subtitle">Danh sach ca chup — {studies.length} ca</p>
+        </div>
+        {compareIds.length === 2 && (
+          <button
+            className="btn btn--primary"
+            onClick={() => navigate(`/compare/${compareIds[0]}/${compareIds[1]}`)}
+            style={{ marginLeft: 'auto' }}
+          >
+            So sánh 2 ca
+          </button>
+        )}
+        {compareIds.length === 1 && (
+          <span style={{ marginLeft: 'auto', color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>
+            Chọn thêm 1 ca để so sánh...
+          </span>
+        )}
       </div>
 
       {/* Stats row */}
@@ -146,6 +172,7 @@ export default function WorklistPage() {
           <table className="data-table" id="worklist-table">
             <thead>
               <tr>
+                <th style={{ width: '40px' }}></th>
                 <th>#</th>
                 <th>Ten benh nhan</th>
                 <th>Ma BN</th>
@@ -158,6 +185,14 @@ export default function WorklistPage() {
             <tbody>
               {pagedStudies.map((study, idx) => (
                 <tr key={study.id}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={compareIds.includes(study.id)}
+                      onChange={() => toggleCompare(study.id)}
+                      title="Chọn để so sánh"
+                    />
+                  </td>
                   <td>{(page - 1) * PAGE_SIZE + idx + 1}</td>
                   <td>{study.patient_name || '—'}</td>
                   <td>{study.patient_code || '—'}</td>

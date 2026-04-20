@@ -1,6 +1,7 @@
 # api/dicom.py
 import os
 import sys
+import requests
 
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Request
 from fastapi.responses import StreamingResponse
@@ -13,6 +14,7 @@ from core.dicom_parser import DicomParser
 from core.orthanc_client import OrthancClient
 from database.connection import get_connection, release_connection
 from models.user import User
+from config import ORTHANC_URL
 
 router = APIRouter(prefix="/api/dicom", tags=["DICOM"])
 
@@ -210,11 +212,8 @@ def get_wado(
     Cornerstone.js không thể thêm Authorization header vào XHR image request
     → Chấp nhận token từ query param HOẶC Authorization header
     """
-    from fastapi import Request as _Request
     from jose import jwt as _jwt, JWTError
     from config import JWT_SECRET, JWT_ALGORITHM
-    from database.connection import SessionLocal
-    from models.user import User as _User
 
     # 1. Lấy raw token — ưu tiên query param (Cornerstone), fallback header
     raw_token = token
@@ -234,14 +233,26 @@ def get_wado(
     except JWTError:
         raise HTTPException(status_code=401, detail="Token không hợp lệ hoặc hết hạn")
 
-    # 3. Stream DICOM từ Orthanc
+    # 3. Stream DICOM từ Orthanc — TRUE streaming (không buffer toàn bộ file)
     try:
-        dicom_bytes = OrthancClient.get_instance_file(objectId)
+        orthanc_response = requests.get(
+            f"{ORTHANC_URL}/instances/{objectId}/file",
+            stream=True,   # ← Stream chunks, không load hết vào RAM
+            timeout=60,
+        )
+        orthanc_response.raise_for_status()
+
+        content_length = orthanc_response.headers.get("Content-Length")
+        headers = {"Content-Disposition": f"inline; filename={objectId}.dcm"}
+        if content_length:
+            headers["Content-Length"] = content_length
+
         return StreamingResponse(
-            BytesIO(dicom_bytes),
+            orthanc_response.iter_content(chunk_size=256 * 1024),  # 256KB chunks
             media_type="application/dicom",
-            headers={"Content-Disposition": f"inline; filename={objectId}.dcm"}
+            headers=headers,
         )
     except Exception as e:
         raise HTTPException(status_code=404, detail=f"Instance not found in Orthanc: {e}")
+
 

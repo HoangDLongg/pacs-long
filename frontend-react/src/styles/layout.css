@@ -274,6 +274,9 @@
 /* ===== PAGE HEADER ===== */
 .page-header {
   margin-bottom: var(--space-6);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
 }
 
 .page-header__title {
