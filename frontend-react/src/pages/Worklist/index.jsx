@@ -99,7 +99,7 @@ export default function WorklistPage() {
       <div className="page-header">
         <div>
           <h2 className="page-header__title">Worklist</h2>
-          <p className="page-header__subtitle">Danh sach ca chup — {studies.length} ca</p>
+          <p className="page-header__subtitle">Danh sách ca chụp — {studies.length} ca</p>
         </div>
         {compareIds.length === 2 && (
           <button
@@ -120,10 +120,10 @@ export default function WorklistPage() {
       {/* Stats row */}
       {stats && (
         <div className="stats-row">
-          <StatCard value={stats.total}    label="Tong ca"    variant="primary" />
-          <StatCard value={stats.pending}  label="Cho doc"    variant="warning" />
-          <StatCard value={stats.reported} label="Da doc"     variant="info" />
-          <StatCard value={stats.verified} label="Da duyet"   variant="purple" />
+          <StatCard value={stats.total}    label="Tổng ca"    variant="primary" />
+          <StatCard value={stats.pending}  label="Chờ đọc"    variant="warning" />
+          <StatCard value={stats.reported} label="Đã đọc"     variant="info" />
+          <StatCard value={stats.verified} label="Đã duyệt"   variant="purple" />
         </div>
       )}
 
@@ -142,7 +142,7 @@ export default function WorklistPage() {
             onClick={() => setShowUpload(!showUpload)}
             id="btn-toggle-upload"
           >
-            {showUpload ? 'Dong' : 'Upload DICOM'}
+            {showUpload ? 'Đóng' : 'Upload DICOM'}
           </button>
           {showUpload && (
             <div className="fade-in" style={{ marginTop: 'var(--space-4)' }}>
@@ -174,12 +174,12 @@ export default function WorklistPage() {
               <tr>
                 <th style={{ width: '40px' }}></th>
                 <th>#</th>
-                <th>Ten benh nhan</th>
-                <th>Ma BN</th>
-                <th>Ngay chup</th>
+                <th>Tên bệnh nhân</th>
+                <th>Mã BN</th>
+                <th>Ngày chụp</th>
                 <th>Modality</th>
-                <th>Trang thai</th>
-                <th>Hanh dong</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -211,7 +211,7 @@ export default function WorklistPage() {
                         className="data-table__btn"
                         onClick={() => navigate(`/report/${study.id}`)}
                       >
-                        Bao cao
+                        Báo cáo
                       </button>
                     </div>
                   </td>
@@ -257,7 +257,7 @@ export default function WorklistPage() {
       {/* Empty state */}
       {!loading && studies.length === 0 && !error && (
         <div className="alert alert--warning">
-          Khong co ca chup nao phu hop voi bo loc
+          Không có ca chụp nào phù hợp với bộ lọc
         </div>
       )}
     </div>

@@ -9,8 +9,8 @@ from psycopg2.extras import RealDictCursor
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.orm import declarative_base
 
+from database.base import Base
 import config
 
 # Thêm path để import config và models
@@ -28,8 +28,6 @@ engine = create_engine(
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-Base = declarative_base()      # ← Dùng chung cho tất cả models
 
 # ====================== psycopg2 Pool (nếu vẫn muốn dùng raw) ======================
 _psycopg2_pool = None

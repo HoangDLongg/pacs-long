@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from core.auth_utils import AuthUtils
 from database.connection import get_db
 from models.user import User
+from models.refresh_token import RefreshToken
 
 # ====================== Pydantic Schemas ======================
 class LoginRequest(BaseModel):

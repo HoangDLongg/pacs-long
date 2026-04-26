@@ -1,0 +1,752 @@
+[
+  {
+    "id": 76,
+    "findings": "- Phổi hai bên quá sáng hai đáy, mờ kính rải rác.\n- Bờ vòm hoành hai bên thấp, hai góc sườn hoành nhọn.\n- Bóng mờ tim không to, hình tim treo, các cung tim trong giới hạn sinh lý.\n- Vôi hóa thành quai động mạch chủ.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến khí phế thũng.\n- Vôi hóa thành quai động mạch chủ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": null,
+    "body_part": "",
+    "description": "PET/CT (SKULL-MIDTHIGH)",
+    "patient_name": "Ngo Van Thanh"
+  },
+  {
+    "id": 77,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim to\n- Nốt mờ đậm dạng vôi hóa rải rác phần thành ngực hai bên",
+    "conclusion": "- Hình ảnh tổn thương phổi kẽ.\n- Bóng mờ tim to.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "CHEST",
+    "description": "CT THORAX W/O CONT",
+    "patient_name": "Trinh Van Khoa"
+  },
+  {
+    "id": 78,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "",
+    "description": "CT THORAX W/CONT",
+    "patient_name": "Trinh Van Khoa"
+  },
+  {
+    "id": 79,
+    "findings": "- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to. Quai động mạch chủ vồng.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.\n- Quai động mạch chủ vồng.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": null,
+    "body_part": "",
+    "description": "PET^1PETCT_150to200LBS (Adult)",
+    "patient_name": "Trinh Van Khoa"
+  },
+  {
+    "id": 80,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên thấp hai góc sườn hoành nhọn\n- Bóng mờ tim không to. Vôi hóa thành quai động mạch chủ.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.\n- Vôi hóa thành quai động mạch chủ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "PELVIS",
+    "description": "CT THORAX W/CONT",
+    "patient_name": "Ly Thi Phuong"
+  },
+  {
+    "id": 81,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành phải kém rõ tù nhẹ góc sườn hoành phải\n- Bóng mờ tim không to các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.\n- Tù nhẹ góc sườn hoành phải.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "CHEST",
+    "description": "CT THORAX W/O DYE",
+    "patient_name": "Ly Thi Phuong"
+  },
+  {
+    "id": 82,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to quai động mạch chủ vồng.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ quai động mạch chủ vồng.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "CHEST",
+    "description": "CT THORAX W/O CONT",
+    "patient_name": "Dinh Van Son"
+  },
+  {
+    "id": 83,
+    "findings": "- Lồng ngực cân đối, không thấy bất thường xương.\n- Hình ảnh vài nốt mờ phổi hai bên.\n- Rốn phổi hai bên không thấy bất thường.\n- Bờ vòm hoành hai bên đều.\n- mờ tù góc sườn hoành phải và đáy phổi phải Bóng tim không to.\n- Các bờ trung thất trong giới hạn bình thường.",
+    "conclusion": "- Hình ảnh vài nốt mờ phổi hai bên + tràn dịch màng phổi phải.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "CHEST",
+    "description": "CT THORAX W/CONT",
+    "patient_name": "Dinh Van Son"
+  },
+  {
+    "id": 84,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "CHEST",
+    "description": "CT THORAX W/O CONT",
+    "patient_name": "Dinh Van Son"
+  },
+  {
+    "id": 85,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim to.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.\n- Bóng mờ tim to.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "",
+    "description": "CT THORAX W/CONT",
+    "patient_name": "Ngo Van Thanh"
+  },
+  {
+    "id": 86,
+    "findings": "- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "",
+    "description": "CT CHEST SCREENING",
+    "patient_name": "Ngo Van Thanh"
+  },
+  {
+    "id": 87,
+    "findings": "- Phổi hai bên kém sáng, rốn phổi hai bên tăng đậm rộng.\n- Bờ vòm hoành hai bên đều, hai góc sườn hoành nhọn.\n- Bóng mờ tim to, các cung tim rộng.",
+    "conclusion": "- Hình ảnh bóng tim to.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "CHEST",
+    "description": "Thorax^AVERAGE_CHEST_LOW_DOSE (Adult)",
+    "patient_name": "Duong Thi Lien"
+  },
+  {
+    "id": 88,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "",
+    "description": "PET LUNG",
+    "patient_name": "Duong Thi Lien"
+  },
+  {
+    "id": 89,
+    "findings": "- Lồng ngực cân đối, không thấy bất thường xương.\n- Phổi hai bên sáng đều.\n- Rốn phổi hai bên không thấy bất thường.\n- Bờ vòm hoành hai bên đều.\n- Góc sườn hoành hai bên nhọn.\n- Bóng tim không to.\n- Vôi hóa thành quai động mạch chủ.",
+    "conclusion": "- Hình ảnh vôi hóa thành quai động mạch chủ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "CHEST",
+    "description": "CT THORAX W/DYE",
+    "patient_name": "Duong Thi Lien"
+  },
+  {
+    "id": 90,
+    "findings": "- Phổi hai bên kém sáng. Dày tổ chức kẽ rải rác hai phổi rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "",
+    "description": "CT THORAX W/CONT",
+    "patient_name": "Trinh Van Khoa"
+  },
+  {
+    "id": 91,
+    "findings": "- Phổi hai bên kém sáng, dày tổ chức kẽ rải rác hai phổi, rốn phổi tăng đậm nhẹ.\n- Bờ vòm hoành hai bên đều, hai góc sườn hoành nhọn.\n- Bóng mờ tim không to, các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh dày tổ chức kẽ rải rác hai phổi.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "",
+    "description": "CT THORAX W/CONT",
+    "patient_name": "Trinh Van Khoa"
+  },
+  {
+    "id": 92,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng dày tổ chức kẽ rải rác hai phổi\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "",
+    "description": "CT THORAX W/O CONT",
+    "patient_name": "Trinh Van Khoa"
+  },
+  {
+    "id": 93,
+    "findings": "- Lồng ngực cân đối, không thấy bất thường xương.\n- Phổi hai bên kém sáng, mờ kính rải rác, rốn phổi tăng đậm nhẹ.\n- Bờ vòm hoành hai bên đều, hai góc sườn hoành nhọn.\n- Bóng mờ tim không to, các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "CHEST_TO_PELVIS",
+    "description": "CT THORAX W/DYE",
+    "patient_name": "Ly Thi Phuong"
+  },
+  {
+    "id": 94,
+    "findings": "- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "CHEST",
+    "description": "CT THORAX W/O CONT",
+    "patient_name": "Ly Thi Phuong"
+  },
+  {
+    "id": 95,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim to. Vôi hóa thành quai động mạch chủ\n- Dày màng phổi đỉnh hai bên.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.\n- Bóng mờ tim to.\n- Vôi hóa thành quai động mạch chủ.\n- Dày màng phổi đỉnh hai bên.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "",
+    "description": "PET LUNG",
+    "patient_name": "Dinh Van Son"
+  },
+  {
+    "id": 96,
+    "findings": "- Bệnh nhân chụp tư thế nằm hạn chế đánh giá sơ bộ: Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim bè ngang. Vôi hóa thành quai động mạch chủ.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.\n- Vôi hóa thành quai động mạch chủ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "CHEST",
+    "description": "CT THORAX W/O CONT",
+    "patient_name": "Dinh Van Son"
+  },
+  {
+    "id": 97,
+    "findings": "- Phổi hai bên kém sáng, mờ kính rải rác, rốn phổi tăng đậm nhẹ.\n- Bờ vòm hoành hai bên đều, hai góc sườn hoành nhọn.\n- Bóng mờ tim không to, các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP PORT",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 98,
+    "findings": "- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim to. Quai động mạch chủ vồng.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.\n- Bóng tim to.\n- Quai động mạch chủ vồng.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "DX",
+    "body_part": "CHEST",
+    "description": "CHEST AP VIEWONLY",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 99,
+    "findings": "- Lồng ngực cân đối, không thấy bất thường xương.\n- Phổi hai bên kém sáng, dày tổ chức kẽ rải rác hai phổi.\n- Bờ vòm hoành hai bên đều, hai góc sườn hoành nhọn.\n- Bóng mờ tim không to, các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "DX",
+    "body_part": "CHEST",
+    "description": "CHEST AP PORT",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 100,
+    "findings": "- Phổi hai bên sáng đều.\n- Rốn phổi hai bên không thấy bất thường.\n- Bờ vòm hoành hai bên đều.\n- Góc sườn hoành hai bên nhọn.\n- Bóng tim không to.\n- Các bờ trung thất trong giới hạn bình thường.\n- Hình ảnh theo dõi gãy cũ cung bên xương sườn VI bên trái.\n- Hiện tại chưa thấy đường gãy xương/ trật khớp mới điển hình trên phim.",
+    "conclusion": "- Hình ảnh theo dõi gãy cũ cung bên xương sườn VI bên trái.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP PORT",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 101,
+    "findings": "- Lồng ngựcmất cân đối cong vẹo cột sống\n- Phổi hai bên kém sáng nốt mờ vị trí sát màng phổi phải\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to quai động mạch chủ vồng vôi hóa thành.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ nốt mờ vị trí sát màng phổi phải.\n- Quai động mạch chủ vồng vôi hóa thành.\n- Cong vẹo cột sống.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP VIEWONLY",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 102,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng mờ kính rải rác 2 phổi dày màng phổi đỉnh 2 bên rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh tổn thương phổi kẽ 2 bên.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP PORT",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 103,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên thấp hai góc sườn hoành nhọn\n- Bóng mờ tim không to các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP PORT",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 104,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to. Quai động mạch chủ vồng.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.\n- Quai động mạch chủ vồng.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP VIEWONLY",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 105,
+    "findings": "- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP VIEWONLY",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 106,
+    "findings": "- Phổi hai bên sáng đều.\n- Rốn phổi hai bên không thấy bất thường.\n- Bờ vòm hoành hai bên đều.\n- Góc sườn hoành hai bên nhọn.\n- Bóng tim không to.\n- Quai động mạch chủ vồng.\n- Vôi hóa thành quai động mạch chủ.",
+    "conclusion": "- Hình ảnh quai động mạch chủ vồng.\n- Vôi hóa thành quai động mạch chủ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "DX",
+    "body_part": "CHEST",
+    "description": "CHEST AP PORT",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 107,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP PORT",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 108,
+    "findings": "- Lồng ngực cân đối, không thấy bất thường xương.\n- Mờ kính+ dày tổ chức kẽ rải rác hai đáy phổi.\n- Bờ vòm hoành hai bên đều.\n- Góc sườn hoành hai bên nhọn.\n- Bóng tim to.\n- Vôi hóa thành quai động mạch chủ.",
+    "conclusion": "- Hình ảnh Bóng tim to.\n- Vôi hóa thành quai động mạch chủ.\n- Tổn thương kẽ hai đáy phổi.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP VIEWONLY",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 109,
+    "findings": "- Phổi hai bên kém sáng dày tổ chức kẽ rải rác hai phổi rốn phổi tăng đậm rộng\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to. Quai động mạch chủ vồng. Vôi hóa thành quai động mạch chủ.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.\n- Quai động mạch chủ vồng.\n- Vôi hóa thành quai động mạch chủ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP PORT",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 110,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Dày tổ chức kẽ kèm mờ kính rải rác hai phổi\n- Bờ vòm hoành hai bên đều. Góc sườn hoành hai bên nhọn\n- Bóng tim không to. Các bờ trung thất trong giới hạn bình thường.",
+    "conclusion": "- Hình ảnh tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP VIEWONLY",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 111,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng dày tổ chức kẽ rải rác hai phổi\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP VIEWONLY",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 112,
+    "findings": "- Lồng ngực cân đối, không thấy bất thường xương.\n- Phổi hai bên sáng đều.\n- Rốn phổi hai bên không thấy bất thường.\n- Bờ vòm hoành hai bên đều.\n- Góc sườn hoành hai bên nhọn.\n- Bóng tim to.",
+    "conclusion": "- Hình ảnh bóng tim to.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP PORT",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 113,
+    "findings": "- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP VIEWONLY",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 114,
+    "findings": "- Lồng ngực cân đối, không thấy bất thường xương.\n- Phổi hai bên kém sáng, dày tổ chức kẽ rải rác hai phổi, rốn phổi tăng đậm nhẹ.\n- Bờ vòm hoành hai bên đều, hai góc sườn hoành nhọn.\n- Bóng mờ tim không to, các cung tim trong giới hạn sinh lý.\n- Quai động mạch chủ vồng.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.\n- Quai động mạch chủ vồng.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP PORT",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 115,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng dày tổ chức kẽ rải rác hai phổi rốn phổi tăng đậm\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim to. Quai động mạch chủ vồng. Vôi hóa thành quai động mạch chủ.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.\n- Bóng mờ tim to.\n- Quai động mạch chủ vồng.\n- Vôi hóa thành quai động mạch chủ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "DX",
+    "body_part": "CHEST",
+    "description": "CHEST AP PORT",
+    "patient_name": "Nguyen Van Tuan"
+  },
+  {
+    "id": 116,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim to.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.\n- Bóng mờ tim to.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP VIEWONLY",
+    "patient_name": "Tran Thi Mai"
+  },
+  {
+    "id": 117,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP PORT",
+    "patient_name": "Le Hoang Minh"
+  },
+  {
+    "id": 118,
+    "findings": "- Phổi hai bên sáng đều.\n- Rốn phổi hai bên không thấy bất thường.\n- Bờ vòm hoành phải lên cao.\n- Góc sườn hoành hai bên nhọn.\n- Bóng tim không to.\n- Các bờ trung thất trong giới hạn bình thường.",
+    "conclusion": "- Hình ảnh dày tổ chức kẽ rải rác hai phổi.\n- Bờ vòm hoành phải lên cao.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP VIEWONLY",
+    "patient_name": "Le Hoang Minh"
+  },
+  {
+    "id": 119,
+    "findings": "- Phổi hai bên kém sáng dày tổ chức kẽ rải rác hai phổi rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên đều hai góc sườn hoành nhọn\n- Bóng mờ tim không to các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP VIEWONLY",
+    "patient_name": "Le Hoang Minh"
+  },
+  {
+    "id": 120,
+    "findings": "- Lồng ngực cân đối, không thấy bất thường xương.\n- Phổi hai bên kém sáng, mờ kính rải rác, rốn phổi tăng đậm nhẹ.\n- Bờ vòm hoành hai bên đều, hai góc sườn hoành nhọn.\n- Bóng mờ tim không to, các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "",
+    "description": "CT CHEST WITHOUT IV CONTRAST",
+    "patient_name": "Le Hoang Minh"
+  },
+  {
+    "id": 121,
+    "findings": "- Lồng ngực cân đối không thấy bất thường xương\n- Phổi hai bên kém sáng mờ kính rải rác rốn phổi tăng đậm nhẹ\n- Bờ vòm hoành hai bên thấp hai góc sườn hoành nhọn\n- Bóng mờ tim không to các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "",
+    "description": "CT CHEST PULMONARY ANGIO WITH IV CON",
+    "patient_name": "Pham Thi Lan"
+  },
+  {
+    "id": 122,
+    "findings": "- Lồng ngực cân đối, không thấy bất thường xương.\n- Phổi hai bên sáng đều.\n- Rốn phổi hai bên không thấy bất thường.\n- Bờ vòm hoành hai bên đều.\n- Góc sườn hoành hai bên nhọn.\n- Bóng tim to nhẹ.",
+    "conclusion": "- Hình ảnh bóng tim to nhẹ.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CR",
+    "body_part": "PORT CHEST",
+    "description": "CHEST AP PORT",
+    "patient_name": "Pham Thi Lan"
+  },
+  {
+    "id": 123,
+    "findings": "- Phổi hai bên kém sáng, dày tổ chức kẽ rải rác hai phổi, rốn phổi tăng đậm nhẹ.\n- Bờ vòm hoành hai bên đều, hai góc sườn hoành nhọn.\n- Bóng mờ tim không to, các cung tim trong giới hạn sinh lý.",
+    "conclusion": "- Hình ảnh dày tổ chức kẽ rải rác hai phổi.",
+    "recommendation": "Theo doi dinh ky, chup lai sau 3-6 thang neu can.",
+    "modality": "CT",
+    "body_part": "CHEST",
+    "description": "CT CHEST WO CONTRAST",
+    "patient_name": "Hoang Thi Nga"
+  },
+  {
+    "id": 124,
+    "findings": "- Gan kích thước bình thường, nhu mô đồng nhất, không ghi nhận nốt hay khối bất thường.\n- Túi mật căng, thành mỏng, không sỏi.\n- Lách kích thước bình thường.\n- Tụy hình thái bình thường.\n- Hai thận kích thước bình thường, không sỏi, không giãn đài bể thận.\n- Không dịch tự do ổ bụng.",
+    "conclusion": "- Không ghi nhận bất thường cơ quan trong ổ bụng.",
+    "recommendation": "Theo dõi định kỳ.",
+    "modality": "CT",
+    "body_part": "CHEST",
+    "description": "CT ABD & PELVIS W/CONTRAST",
+    "patient_name": "Ngo Van Thanh"
+  },
+  {
+    "id": 125,
+    "findings": "- Gan to, nhu mô không đồng nhất, nốt giảm tỉ trọng thùy phải kích thước 35x30mm, bắt thuốc mạnh thì động mạch, thải thuốc thì tĩnh mạch cửa.\n- Tĩnh mạch cửa 14mm, lách to 15cm.\n- Không dịch ổ bụng.\n- Các cơ quan khác bình thường.",
+    "conclusion": "- Nốt gan phải nghi HCC (ung thư biểu mô tế bào gan) trên nền xơ gan.\n- Lách to, tăng áp tĩnh mạch cửa.",
+    "recommendation": "Đề nghị MRI gan với chất tương phản đặc hiệu gan (Primovist) để đánh giá thêm. Xét nghiệm AFP.",
+    "modality": "CT",
+    "body_part": "",
+    "description": "CT ABD & PELVIS W/CONTRAST",
+    "patient_name": "Ngo Van Thanh"
+  },
+  {
+    "id": 126,
+    "findings": "- Gan kích thước bình thường.\n- Sỏi túi mật đường kính khoảng 12mm, thành túi mật dày nhẹ.\n- Ống mật chủ 5mm không giãn.\n- Tụy, lách, hai thận bình thường.\n- Không dịch ổ bụng.",
+    "conclusion": "- Sỏi túi mật kèm viêm túi mật mạn.",
+    "recommendation": "Đề nghị khám ngoại tiêu hóa, cân nhắc phẫu thuật cắt túi mật nội soi.",
+    "modality": "CT",
+    "body_part": "ABDOMEN",
+    "description": "CT ABDOMEN W&W/O CONT",
+    "patient_name": "Trinh Van Khoa"
+  },
+  {
+    "id": 127,
+    "findings": "- Thận phải: sỏi bể thận kích thước 18mm, giãn đài bể thận và niệu quản đoạn trên phải.\n- Thận trái: bình thường.\n- Bàng quang dịch tốt, thành mỏng.\n- Gan, lách, tụy bình thường.\n- Không dịch ổ bụng.",
+    "conclusion": "- Sỏi bể thận phải kèm ứ nước thận phải độ II.",
+    "recommendation": "Đề nghị khám tiết niệu. Cân nhắc tán sỏi ngoài cơ thể hoặc phẫu thuật.",
+    "modality": "CT",
+    "body_part": "CHEST",
+    "description": "CT ABD & PELVIS W/CONTRAST",
+    "patient_name": "Ngo Van Thanh"
+  },
+  {
+    "id": 128,
+    "findings": "- Gan kích thước bình thường, nhu mô đồng nhất, không ghi nhận nốt hay khối bất thường.\n- Túi mật căng, thành mỏng, không sỏi.\n- Lách kích thước bình thường.\n- Tụy hình thái bình thường.\n- Hai thận kích thước bình thường, không sỏi, không giãn đài bể thận.\n- Không dịch tự do ổ bụng.",
+    "conclusion": "- Không ghi nhận bất thường cơ quan trong ổ bụng.",
+    "recommendation": "Theo dõi định kỳ.",
+    "modality": "CT",
+    "body_part": "ABD PEL",
+    "description": "CT ABD AND PELVIS WITH IV CONT",
+    "patient_name": "Pham Thi Lan"
+  },
+  {
+    "id": 129,
+    "findings": "- Gan to, nhu mô không đồng nhất, nốt giảm tỉ trọng thùy phải kích thước 35x30mm, bắt thuốc mạnh thì động mạch, thải thuốc thì tĩnh mạch cửa.\n- Tĩnh mạch cửa 14mm, lách to 15cm.\n- Không dịch ổ bụng.\n- Các cơ quan khác bình thường.",
+    "conclusion": "- Nốt gan phải nghi HCC (ung thư biểu mô tế bào gan) trên nền xơ gan.\n- Lách to, tăng áp tĩnh mạch cửa.",
+    "recommendation": "Đề nghị MRI gan với chất tương phản đặc hiệu gan (Primovist) để đánh giá thêm. Xét nghiệm AFP.",
+    "modality": "CR",
+    "body_part": "PORT ABDOMEN",
+    "description": "ABD SERIES FLAT AND ERECT PORTABLE",
+    "patient_name": "Pham Thi Lan"
+  },
+  {
+    "id": 130,
+    "findings": "- Gan kích thước bình thường.\n- Sỏi túi mật đường kính khoảng 12mm, thành túi mật dày nhẹ.\n- Ống mật chủ 5mm không giãn.\n- Tụy, lách, hai thận bình thường.\n- Không dịch ổ bụng.",
+    "conclusion": "- Sỏi túi mật kèm viêm túi mật mạn.",
+    "recommendation": "Đề nghị khám ngoại tiêu hóa, cân nhắc phẫu thuật cắt túi mật nội soi.",
+    "modality": "CT",
+    "body_part": "",
+    "description": "CT ABD AND PELVIS WITH IV CONT",
+    "patient_name": "Pham Thi Lan"
+  },
+  {
+    "id": 131,
+    "findings": "- Thận phải: sỏi bể thận kích thước 18mm, giãn đài bể thận và niệu quản đoạn trên phải.\n- Thận trái: bình thường.\n- Bàng quang dịch tốt, thành mỏng.\n- Gan, lách, tụy bình thường.\n- Không dịch ổ bụng.",
+    "conclusion": "- Sỏi bể thận phải kèm ứ nước thận phải độ II.",
+    "recommendation": "Đề nghị khám tiết niệu. Cân nhắc tán sỏi ngoài cơ thể hoặc phẫu thuật.",
+    "modality": "CR",
+    "body_part": "PORT ABDOMEN",
+    "description": "ABD SERIES FLAT AND ERECT PORTABLE",
+    "patient_name": "Pham Thi Lan"
+  },
+  {
+    "id": 132,
+    "findings": "- Gan kích thước bình thường, nhu mô đồng nhất, không ghi nhận nốt hay khối bất thường.\n- Túi mật căng, thành mỏng, không sỏi.\n- Lách kích thước bình thường.\n- Tụy hình thái bình thường.\n- Hai thận kích thước bình thường, không sỏi, không giãn đài bể thận.\n- Không dịch tự do ổ bụng.",
+    "conclusion": "- Không ghi nhận bất thường cơ quan trong ổ bụng.",
+    "recommendation": "Theo dõi định kỳ.",
+    "modality": "CT",
+    "body_part": "ABDOMEN",
+    "description": "CT CHEST+ABDOMEN+PELVIS W CONTRAST",
+    "patient_name": "Dang Van Hai"
+  },
+  {
+    "id": 133,
+    "findings": "- Gan to, nhu mô không đồng nhất, nốt giảm tỉ trọng thùy phải kích thước 35x30mm, bắt thuốc mạnh thì động mạch, thải thuốc thì tĩnh mạch cửa.\n- Tĩnh mạch cửa 14mm, lách to 15cm.\n- Không dịch ổ bụng.\n- Các cơ quan khác bình thường.",
+    "conclusion": "- Nốt gan phải nghi HCC (ung thư biểu mô tế bào gan) trên nền xơ gan.\n- Lách to, tăng áp tĩnh mạch cửa.",
+    "recommendation": "Đề nghị MRI gan với chất tương phản đặc hiệu gan (Primovist) để đánh giá thêm. Xét nghiệm AFP.",
+    "modality": null,
+    "body_part": "ABDOMEN",
+    "description": "CT ABDOMEN & PELVIS ENHANCED=AB",
+    "patient_name": "Vo Van Duc"
+  },
+  {
+    "id": 134,
+    "findings": "- Gan kích thước bình thường.\n- Sỏi túi mật đường kính khoảng 12mm, thành túi mật dày nhẹ.\n- Ống mật chủ 5mm không giãn.\n- Tụy, lách, hai thận bình thường.\n- Không dịch ổ bụng.",
+    "conclusion": "- Sỏi túi mật kèm viêm túi mật mạn.",
+    "recommendation": "Đề nghị khám ngoại tiêu hóa, cân nhắc phẫu thuật cắt túi mật nội soi.",
+    "modality": "CT",
+    "body_part": "SPINE",
+    "description": "Abdomen^ABDOMEN (Adult)",
+    "patient_name": "Cao Van Phuc"
+  },
+  {
+    "id": 135,
+    "findings": "- Hai thận kích thước bình thường, bờ đều.\n- Nang đơn thuần cực dưới thận trái kích thước 22mm.\n- Không ghi nhận khối u đặc hay sỏi.\n- Tuyến thượng thận hai bên bình thường.\n- Hệ thống đài bể thận không giãn.",
+    "conclusion": "- Nang đơn thuần thận trái (Bosniak I).",
+    "recommendation": "Theo dõi siêu âm sau 12 tháng.",
+    "modality": "MR",
+    "body_part": "KIDNEY",
+    "description": "MR ABDOMEN WITHOUT CONTRAST",
+    "patient_name": "Bui Thi Huong"
+  },
+  {
+    "id": 136,
+    "findings": "- Giảm chiều cao thân đốt sống L1, gãy lún khoảng 40%.\n- Thoái hóa đĩa đệm L4-L5, L5-S1, giảm tín hiệu đĩa đệm.\n- Phồng đĩa đệm L4-L5 chèn ép nhẹ bao cùng.\n- Hẹp ống sống L4-L5.\n- Các cấu trúc khác bình thường.",
+    "conclusion": "- Gãy lún đốt sống L1.\n- Thoái hóa đĩa đệm đa tầng L4-S1 kèm phồng đĩa đệm L4-L5.",
+    "recommendation": "Đề nghị MRI cột sống thắt lưng để đánh giá thêm. Khám chuyên khoa cột sống.",
+    "modality": "CT",
+    "body_part": "SPINE",
+    "description": "Spine^SPINE_BONE_SBRT (Adult)",
+    "patient_name": "Mai Thi Dung"
+  },
+  {
+    "id": 137,
+    "findings": "- Thoát vị đĩa đệm trung tâm-cạnh bên trái L5-S1, kích thước khoảng 8mm, chèn ép rễ S1 trái.\n- Hẹp lỗ liên hợp L5-S1 bên trái.\n- Các tầng đĩa đệm khác bình thường.\n- Không ghi nhận tổn thương xương.",
+    "conclusion": "- Thoát vị đĩa đệm L5-S1 trái chèn ép rễ S1 trái.",
+    "recommendation": "Đề nghị điều trị bảo tồn. Tái khám nếu triệu chứng không cải thiện sau 6 tuần.",
+    "modality": "CT",
+    "body_part": "SPINE",
+    "description": "Spine^SPINE_BONE_SBRT (Adult)",
+    "patient_name": "Luong Thi Yen"
+  },
+  {
+    "id": 138,
+    "findings": "- Cong vẹo cột sống ngực-thắt lưng, lồi bên phải.\n- Gai xương thân đốt sống đa tầng.\n- Vôi hóa dây chằng dọc trước.\n- Hẹp khoang đĩa đệm L3-L4, L4-L5.\n- Không ghi nhận thoát vị đĩa đệm rõ.",
+    "conclusion": "- Thoái hóa cột sống đa tầng.\n- Cong vẹo cột sống.",
+    "recommendation": "Vật lý trị liệu. Theo dõi định kỳ.",
+    "modality": "CT",
+    "body_part": "SPINE",
+    "description": "Spine^SPINE_BONE_SBRT (Adult)",
+    "patient_name": "Ho Van Tai"
+  },
+  {
+    "id": 139,
+    "findings": "- Tuyến vú hai bên mật độ không đồng nhất type C (theo BI-RADS).\n- Không thấy hình ảnh nốt đặc hay calci hóa nghi ngờ.\n- Các cấu trúc mạch máu và mô mỡ bình thường.\n- Hạch nách hai bên không to.",
+    "conclusion": "- Tuyến vú hai bên không ghi nhận bất thường.\n- BI-RADS 1: Bình thường.",
+    "recommendation": "Tầm soát định kỳ mammography sau 12 tháng.",
+    "modality": "MG",
+    "body_part": "BREAST",
+    "description": "DBT Reconstructed Volume",
+    "patient_name": "Huynh Thi Tam"
+  },
+  {
+    "id": 140,
+    "findings": "- Tuyến vú phải: nốt đặc bờ rõ, kích thước khoảng 12x10mm vùng 1/4 trên ngoài, mật độ trung bình.\n- Tuyến vú trái: không ghi nhận bất thường.\n- Không thấy vi vôi hóa nghi ngờ.\n- Hạch nách phải kích thước bình thường.",
+    "conclusion": "- Nốt đặc vú phải vùng 1/4 trên ngoài.\n- BI-RADS 3: Có thể lành tính, cần theo dõi.",
+    "recommendation": "Đề nghị siêu âm vú để đánh giá thêm. Tái khám mammography sau 6 tháng.",
+    "modality": "MG",
+    "body_part": "BREAST",
+    "description": "Simulated DBT Projection",
+    "patient_name": "Huynh Thi Tam"
+  },
+  {
+    "id": 141,
+    "findings": "- Tuyến vú hai bên mật độ type D (rất đặc).\n- Vú trái: đám vi vôi hóa dạng đa hình vùng 1/4 trên trong, phân bố nhóm, kéo dài khoảng 15mm.\n- Vú phải: không ghi nhận tổn thương.\n- Hạch nách hai bên không to bất thường.",
+    "conclusion": "- Vi vôi hóa nghi ngờ ác tính vùng 1/4 trên trong vú trái.\n- BI-RADS 4B: Nghi ngờ ác tính.",
+    "recommendation": "Đề nghị sinh thiết lõi (core biopsy) dưới hướng dẫn stereotaxy.",
+    "modality": "MG",
+    "body_part": "BREAST",
+    "description": "Simulated Digital Mammography",
+    "patient_name": "Huynh Thi Tam"
+  },
+  {
+    "id": 142,
+    "findings": "- Tuyến vú hai bên mật độ type B.\n- Vú phải: nang đơn thuần kích thước 8mm vùng 1/4 dưới trong.\n- Vú trái: nang đơn thuần kích thước 5mm.\n- Không ghi nhận calci hóa nghi ngờ hay tổn thương khối đặc.\n- Da và núm vú hai bên bình thường.",
+    "conclusion": "- Nang đơn thuần vú hai bên.\n- BI-RADS 2: Lành tính.",
+    "recommendation": "Theo dõi mammography định kỳ hàng năm.",
+    "modality": "MG",
+    "body_part": "BREAST",
+    "description": "DBT Reconstructed Volume",
+    "patient_name": "Phan Van Long"
+  },
+  {
+    "id": 143,
+    "findings": "- Tuyến vú trái: khối đặc bờ không đều, kích thước 25x18mm vùng 1/4 trên ngoài, co kéo tổ chức xung quanh.\n- Dày da vùng trên ngoài vú trái.\n- Hạch nách trái to, hình tròn, mất cấu trúc rốn mỡ, kích thước 18mm.\n- Vú phải: không ghi nhận bất thường.",
+    "conclusion": "- Khối đặc vú trái nghi ngờ ác tính kèm hạch nách trái nghi di căn.\n- BI-RADS 5: Rất nghi ngờ ác tính.",
+    "recommendation": "Đề nghị sinh thiết lõi u vú trái và chọc hút hạch nách trái. Chuyển khoa Ung bướu.",
+    "modality": "MG",
+    "body_part": "BREAST",
+    "description": "Simulated DBT Projection",
+    "patient_name": "Phan Van Long"
+  },
+  {
+    "id": 144,
+    "findings": "- Tuyến vú hai bên mật độ không đồng nhất type C.\n- Vú phải: hai nốt đặc bờ rõ, đều, kích thước 7mm và 5mm vùng sau núm vú.\n- Vú trái: bình thường.\n- Calci hóa lành tính dạng vỏ trứng rải rác.\n- Hạch nách hai bên bình thường.",
+    "conclusion": "- Nốt đặc vú phải, hướng lành tính (fibroadenoma?).\n- BI-RADS 3: Có thể lành tính.",
+    "recommendation": "Siêu âm vú bổ sung. Theo dõi mammography sau 6 tháng.",
+    "modality": "MG",
+    "body_part": "BREAST",
+    "description": "Simulated Digital Mammography",
+    "patient_name": "Phan Van Long"
+  },
+  {
+    "id": 145,
+    "findings": "- Tuyến vú hai bên mật độ không đồng nhất type C (theo BI-RADS).\n- Không thấy hình ảnh nốt đặc hay calci hóa nghi ngờ.\n- Các cấu trúc mạch máu và mô mỡ bình thường.\n- Hạch nách hai bên không to.",
+    "conclusion": "- Tuyến vú hai bên không ghi nhận bất thường.\n- BI-RADS 1: Bình thường.",
+    "recommendation": "Tầm soát định kỳ mammography sau 12 tháng.",
+    "modality": "MG",
+    "body_part": "BREAST",
+    "description": "DBT Reconstructed Volume",
+    "patient_name": "Vu Thi Ha"
+  },
+  {
+    "id": 146,
+    "findings": "- Tuyến vú phải: nốt đặc bờ rõ, kích thước khoảng 12x10mm vùng 1/4 trên ngoài, mật độ trung bình.\n- Tuyến vú trái: không ghi nhận bất thường.\n- Không thấy vi vôi hóa nghi ngờ.\n- Hạch nách phải kích thước bình thường.",
+    "conclusion": "- Nốt đặc vú phải vùng 1/4 trên ngoài.\n- BI-RADS 3: Có thể lành tính, cần theo dõi.",
+    "recommendation": "Đề nghị siêu âm vú để đánh giá thêm. Tái khám mammography sau 6 tháng.",
+    "modality": "MG",
+    "body_part": "BREAST",
+    "description": "Simulated DBT Projection",
+    "patient_name": "Vu Thi Ha"
+  },
+  {
+    "id": 147,
+    "findings": "- Tuyến vú hai bên mật độ type D (rất đặc).\n- Vú trái: đám vi vôi hóa dạng đa hình vùng 1/4 trên trong, phân bố nhóm, kéo dài khoảng 15mm.\n- Vú phải: không ghi nhận tổn thương.\n- Hạch nách hai bên không to bất thường.",
+    "conclusion": "- Vi vôi hóa nghi ngờ ác tính vùng 1/4 trên trong vú trái.\n- BI-RADS 4B: Nghi ngờ ác tính.",
+    "recommendation": "Đề nghị sinh thiết lõi (core biopsy) dưới hướng dẫn stereotaxy.",
+    "modality": "MG",
+    "body_part": "BREAST",
+    "description": "Simulated Digital Mammography",
+    "patient_name": "Vu Thi Ha"
+  },
+  {
+    "id": 148,
+    "findings": "- Tuyến vú hai bên mật độ type B.\n- Vú phải: nang đơn thuần kích thước 8mm vùng 1/4 dưới trong.\n- Vú trái: nang đơn thuần kích thước 5mm.\n- Không ghi nhận calci hóa nghi ngờ hay tổn thương khối đặc.\n- Da và núm vú hai bên bình thường.",
+    "conclusion": "- Nang đơn thuần vú hai bên.\n- BI-RADS 2: Lành tính.",
+    "recommendation": "Theo dõi mammography định kỳ hàng năm.",
+    "modality": "MG",
+    "body_part": "BREAST",
+    "description": "Simulated DBT Projection",
+    "patient_name": "To Van Binh"
+  },
+  {
+    "id": 149,
+    "findings": "- Tuyến vú trái: khối đặc bờ không đều, kích thước 25x18mm vùng 1/4 trên ngoài, co kéo tổ chức xung quanh.\n- Dày da vùng trên ngoài vú trái.\n- Hạch nách trái to, hình tròn, mất cấu trúc rốn mỡ, kích thước 18mm.\n- Vú phải: không ghi nhận bất thường.",
+    "conclusion": "- Khối đặc vú trái nghi ngờ ác tính kèm hạch nách trái nghi di căn.\n- BI-RADS 5: Rất nghi ngờ ác tính.",
+    "recommendation": "Đề nghị sinh thiết lõi u vú trái và chọc hút hạch nách trái. Chuyển khoa Ung bướu.",
+    "modality": "MG",
+    "body_part": "BREAST",
+    "description": "Simulated Digital Mammography",
+    "patient_name": "To Van Binh"
+  },
+  {
+    "id": 150,
+    "findings": "- Tuyến vú hai bên mật độ không đồng nhất type C.\n- Vú phải: hai nốt đặc bờ rõ, đều, kích thước 7mm và 5mm vùng sau núm vú.\n- Vú trái: bình thường.\n- Calci hóa lành tính dạng vỏ trứng rải rác.\n- Hạch nách hai bên bình thường.",
+    "conclusion": "- Nốt đặc vú phải, hướng lành tính (fibroadenoma?).\n- BI-RADS 3: Có thể lành tính.",
+    "recommendation": "Siêu âm vú bổ sung. Theo dõi mammography sau 6 tháng.",
+    "modality": "MG",
+    "body_part": "BREAST",
+    "description": "DBT Reconstructed Volume",
+    "patient_name": "To Van Binh"
+  }
+]

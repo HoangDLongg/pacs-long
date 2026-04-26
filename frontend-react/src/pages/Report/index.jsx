@@ -1,7 +1,7 @@
 /* ================================================
    src/pages/Report/index.jsx
-   Bao cao chan doan
-   Spec US5: Doctor edit, Tech/Patient readonly, xuat PDF
+   Báo cáo chẩn đoán
+   Spec US5: Doctor edit, Tech/Patient readonly, xuất PDF
    Route: /report/:id  (id = study DB id)
    ================================================ */
 
@@ -71,7 +71,7 @@ export default function ReportPage() {
   // ---- Save (create or update) ----
   const handleSave = useCallback(async () => {
     if (!findings.trim() || !conclusion.trim()) {
-      setSaveMsg({ type: 'error', text: 'Ket qua va Ket luan khong duoc de trong' })
+      setSaveMsg({ type: 'error', text: 'Kết quả và Kết luận không được để trống' })
       return
     }
 
@@ -89,12 +89,12 @@ export default function ReportPage() {
       if (reportId) {
         // Spec UC09: update
         await updateReport(reportId, payload)
-        setSaveMsg({ type: 'success', text: 'Cap nhat bao cao thanh cong' })
+        setSaveMsg({ type: 'success', text: 'Cập nhật báo cáo thành công' })
       } else {
         // Spec UC08: create
         const result = await createReport(payload)
         setReportId(result.id)
-        setSaveMsg({ type: 'success', text: 'Tao bao cao thanh cong. Trang thai → REPORTED' })
+        setSaveMsg({ type: 'success', text: 'Tạo báo cáo thành công. Trạng thái → REPORTED' })
       }
       setEditMode(false)
       // Reload report để có doctor_name, timestamp mới
@@ -113,7 +113,7 @@ export default function ReportPage() {
     try {
       await exportPdf(studyId, study?.patient_name)
     } catch (err) {
-      setSaveMsg({ type: 'error', text: `Xuat PDF that bai: ${err.message}` })
+      setSaveMsg({ type: 'error', text: `Xuất PDF thất bại: ${err.message}` })
     } finally {
       setExporting(false)
     }
@@ -132,7 +132,7 @@ export default function ReportPage() {
       <div className="page-content">
         <div className="viewer-state">
           <div className="spinner" />
-          <p>Dang tai bao cao...</p>
+          <p>Đang tải báo cáo...</p>
         </div>
       </div>
     )
@@ -143,7 +143,7 @@ export default function ReportPage() {
       <div className="page-content">
         <div className="viewer-state viewer-state--error">
           <p>{loadErr}</p>
-          <button className="btn btn--ghost" onClick={() => navigate(-1)}>Quay lai</button>
+          <button className="btn btn--ghost" onClick={() => navigate(-1)}>Quay lại</button>
         </div>
       </div>
     )
@@ -155,7 +155,7 @@ export default function ReportPage() {
       {/* ---- Page header ---- */}
       <div className="page-header">
         <div>
-          <h1 className="page-header__title">Bao cao chan doan</h1>
+          <h1 className="page-header__title">Báo cáo chẩn đoán</h1>
           {study && (
             <p className="page-header__subtitle">
               {study.patient_name} &bull; {study.patient_code} &bull; {study.study_date} &bull; {study.modality}
@@ -178,7 +178,7 @@ export default function ReportPage() {
               onClick={handleExportPdf}
               disabled={exporting}
             >
-              {exporting ? 'Dang xuat...' : 'Xuat PDF'}
+              {exporting ? 'Đang xuất...' : 'Xuất PDF'}
             </button>
           )}
 
@@ -188,12 +188,12 @@ export default function ReportPage() {
               className="btn btn--primary btn--sm"
               onClick={() => setEditMode(true)}
             >
-              Chinh sua
+              Chỉnh sửa
             </button>
           )}
 
           <button className="btn btn--ghost btn--sm" onClick={() => navigate(-1)}>
-            Quay lai
+            Quay lại
           </button>
         </div>
       </div>
@@ -202,15 +202,15 @@ export default function ReportPage() {
       {study && (
         <div className="card report-study-card">
           <div className="report-study-grid">
-            <div><span className="report-label">Benh nhan</span><span className="report-value">{study.patient_name}</span></div>
-            <div><span className="report-label">Ma BN</span><span className="report-value">{study.patient_code}</span></div>
-            <div><span className="report-label">Gioi tinh</span><span className="report-value">{study.gender === 'M' ? 'Nam' : study.gender === 'F' ? 'Nu' : '—'}</span></div>
-            <div><span className="report-label">Ngay sinh</span><span className="report-value">{study.birth_date || '—'}</span></div>
-            <div><span className="report-label">Ngay chup</span><span className="report-value">{study.study_date}</span></div>
+            <div><span className="report-label">Bệnh nhân</span><span className="report-value">{study.patient_name}</span></div>
+            <div><span className="report-label">Mã BN</span><span className="report-value">{study.patient_code}</span></div>
+            <div><span className="report-label">Giới tính</span><span className="report-value">{study.gender === 'M' ? 'Nam' : study.gender === 'F' ? 'Nữ' : '—'}</span></div>
+            <div><span className="report-label">Ngày sinh</span><span className="report-value">{study.birth_date || '—'}</span></div>
+            <div><span className="report-label">Ngày chụp</span><span className="report-value">{study.study_date}</span></div>
             <div><span className="report-label">Modality</span><span className="report-value">{study.modality}</span></div>
             {study.description && (
               <div className="report-study-grid__full">
-                <span className="report-label">Mo ta</span>
+                <span className="report-label">Mô tả</span>
                 <span className="report-value">{study.description}</span>
               </div>
             )}
@@ -222,7 +222,7 @@ export default function ReportPage() {
               className="btn btn--ghost btn--sm"
               onClick={() => navigate(`/viewer/${studyId}`)}
             >
-              Xem anh DICOM
+              Xem ảnh DICOM
             </button>
           </div>
         </div>
@@ -245,23 +245,23 @@ export default function ReportPage() {
           /* ==================== VIEW MODE ==================== */
           <div className="report-view">
             <div className="report-view__meta">
-              <span>Bac si: <strong>{report.doctor_name}</strong></span>
-              <span>Ngay bao cao: <strong>{String(report.report_date || '').slice(0, 10)}</strong></span>
+              <span>Bác sĩ: <strong>{report.doctor_name}</strong></span>
+              <span>Ngày báo cáo: <strong>{String(report.report_date || '').slice(0, 10)}</strong></span>
             </div>
 
             <div className="report-section">
-              <h3 className="report-section__title">Ket qua</h3>
+              <h3 className="report-section__title">Kết quả</h3>
               <p className="report-section__content">{report.findings}</p>
             </div>
 
             <div className="report-section">
-              <h3 className="report-section__title">Ket luan</h3>
+              <h3 className="report-section__title">Kết luận</h3>
               <p className="report-section__content">{report.conclusion}</p>
             </div>
 
             {report.recommendation && (
               <div className="report-section">
-                <h3 className="report-section__title">De nghi</h3>
+                <h3 className="report-section__title">Đề nghị</h3>
                 <p className="report-section__content">{report.recommendation}</p>
               </div>
             )}
@@ -272,13 +272,13 @@ export default function ReportPage() {
           <div className="report-edit">
             {!report && (
               <p className="report-edit__notice">
-                Ca nay chua co bao cao. Dien vao form de tao moi.
+                Ca này chưa có báo cáo. Điền vào form để tạo mới.
               </p>
             )}
 
             <div className="form-group">
               <label className="form-label" htmlFor="findings">
-                Ket qua <span className="form-required">*</span>
+                Kết quả <span className="form-required">*</span>
               </label>
               <textarea
                 id="findings"
@@ -286,13 +286,13 @@ export default function ReportPage() {
                 rows={6}
                 value={findings}
                 onChange={(e) => setFindings(e.target.value)}
-                placeholder="Mo ta chi tiet ket qua hinh anh..."
+                placeholder="Mô tả chi tiết kết quả hình ảnh..."
               />
             </div>
 
             <div className="form-group">
               <label className="form-label" htmlFor="conclusion">
-                Ket luan <span className="form-required">*</span>
+                Kết luận <span className="form-required">*</span>
               </label>
               <textarea
                 id="conclusion"
@@ -300,13 +300,13 @@ export default function ReportPage() {
                 rows={4}
                 value={conclusion}
                 onChange={(e) => setConclusion(e.target.value)}
-                placeholder="Ket luan chan doan..."
+                placeholder="Kết luận chẩn đoán..."
               />
             </div>
 
             <div className="form-group">
               <label className="form-label" htmlFor="recommendation">
-                De nghi <span className="form-label--optional">(tuy chon)</span>
+                Đề nghị <span className="form-label--optional">(tùy chọn)</span>
               </label>
               <textarea
                 id="recommendation"
@@ -314,7 +314,7 @@ export default function ReportPage() {
                 rows={3}
                 value={recommendation}
                 onChange={(e) => setRecommendation(e.target.value)}
-                placeholder="Huong dieu tri, tai kham..."
+                placeholder="Hướng điều trị, tái khám..."
               />
             </div>
 
@@ -330,7 +330,7 @@ export default function ReportPage() {
                     setSaveMsg(null)
                   }}
                 >
-                  Huy
+                  Hủy
                 </button>
               )}
               <button
@@ -338,7 +338,7 @@ export default function ReportPage() {
                 onClick={handleSave}
                 disabled={saving}
               >
-                {saving ? 'Dang luu...' : reportId ? 'Cap nhat' : 'Tao bao cao'}
+                {saving ? 'Đang lưu...' : reportId ? 'Cập nhật' : 'Tạo báo cáo'}
               </button>
             </div>
           </div>
@@ -349,12 +349,12 @@ export default function ReportPage() {
             {/* Spec US5 acceptance 3: tech thấy readonly */}
             {/* Spec US8 acceptance 5: patient thấy "Đang chờ kết quả" */}
             <p className="viewer-empty-text">
-              {isPatient ? 'Dang cho ket qua' : 'Chua co bao cao'}
+              {isPatient ? 'Đang chờ kết quả' : 'Chưa có báo cáo'}
             </p>
             <p className="viewer-empty-sub">
               {isPatient
-                ? 'Bac si dang xu ly. Vui long kiem tra lai sau.'
-                : 'Bac si chua viet bao cao cho ca chup nay.'}
+                ? 'Bác sĩ đang xử lý. Vui lòng kiểm tra lại sau.'
+                : 'Bác sĩ chưa viết báo cáo cho ca chụp này.'}
             </p>
           </div>
         )}

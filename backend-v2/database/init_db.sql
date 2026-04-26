@@ -73,3 +73,21 @@ CREATE INDEX IF NOT EXISTS idx_studies_status        ON studies(status);
 CREATE INDEX IF NOT EXISTS idx_users_linked_patient  ON users(linked_patient_id);
 CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user   ON refresh_tokens(user_id);
 CREATE INDEX IF NOT EXISTS idx_refresh_tokens_expires ON refresh_tokens(expires_at);
+
+-- pgvector: IVFFlat index cho tìm kiếm vector nhanh (ANN)
+-- lists = 10 phù hợp cho <1000 documents, tăng lên khi data lớn hơn
+-- Cần ít nhất 10 rows đã có embedding trước khi index hoạt động hiệu quả
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'idx_reports_embedding') THEN
+        -- Chỉ tạo index khi đã có đủ data (tránh lỗi khi bảng rỗng)
+        IF (SELECT COUNT(*) FROM diagnostic_reports WHERE embedding IS NOT NULL) >= 10 THEN
+            CREATE INDEX idx_reports_embedding
+                ON diagnostic_reports USING ivfflat (embedding vector_cosine_ops)
+                WITH (lists = 10);
+            RAISE NOTICE 'Created IVFFlat index on diagnostic_reports.embedding';
+        ELSE
+            RAISE NOTICE 'Skipped IVFFlat index: need >= 10 rows with embedding';
+        END IF;
+    END IF;
+END $$;

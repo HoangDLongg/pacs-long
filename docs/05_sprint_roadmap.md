@@ -39,22 +39,23 @@
 
 ---
 
-## Sprint 2 — Frontend React Pages 🚧 ĐANG LÀM
+## Sprint 2 — Frontend React Pages ✅ HOÀN THÀNH
 
 ### Mục tiêu
-Build 6 trang còn lại cho React SPA.
+Build 8 trang cho React SPA.
 
 | Hạng mục | Ưu tiên | Trạng thái |
 |---|---|---|
-| Layout: Sidebar + Topbar + AppLayout | P0 | ⬜ |
-| Shared components (StatusBadge, StatCard, FilterBar...) | P0 | ⬜ |
-| API layer (worklist.js, dicom.js, report.js, patient.js) | P0 | ⬜ |
-| Worklist page (dashboard + table + filter) | P0 | ⬜ |
-| Viewer page (Cornerstone.js DICOM viewer) | P0 | ⬜ |
-| Report page (create + update + readonly) | P0 | ⬜ |
-| MyStudies page (patient portal) | P1 | ⬜ |
-| Admin page (user management) | P1 | ⬜ |
-| Search page (UI only — logic cần Sprint 3) | P2 | ⬜ |
+| Layout: Sidebar + Topbar + AppLayout | P0 | ✅ Done |
+| Shared components (StatusBadge, StatCard, FilterBar...) | P0 | ✅ Done |
+| API layer (worklist.js, dicom.js, report.js, patient.js, search.js) | P0 | ✅ Done |
+| Worklist page (dashboard + table + filter) | P0 | ✅ Done |
+| Viewer page (Cornerstone3D v4 DICOM viewer) | P0 | ✅ Done |
+| Report page (create + update + readonly + PDF) | P0 | ✅ Done |
+| MyStudies page (patient portal) | P1 | ✅ Done |
+| Admin page (user management) | P1 | ✅ Done |
+| Search page (4 tabs: Hybrid/Dense/Keyword/NL2SQL) | P0 | ✅ Done |
+| Compare page (side-by-side 2 studies) | P2 | ✅ Done |
 
 ### Backend APIs cần bổ sung cho Sprint 2
 
@@ -66,21 +67,21 @@ Build 6 trang còn lại cho React SPA.
 
 ---
 
-## Sprint 3 — RAG Engine Integration
+## Sprint 3 — RAG Engine Integration ✅ HOÀN THÀNH
 
-| Hạng mục | Mô tả |
-|---|---|
-| BGE-M3 embedding trong backend-v2 | Text → vector 1024d |
-| Dense search (pgvector cosine) | Tìm báo cáo tương tự |
-| BM25 keyword search | Tìm theo từ khóa |
-| Hybrid search (Dense + BM25 + RRF) | Kết hợp 2 phương pháp |
-| NL2SQL (Ollama/Gemini) | Câu hỏi → SQL query |
-| Tích hợp micro-services (6800, 6803, 6804, 6805) | Kết nối RAG pipeline |
-| Search page hoàn chỉnh | 4 tab search + NL2SQL |
+| Hạng mục | Mô tả | Trạng thái |
+|---|---|---|
+| multilingual-e5-large embedding | Text → vector 1024d | ✅ Done |
+| Dense search (pgvector cosine) | Tìm báo cáo tương tự | ✅ Done |
+| BM25 keyword search | Tìm theo từ khóa | ✅ Done |
+| Hybrid search (Dense + BM25 + RRF) | Kết hợp 2 phương pháp | ✅ Done |
+| NL2SQL (Ollama/Gemini) | Câu hỏi → SQL query | ✅ Done |
+| Query Router (embedding-based) | STRUCTURED/SEMANTIC/HYBRID | ✅ Done |
+| Search page hoàn chỉnh | 4 tab search + NL2SQL + Compare | ✅ Done |
 
 ---
 
-## Sprint 4 — Polish + Documentation
+## Sprint 4 — Polish + Documentation 🚧 ĐANG LÀM
 
 | Hạng mục | Mô tả |
 |---|---|

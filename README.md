@@ -68,40 +68,63 @@ graph TB
 
 ```mermaid
 graph TD
-    Q["Bac si go cau hoi"] --> CHATBOT["6800_chatbotapi<br/>Nhan cau hoi"]
-    CHATBOT --> INTENT["6805_intent_system<br/>Phan loai y dinh"]
+    Q["User nhap query"] --> SEARCH["Unified Search Box<br/>1 o search duy nhat"]
+    SEARCH --> ASK["/api/ask<br/>ask.py"]
+    SEARCH --> KW["/api/search/keyword<br/>search.py"]
 
-    INTENT -->|TIM KIEM| DDQ["6804_ddq<br/>Query Database"]
-    INTENT -->|HOI DAP| RAG["6803_rag<br/>Tim tai lieu y khoa"]
-    INTENT -->|SO SANH| DDQ
+    ASK --> ROUTER["query_router.py<br/>Intent Classifier<br/>(embedding similarity + heuristic)"]
 
-    DDQ --> DB["PostgreSQL"]
-    RAG --> EMB["6808_chunking_embedding<br/>BGE-M3 Vectors"]
-    EMB --> VECTOR["pgvector<br/>Cosine Search"]
+    ROUTER -->|PATIENT_LOOKUP| PS["patient_search()<br/>ILIKE full_name only"]
+    ROUTER -->|STRUCTURED| LLM["llm_nl2sql()<br/>LLM doc schema DB that<br/>→ sinh SQL"]
+    ROUTER -->|SEMANTIC| RAG["hybrid_search()<br/>Dense + BM25 + RRF"]
+    ROUTER -->|HYBRID| BOTH["LLM SQL + RAG<br/>Chay ca 2"]
 
-    DDQ --> RESULT1["Tra ket qua benh nhan"]
-    RAG --> RESULT2["Tra cau tra loi + trich nguon"]
+    LLM --> SCHEMA["_read_db_schema()<br/>information_schema<br/>+ sample data"]
+    SCHEMA --> OLLAMA["Ollama (Gemma 4b)<br/>hoac Gemini"]
+    OLLAMA --> EXEC["execute_sql()<br/>PostgreSQL"]
+
+    PS --> DB["PostgreSQL<br/>+ pgvector"]
+    RAG --> EMB["BGE-M3<br/>embeddings.py"]
+    EMB --> DB
+    KW --> DB
+    EXEC --> DB
+
+    DB --> RESULT["Ket qua tra ve Frontend<br/>Keyword + RAG (deduplicated)"]
 
     style Q fill:#1a73e8,color:#fff
-    style CHATBOT fill:#34a853,color:#fff
-    style INTENT fill:#fbbc04,color:#000
-    style DDQ fill:#ea4335,color:#fff
+    style ROUTER fill:#fbbc04,color:#000
+    style PS fill:#34a853,color:#fff
+    style LLM fill:#ea4335,color:#fff
     style RAG fill:#ea4335,color:#fff
-    style RESULT1 fill:#0d47a1,color:#fff
-    style RESULT2 fill:#0d47a1,color:#fff
+    style BOTH fill:#ff6d00,color:#fff
+    style DB fill:#0d47a1,color:#fff
+    style RESULT fill:#0d47a1,color:#fff
 ```
 
-### Micro-services
+### Pipeline chi tiet
 
-| Service | Chuc nang |
-|---|---|
-| 6800_chatbotapi | API gateway, nhan cau hoi tu frontend |
-| 6801_llms_gateway | Gateway goi cac LLM (Ollama, Gemini) |
-| 6803_rag | RAG engine - tim kiem tai lieu y khoa |
-| 6803_preprocessing | Tien xu ly van ban y khoa |
-| 6804_ddq | Data-Driven Query - NL2SQL, truy van database |
-| 6805_intent_system | Phan loai y dinh cau hoi |
-| 6808_chungking_embbedding_local | Chunking + Embedding van ban (BGE-M3) |
+| Step | Module | Chuc nang |
+|---|---|---|
+| 1. Nhan query | `api/ask.py` + `api/search.py` | Frontend goi song song `/api/ask` va `/api/search/keyword` |
+| 2. Phan loai | `core/query_router.py` | Heuristic (ten nguoi Viet) + Embedding similarity → 4 intents |
+| 3a. Tim benh nhan | `core/rag_engine.py → patient_search()` | ILIKE chi tren `full_name` + `patient_id` |
+| 3b. Thong ke SQL | `core/nl2sql_engine.py → llm_nl2sql()` | LLM doc schema DB that → sinh SQL → execute |
+| 3c. Noi dung y khoa | `core/rag_engine.py → hybrid_search()` | Dense (pgvector cosine) + BM25 sparse + RRF fusion |
+| 3d. Hybrid | Ca 3b + 3c | Chay ca SQL va RAG |
+| 4. Ket qua | Frontend merge + dedup | Keyword first, RAG second, hien thi tach biet |
+
+### Micro-services → Backend modules
+
+| Service goc | Implemented trong | Chuc nang |
+|---|---|---|
+| 6800_chatbotapi | `api/ask.py` | API gateway, nhan cau hoi tu frontend |
+| 6801_llms_gateway | `core/nl2sql_engine.py` | Goi Ollama (local) / Gemini (cloud) |
+| 6803_rag | `core/rag_engine.py` | RAG engine: Dense + BM25 + Hybrid + Patient search |
+| 6803_preprocessing | `scripts/seed_reports.py` | Tien xu ly van ban y khoa tu ViX-Ray |
+| 6804_ddq | `core/nl2sql_engine.py` | NL2SQL: LLM doc schema DB → sinh SQL |
+| 6805_intent_system | `core/query_router.py` | 4 intents: PATIENT_LOOKUP, STRUCTURED, SEMANTIC, HYBRID |
+| 6808_chunking_embedding | `core/embeddings.py` + `scripts/embed_existing.py` | BGE-M3 encoding + pgvector storage |
+
 
 ---
 

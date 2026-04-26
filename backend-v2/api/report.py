@@ -79,7 +79,7 @@ def create_report(
 ):
     """POST /api/report — Tạo báo cáo (Doctor/Admin only)
     Spec UC08: tạo report + update status PENDING → REPORTED
-    Spec FR-005: tạo embedding vector 1024d khi lưu (TODO: dùng BGE-M3 sau)
+    Spec UC18: auto-embed với e5-large (1024d) khi lưu
     """
     if current_user.role not in ("doctor", "admin"):
         raise HTTPException(status_code=403, detail="Chỉ bác sĩ/admin được viết báo cáo")
@@ -105,6 +105,22 @@ def create_report(
             "UPDATE studies SET status = 'REPORTED' WHERE id = %s",
             (body.study_id,)
         )
+
+        # UC18: Auto-embed với e5-large
+        try:
+            from core.embeddings import EmbeddingModel
+            text = EmbeddingModel.make_report_text(body.findings, body.conclusion)
+            if text:
+                vector = EmbeddingModel.encode(text)
+                if vector:
+                    cursor.execute(
+                        "UPDATE diagnostic_reports SET embedding = %s::vector WHERE id = %s",
+                        (str(vector), report_id)
+                    )
+        except Exception as embed_err:
+            import logging
+            logging.getLogger(__name__).warning(f"Auto-embed failed for report {report_id}: {embed_err}")
+
         conn.commit()
         return {"id": report_id, "message": "Tạo báo cáo thành công"}
 
@@ -126,7 +142,7 @@ def update_report(
     current_user: User = Depends(AuthUtils.get_current_user),
 ):
     """PUT /api/report/{id} — Cập nhật báo cáo (Doctor/Admin only)
-    Spec UC09: update report + tính lại embedding (TODO: BGE-M3)
+    Spec UC09: update report + tính lại embedding với e5-large
     """
     if current_user.role not in ("doctor", "admin"):
         raise HTTPException(status_code=403, detail="Chỉ bác sĩ/admin được sửa báo cáo")
@@ -143,6 +159,21 @@ def update_report(
 
         if not cursor.fetchone():
             raise HTTPException(status_code=404, detail="Báo cáo không tồn tại")
+
+        # UC18: Re-embed với e5-large khi update
+        try:
+            from core.embeddings import EmbeddingModel
+            text = EmbeddingModel.make_report_text(body.findings, body.conclusion)
+            if text:
+                vector = EmbeddingModel.encode(text)
+                if vector:
+                    cursor.execute(
+                        "UPDATE diagnostic_reports SET embedding = %s::vector WHERE id = %s",
+                        (str(vector), report_id)
+                    )
+        except Exception as embed_err:
+            import logging
+            logging.getLogger(__name__).warning(f"Re-embed failed for report {report_id}: {embed_err}")
 
         conn.commit()
         return {"message": "Cập nhật báo cáo thành công"}
