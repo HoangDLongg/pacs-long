@@ -163,20 +163,16 @@
 
 ---
 
-## D. CHỨC NĂNG CHƯA LÀM (Sprint 2+)
+## D. CHỨC NĂNG CHUẨN BỊ (Sprint 5)
 
 | # | Chức năng | Sprint |
 |---|---|---|
-| F1 | Cornerstone.js viewer (xem DICOM thực sự, không iframe) | Sprint 2 |
-| F2 | Window/Level (WW/WL) điều chỉnh độ tương phản | Sprint 2 |
-| F3 | Xem multi-frame (scroll CT/MR) | Sprint 2 |
-| F4 | PDF template đẹp với logo bệnh viện | Sprint 2 |
-| F5 | Gợi ý findings từ RAG khi bác sĩ đang gõ | Sprint 3 |
-| F6 | Chat interface real-time streaming | Sprint 3 |
-| F7 | Biểu đồ thống kê (theo tháng, theo modality) | Sprint 3 |
-| F8 | User management CRUD (thêm/sửa/khoá user) | Sprint 4 |
-| F9 | Audit log (log mọi thao tác) | Sprint 4 |
-| F10 | Responsive mobile | Sprint 4 |
+| F1 | Graph RAG (NetworkX + Gemma 4) | Sprint 5 |
+| F2 | Multi-hop entity search | Sprint 5 |
+| F3 | Pattern discovery (co-occurrence) | Sprint 5 |
+| F4 | Chat interface real-time streaming | Sprint 5+ |
+| F5 | Biểu đồ thống kê (theo tháng, modality) | Sprint 5+ |
+| F6 | Audit log (log mọi thao tác) | Sprint 5+ |
 
 ---
 
@@ -184,11 +180,11 @@
 
 | Hạng mục | Số lượng |
 |---|---|
-| Tổng chức năng đã thiết kế | **75** |
+| Tổng chức năng đã implement | **75** |
 | Chức năng frontend (UI) | **59** |
 | Chức năng backend (API/logic) | **16** |
-| Số trang web | **6** |
-| Số API endpoint | **15** |
-| Bảng database | **4** |
-| Role người dùng | **3** |
-| Chức năng chưa làm (Sprint 2+) | **10** |
+| Số trang web | **8** |
+| Số API endpoint | **20+** |
+| Bảng database | **5** |
+| Role người dùng | **4** |
+| Chức năng planned (Sprint 5) | **6** |

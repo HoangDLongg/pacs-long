@@ -32,8 +32,13 @@ frontend-react/
 │   │   ├── layout.css       # Sidebar, Topbar, AppShell layout
 │   │   └── components.css   # Button, Card, Table, Form, Badge...
 │   │
-│   ├── api/
-│   │   └── index.js         # Tất cả fetch calls, auth header, error handling
+│   ├── api/                    # API wrappers (tách 6 file)
+│   │   ├── auth.js             # Login, Register, Refresh
+│   │   ├── worklist.js         # Worklist CRUD
+│   │   ├── dicom.js            # DICOM upload/download
+│   │   ├── report.js           # Report CRUD
+│   │   ├── search.js           # RAG search + NL2SQL
+│   │   └── patient.js          # Patient lookup
 │   │
 │   ├── hooks/
 │   │   └── useAuth.js       # Custom hook: token, user, login, logout
@@ -45,10 +50,11 @@ frontend-react/
 │   │   │   └── AppLayout.jsx# Shell = Sidebar + main area + Outlet
 │   │   │
 │   │   └── shared/
+│   │       ├── FilterBar.jsx      # Search/filter bar
+│   │       ├── RoleGuard.jsx      # Role-based access control
+│   │       ├── StatCard.jsx       # Dashboard thống kê
 │   │       ├── StatusBadge.jsx    # PENDING/REPORTED/VERIFIED
-│   │       ├── StatCard.jsx       # Dashboard số liệu
-│   │       ├── DataTable.jsx      # Generic table component
-│   │       └── LoadingSpinner.jsx # Loading state
+│   │       └── UploadZone.jsx     # Drag & drop DICOM upload
 │   │
 │   └── pages/
 │       ├── Login.jsx        # Đăng nhập
@@ -219,21 +225,19 @@ flowchart TD
 
 ---
 
-## API Layer (`src/api/index.js`)
+## API Layer (`src/api/`)
 
 ```javascript
-// Pattern: tất cả API calls tập trung 1 nơi
-const API = {
-  auth:     { login, me },
-  worklist: { getList, getStats, getDetail },
-  dicom:    { upload },
-  report:   { get, create, update, exportPdf },
-  search:   { keyword, dense, hybrid, ask },
-}
+// 6 file tách riêng theo domain:
+// auth.js     — login, register, refresh, me
+// worklist.js — getList, getStats, getDetail
+// dicom.js    — upload, download, getInstances
+// report.js   — get, create, update, exportPdf
+// search.js   — keyword, dense, hybrid, ask
+// patient.js  — getMyStudies
 
 // Mọi request đều tự động gắn JWT header
 // 401 → tự động logout + redirect /login
-// Lỗi → throw Error với message tiếng Việt
 ```
 
 ---

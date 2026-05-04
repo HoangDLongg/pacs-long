@@ -264,7 +264,7 @@ flowchart TD
 5. Bác sĩ nhấn "Lưu báo cáo"
 6. Frontend gọi `POST /api/report`
 7. Backend lưu vào bảng `diagnostic_reports`
-8. **Tự động [UC18]**: Backend gọi BGE-M3 → tạo vector embedding → lưu vào cột `embedding`
+8. **Tự động [UC18]**: Backend gọi e5-large → tạo vector embedding → lưu vào cột `embedding`
 9. Backend cập nhật `studies.status` = `'REPORTED'`
 10. Hiển thị thông báo "Lưu báo cáo thành công"
 
@@ -361,11 +361,11 @@ flowchart TD
 | **Hậu điều kiện** | Danh sách báo cáo ngữ nghĩa tương đồng + score |
 
 **Luồng chính:**
-1. Người dùng chọn tab "Dense (BGE-M3)"
+1. Người dùng chọn tab "Dense (e5-large)"
 2. Nhập mô tả lâm sàng (VD: "bệnh nhân nam 50 tuổi, tổn thương dạng nốt đơn độc vùng thuỳ trên phổi phải")
 3. Nhấn "Tìm kiếm"
 4. Hệ thống gọi `POST /api/search` với `method: "dense"`
-5. Backend encode query bằng BGE-M3 → vector 1024 chiều
+5. Backend encode query bằng e5-large → vector 1024 chiều
 6. pgvector tìm top-K báo cáo gần nhất bằng cosine similarity
 7. Trả về kết quả kèm `similarity_score` (0.0 → 1.0)
 8. Frontend hiển thị score bar cho mỗi kết quả
@@ -385,7 +385,7 @@ flowchart TD
 1. Người dùng chọn tab "Hybrid" (mặc định)
 2. Nhập câu truy vấn
 3. Hệ thống chạy song song:
-   - **Dense search**: BGE-M3 vector similarity
+   - **Dense search**: e5-large vector similarity
    - **BM25 sparse**: điểm relevance từ khoá
 4. Kết hợp rank bằng **RRF** (Reciprocal Rank Fusion):
    - `score = 1/(k + rank_dense) + 1/(k + rank_bm25)` với k=60
@@ -460,7 +460,7 @@ flowchart TD
 
 **Luồng chính:**
 1. Admin vào `/admin`
-2. Hiển thị: Backend (FastAPI), Database (PostgreSQL+pgvector), DICOM (Orthanc), Embedding (BGE-M3), NL2SQL (Ollama/Gemini), Frontend (React+Vite)
+2. Hiển thị: Backend (FastAPI), Database (PostgreSQL+pgvector), DICOM (Orthanc), Embedding (e5-large), NL2SQL (Ollama/Gemini), Frontend (React+Vite)
 
 ---
 
@@ -476,7 +476,7 @@ flowchart TD
 **Luồng chính:**
 1. Sau khi lưu báo cáo thành công
 2. Backend ghép text: `findings + " " + conclusion`
-3. BGE-M3 model encode → vector float32 1024 chiều
+3. e5-large model encode → vector float32 1024 chiều
 4. Lưu vào `diagnostic_reports.embedding`
 5. Index IVFFlat pgvector cập nhật tự động
 

@@ -81,17 +81,28 @@ Build 8 trang cho React SPA.
 
 ---
 
-## Sprint 4 — Polish + Documentation 🚧 ĐANG LÀM
+## Sprint 4 — Polish + Documentation ✅ HOÀN THÀNH
 
-| Hạng mục | Mô tả |
-|---|---|
-| PDF export (ReportLab) | Xuất báo cáo PDF |
-| Admin CRUD users | Thêm/sửa/khoá user |
-| Responsive layout | Sidebar auto-collapse |
-| Loading skeleton | Animation chuyên nghiệp |
-| Error boundary | Bắt lỗi React toàn cục |
-| Unit tests (Pytest) | Backend test coverage |
-| Final documentation | Báo cáo luận văn |
+| Hạng mục | Mô tả | Trạng thái |
+|---|---|---|
+| PDF export (ReportLab) | Xuất báo cáo PDF | ✅ Done |
+| Admin CRUD users | Thêm/sửa/khoá user | ✅ Done |
+| Responsive layout | Sidebar auto-collapse | ✅ Done |
+| Error handling | Xử lý lỗi API toàn cục | ✅ Done |
+| Documentation | 11 tài liệu thiết kế | ✅ Done |
+
+---
+
+## Sprint 5 — Graph RAG Pipeline ⬜ PLANNED
+
+| Hạng mục | Mô tả | Trạng thái |
+|---|---|---|
+| NetworkX Knowledge Graph | In-memory graph từ DB | ⬜ Planned |
+| Gemma 4 entity extraction | Trích xuất thực thể y tế | ⬜ Planned |
+| Graph search (multi-hop) | Tìm kiếm đa bước qua đồ thị | ⬜ Planned |
+| GRAPH intent in router | Thêm intent GRAPH | ⬜ Planned |
+
+Xem chi tiết: [09_graph_rag_plan.md](09_graph_rag_plan.md)
 
 ---
 

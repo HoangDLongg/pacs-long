@@ -19,8 +19,8 @@
 | Database | **PostgreSQL 16** | Lưu trữ dữ liệu chính |
 | Vector Extension | **pgvector** | Lưu embedding vectors (1024 dim) |
 | DICOM Server | **Orthanc** (Docker) | Lưu trữ ảnh DICOM |
-| Embedding Model | **BGE-M3** (FlagEmbedding) | Text → Vector cho RAG |
-| NL2SQL (Local) | **Ollama** (qwen2.5-coder) | Chuyển câu hỏi → SQL |
+| Embedding Model | **multilingual-e5-large** (intfloat) | Text → Vector 1024d cho RAG |
+| NL2SQL (Local) | **Ollama** (gemma4:e4b) | Chuyển câu hỏi → SQL |
 | NL2SQL (Cloud) | **Gemini 2.0 Flash** | Fallback khi Ollama không có |
 | Auth | **JWT** (python-jose) | Xác thực người dùng |
 | PDF Export | **ReportLab** | Xuất báo cáo PDF |

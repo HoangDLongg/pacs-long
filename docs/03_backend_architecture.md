@@ -3,35 +3,45 @@
 ## Cấu trúc thư mục Backend
 
 ```
-backend/
-├── main.py                  # FastAPI app entry — khai báo routers, static files
-├── config.py                # Đọc .env: DB, JWT, Ollama, Gemini
+backend-v2/
+├── main.py                  # FastAPI app entry — khai báo 8 routers, lifespan
+├── config.py                # Đọc .env: DB, JWT, Ollama
 ├── requirements.txt         # Dependencies
 ├── .env                     # API keys, DB config (không commit Git)
 │
 ├── api/                     # Routers — xử lý HTTP requests
-│   ├── auth.py              # POST /api/auth/login, GET /api/auth/me
-│   ├── worklist.py          # GET /api/worklist, GET /api/worklist/stats
-│   ├── dicom.py             # POST /api/dicom/upload, GET /api/dicom/wado
-│   ├── report.py            # CRUD /api/report/{id}
-│   ├── search.py            # POST /api/search (keyword/dense/hybrid)
-│   └── ask.py               # POST /api/ask (unified NL2SQL + RAG)
+│   ├── auth.py              # /api/auth — Login, Register, Refresh JWT
+│   ├── worklist.py          # /api/worklist — CRUD + filter + stats
+│   ├── dicom.py             # /api/dicom — Upload/download/instances
+│   ├── report.py            # /api/report — CRUD + PDF export
+│   ├── search.py            # /api/search — RAG search (UC12-14)
+│   ├── ask.py               # /api/ask — NL2SQL + RAG (UC15)
+│   ├── admin.py             # /api/admin — User management
+│   └── dicom_editor.py      # /api/editor — Sửa metadata DICOM
 │
 ├── core/                    # Business logic
 │   ├── auth_utils.py        # hash_password, verify_password, JWT encode/decode
-│   ├── embedding_model.py   # Singleton BGEM3FlagModel loader
-│   ├── rag_engine.py        # Dense search, Hybrid search (BM25 + RRF)
-│   ├── nl2sql_engine.py     # Rule-based → Ollama → Gemini fallback
-│   ├── query_router.py      # Phân loại: STRUCTURED / SEMANTIC / HYBRID
-│   ├── answer_generator.py  # Tổng hợp câu trả lời từ kết quả SQL + RAG
-│   └── orthanc_client.py    # Gọi Orthanc REST API (upload, getWado, health)
+│   ├── embeddings.py        # multilingual-e5-large (1024d) Singleton
+│   ├── rag_engine.py        # Keyword + Dense + Hybrid (BM25 + RRF) + Patient search
+│   ├── query_router.py      # Intent classifier (semantic similarity)
+│   ├── nl2sql_engine.py     # LLM đọc schema DB thật → sinh SQL
+│   ├── orthanc_client.py    # Gọi Orthanc REST API
+│   └── dicom_parser.py      # Parse DICOM file metadata
 │
 ├── database/
-│   ├── connection.py        # Pool kết nối PostgreSQL, hàm execute/fetch
-│   └── schema.sql           # DDL tạo bảng + indexes
+│   ├── connection.py        # Pool kết nối PostgreSQL (psycopg2)
+│   ├── base.py              # CRUD helper functions
+│   └── init_db.sql          # DDL tạo 5 bảng + indexes + pgvector
+│
+├── models/                  # Data models (Python dataclass)
+│   ├── patient.py, study.py, report.py, user.py, refresh_token.py
 │
 └── scripts/
-    └── seed_data.py         # Tạo dữ liệu mẫu (5 users, 30 BN, 44 ca chụp)
+    ├── seed_data.py         # Tạo dữ liệu mẫu (users, patients, studies)
+    ├── seed_reports.py      # 75 báo cáo y tế mẫu
+    ├── embed_existing.py    # Batch embed reports → vector
+    ├── bulk_upload.py       # Bulk upload 13K DICOM files
+    └── benchmark_embeddings.py # So sánh embedding models
 ```
 
 ---
@@ -86,7 +96,7 @@ backend/
 | GET | `/api/search/keyword` | Có | Tìm keyword trong findings/conclusion (SQL ILIKE) |
 | POST | `/api/search` | Có | Tìm kiếm ngữ nghĩa (body: `{query, top_k, method}`) |
 
-**method:** `dense` (chỉ BGE-M3) hoặc `hybrid` (Dense + BM25 + RRF)
+**method:** `keyword`, `dense` (chỉ e5-large) hoặc `hybrid` (Dense + BM25 + RRF)
 
 ---
 
@@ -137,7 +147,7 @@ flowchart TD
     end
 
     subgraph RAG ["RAG Engine (Hybrid Search)"]
-        R1[BGE-M3 Encode\nquery → vector 1024d]
+        R1[e5-large Encode\nquery → vector 1024d]
         R2[Dense Search\ncosine similarity pgvector]
         R3[BM25 Sparse\ntext relevance]
         R4[RRF Fusion\nReciprocal Rank Fusion]
@@ -166,8 +176,8 @@ Dùng **Regex pattern** cho các câu hỏi phổ biến:
 - `"bao nhiêu ca tuần này"` → `WHERE study_date >= date_trunc('week', ...)`
 
 ### Tầng 2: Ollama (local, nhanh, riêng tư)
-- Model: `qwen2.5-coder:7b`
-- System prompt: Schema ngắn gọn (<100 token)
+- Model: `gemma4:e4b`
+- LLM đọc schema DB thật từ `information_schema`
 - Output: SQL SELECT trực tiếp, không giải thích
 
 ### Tầng 3: Gemini Flash (cloud fallback)

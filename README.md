@@ -1,150 +1,142 @@
-# PACS++ — He thong PACS tich hop RAG
+# 🏥 PACS++ — Hệ thống PACS tích hợp AI RAG Search
 
-**Medical Imaging Management System with AI-Powered Search**
+**Medical Imaging Management System with AI-Powered Intelligent Search**
 
----
-
-## Gioi thieu
-
-PACS++ la he thong PACS (Picture Archiving and Communication System) mo rong, tich hop cong nghe RAG (Retrieval-Augmented Generation) de ho tro tim kiem va tra cuu hinh anh y te thong minh.
-
-### Tinh nang chinh
-
-- 4-Role Access Control: Admin, Doctor, Technician, Patient
-- DICOM Management: Upload, luu tru, xem anh y te (CT, MR, X-ray, MG)
-- Worklist Management: Quan ly danh sach ca chup voi filter va thong ke
-- Diagnostic Reports: Viet, sua, xem bao cao chan doan
-- Patient Portal: Benh nhan xem lich su kham va ket qua
-- RAG Search: Tim kiem ngu nghia trong bao cao (Dense + Hybrid + NL2SQL)
-- Hospital Dark Theme: Giao dien toi phu hop phong doc phim
+> Hệ thống PACS mở rộng, tích hợp RAG (Retrieval-Augmented Generation) để hỗ trợ bác sĩ tìm kiếm và tra cứu kết quả chẩn đoán hình ảnh y tế thông minh.
 
 ---
 
-## Kien truc he thong
+## ✨ Tính năng chính
+
+| Tính năng | Mô tả |
+|---|---|
+| 🔐 **4-Role Access Control** | Admin, Doctor, Technician, Patient — phân quyền đầy đủ |
+| 🖼️ **DICOM Management** | Upload, lưu trữ, xem ảnh y tế (CT, MR, X-ray, MG) qua Orthanc |
+| 📋 **Worklist** | Quản lý danh sách ca chụp với filter, sort, thống kê dashboard |
+| 📝 **Diagnostic Reports** | Viết, sửa, xem báo cáo chẩn đoán + xuất PDF |
+| 🧑 **Patient Portal** | Bệnh nhân xem lịch sử khám và kết quả của mình |
+| 🔍 **RAG Search** | Tìm kiếm ngữ nghĩa: Dense + BM25 + Hybrid (RRF) |
+| 🤖 **NL2SQL** | Hỏi đáp tự nhiên → LLM sinh SQL → thực thi |
+| 🎨 **Hospital Dark Theme** | Giao diện tối chuyên nghiệp, phù hợp phòng đọc phim |
+
+---
+
+## 🏗️ Kiến trúc hệ thống
 
 ```mermaid
 graph TB
-    subgraph Frontend
-        FE["React 18 + Vite 5<br/>Port 5173"]
+    subgraph Frontend["🖥️ Frontend — React 18 + Vite (Port 5173)"]
+        FE["8 Pages: Login, Worklist, Viewer,<br/>Report, Search, MyStudies, Admin, Compare"]
     end
 
-    subgraph Backend
-        API["FastAPI<br/>Port 8000"]
-        AUTH["Auth API"]
+    subgraph Backend["⚙️ Backend — FastAPI (Port 8000)"]
+        AUTH["Auth API<br/>(JWT)"]
         WL["Worklist API"]
         DICOM_API["DICOM API"]
         REPORT["Report API"]
-        SEARCH["Search API"]
+        SEARCH["Search API<br/>(RAG)"]
+        ASK["Ask API<br/>(NL2SQL)"]
+        ADMIN_API["Admin API"]
     end
 
-    subgraph Database
+    subgraph AI["🧠 AI Engine"]
+        EMB["Embedding Model<br/>multilingual-e5-large<br/>(1024 dim)"]
+        ROUTER["Query Router<br/>(Semantic Classification)"]
+        RAG["Hybrid Search<br/>Dense + BM25 + RRF"]
+        NL2SQL["NL2SQL Engine<br/>Ollama / Gemini"]
+    end
+
+    subgraph Infrastructure["☁️ Docker Compose"]
         PG["PostgreSQL 16<br/>+ pgvector<br/>Port 5432"]
+        ORTHANC["Orthanc DICOM<br/>Port 8042/4242"]
     end
 
-    subgraph Services
-        ORTHANC["Orthanc<br/>DICOM Server<br/>Port 8042"]
-        OLLAMA["Ollama<br/>Local LLM<br/>Port 11434"]
+    subgraph LLM["🤖 Local LLM"]
+        OLLAMA["Ollama (Port 11434)<br/>gemma4:e4b + qwen2.5-coder:7b"]
     end
 
-    FE -->|HTTP| API
-    API --> AUTH
-    API --> WL
-    API --> DICOM_API
-    API --> REPORT
-    API --> SEARCH
-
+    FE -->|"fetch /api/*"| Backend
+    SEARCH --> RAG
+    ASK --> ROUTER
+    ROUTER --> NL2SQL
+    ROUTER --> RAG
+    RAG --> EMB
+    NL2SQL --> OLLAMA
+    EMB --> PG
+    DICOM_API --> ORTHANC
     AUTH --> PG
     WL --> PG
     REPORT --> PG
-    DICOM_API --> ORTHANC
-    DICOM_API --> PG
-    SEARCH --> PG
-    SEARCH --> OLLAMA
 ```
 
 ---
 
-## RAG Pipeline
+## 🔍 RAG Search Pipeline
 
 ```mermaid
-graph TD
-    Q["User nhap query"] --> SEARCH["Unified Search Box<br/>1 o search duy nhat"]
-    SEARCH --> ASK["/api/ask<br/>ask.py"]
-    SEARCH --> KW["/api/search/keyword<br/>search.py"]
+flowchart TD
+    Q["User nhập câu hỏi"] --> ROUTER["Query Router<br/>(Semantic Similarity + Heuristic)"]
 
-    ASK --> ROUTER["query_router.py<br/>Intent Classifier<br/>(embedding similarity + heuristic)"]
+    ROUTER -->|"PATIENT_LOOKUP<br/>(tên người Việt)"| PS["patient_search()<br/>ILIKE on full_name"]
+    ROUTER -->|"STRUCTURED<br/>(thống kê, đếm)"| LLM["llm_nl2sql()<br/>LLM đọc schema DB → SQL"]
+    ROUTER -->|"SEMANTIC<br/>(bệnh lý, triệu chứng)"| RAG["hybrid_search()<br/>Dense + BM25 + RRF"]
+    ROUTER -->|"HYBRID<br/>(mập mờ)"| BOTH["Chạy cả SQL + RAG"]
 
-    ROUTER -->|PATIENT_LOOKUP| PS["patient_search()<br/>ILIKE full_name only"]
-    ROUTER -->|STRUCTURED| LLM["llm_nl2sql()<br/>LLM doc schema DB that<br/>→ sinh SQL"]
-    ROUTER -->|SEMANTIC| RAG["hybrid_search()<br/>Dense + BM25 + RRF"]
-    ROUTER -->|HYBRID| BOTH["LLM SQL + RAG<br/>Chay ca 2"]
+    LLM --> SCHEMA["_read_db_schema()<br/>information_schema + samples"]
+    SCHEMA --> OLLAMA["Ollama gemma4:e4b<br/>hoặc Gemini Flash"]
+    OLLAMA --> EXEC["execute_sql()<br/>validate + execute"]
 
-    LLM --> SCHEMA["_read_db_schema()<br/>information_schema<br/>+ sample data"]
-    SCHEMA --> OLLAMA["Ollama (Gemma 4b)<br/>hoac Gemini"]
-    OLLAMA --> EXEC["execute_sql()<br/>PostgreSQL"]
+    RAG --> EMB["e5-large encode<br/>(1024d vector)"]
+    EMB --> DENSE["Dense: pgvector cosine"]
+    RAG --> BM25["BM25 sparse ranking"]
+    DENSE --> RRF["RRF Fusion<br/>score = w/(k+rank_d) + w/(k+rank_s)"]
+    BM25 --> RRF
+    RRF --> THRESH["Threshold ≥ 70%"]
 
-    PS --> DB["PostgreSQL<br/>+ pgvector"]
-    RAG --> EMB["BGE-M3<br/>embeddings.py"]
-    EMB --> DB
-    KW --> DB
+    PS --> DB["PostgreSQL + pgvector"]
     EXEC --> DB
+    THRESH --> DB
 
-    DB --> RESULT["Ket qua tra ve Frontend<br/>Keyword + RAG (deduplicated)"]
+    DB --> RESULT["Kết quả → Frontend"]
 
-    style Q fill:#1a73e8,color:#fff
     style ROUTER fill:#fbbc04,color:#000
     style PS fill:#34a853,color:#fff
     style LLM fill:#ea4335,color:#fff
     style RAG fill:#ea4335,color:#fff
     style BOTH fill:#ff6d00,color:#fff
     style DB fill:#0d47a1,color:#fff
-    style RESULT fill:#0d47a1,color:#fff
 ```
 
-### Pipeline chi tiet
+### Pipeline chi tiết
 
-| Step | Module | Chuc nang |
+| Step | Module | Chức năng |
 |---|---|---|
-| 1. Nhan query | `api/ask.py` + `api/search.py` | Frontend goi song song `/api/ask` va `/api/search/keyword` |
-| 2. Phan loai | `core/query_router.py` | Heuristic (ten nguoi Viet) + Embedding similarity → 4 intents |
-| 3a. Tim benh nhan | `core/rag_engine.py → patient_search()` | ILIKE chi tren `full_name` + `patient_id` |
-| 3b. Thong ke SQL | `core/nl2sql_engine.py → llm_nl2sql()` | LLM doc schema DB that → sinh SQL → execute |
-| 3c. Noi dung y khoa | `core/rag_engine.py → hybrid_search()` | Dense (pgvector cosine) + BM25 sparse + RRF fusion |
-| 3d. Hybrid | Ca 3b + 3c | Chay ca SQL va RAG |
-| 4. Ket qua | Frontend merge + dedup | Keyword first, RAG second, hien thi tach biet |
-
-### Micro-services → Backend modules
-
-| Service goc | Implemented trong | Chuc nang |
-|---|---|---|
-| 6800_chatbotapi | `api/ask.py` | API gateway, nhan cau hoi tu frontend |
-| 6801_llms_gateway | `core/nl2sql_engine.py` | Goi Ollama (local) / Gemini (cloud) |
-| 6803_rag | `core/rag_engine.py` | RAG engine: Dense + BM25 + Hybrid + Patient search |
-| 6803_preprocessing | `scripts/seed_reports.py` | Tien xu ly van ban y khoa tu ViX-Ray |
-| 6804_ddq | `core/nl2sql_engine.py` | NL2SQL: LLM doc schema DB → sinh SQL |
-| 6805_intent_system | `core/query_router.py` | 4 intents: PATIENT_LOOKUP, STRUCTURED, SEMANTIC, HYBRID |
-| 6808_chunking_embedding | `core/embeddings.py` + `scripts/embed_existing.py` | BGE-M3 encoding + pgvector storage |
-
+| 1. Nhận query | `api/ask.py` + `api/search.py` | Frontend gọi `/api/ask` và `/api/search/keyword` |
+| 2. Phân loại | `core/query_router.py` | Heuristic (tên Việt) + Embedding similarity → 4 intents |
+| 3a. Tìm bệnh nhân | `core/rag_engine.py → patient_search()` | ILIKE chỉ trên `full_name` + `patient_id` |
+| 3b. Thống kê SQL | `core/nl2sql_engine.py → llm_nl2sql()` | LLM đọc schema DB thật → sinh SQL → execute |
+| 3c. Nội dung y khoa | `core/rag_engine.py → hybrid_search()` | Dense (pgvector cosine) + BM25 sparse + RRF fusion |
+| 3d. Hybrid | Cả 3b + 3c | Chạy cả SQL và RAG |
 
 ---
 
-## Database Schema (ERD)
+## 📊 Database Schema
 
 ```mermaid
 erDiagram
-    patients ||--o{ studies : "1 benh nhan - N ca chup"
-    studies ||--o| diagnostic_reports : "1 ca chup - 0..1 bao cao"
+    patients ||--o{ studies : "1 BN → N ca chụp"
+    studies ||--o| diagnostic_reports : "1 ca → 0..1 báo cáo"
     users ||--o{ studies : "technician upload"
-    users ||--o{ diagnostic_reports : "doctor viet"
+    users ||--o{ diagnostic_reports : "doctor viết"
     users ||--o| patients : "patient account linked"
+    users ||--o{ refresh_tokens : "JWT tokens"
 
     patients {
         int id PK
         varchar patient_id UK
         varchar full_name
-        varchar gender
+        char gender
         date birth_date
-        varchar phone
     }
 
     users {
@@ -152,7 +144,7 @@ erDiagram
         varchar username UK
         varchar password_hash
         varchar full_name
-        varchar role
+        varchar role "admin|doctor|technician|patient"
         boolean is_active
         int linked_patient_id FK
     }
@@ -162,13 +154,11 @@ erDiagram
         varchar study_uid UK
         int patient_id FK
         date study_date
-        varchar modality
+        varchar modality "CR|CT|MR|US|DX|MG"
         varchar body_part
-        varchar description
-        varchar status
+        varchar status "PENDING|REPORTED|VERIFIED"
         int technician_id FK
         varchar orthanc_id
-        int num_instances
     }
 
     diagnostic_reports {
@@ -178,113 +168,122 @@ erDiagram
         text findings
         text conclusion
         text recommendation
-        vector embedding
+        vector embedding "e5-large 1024d"
+    }
+
+    refresh_tokens {
+        int id PK
+        int user_id FK
+        varchar token_hash UK
+        timestamptz expires_at
+        boolean revoked
     }
 ```
 
 ---
 
-## Phan quyen (4 Roles)
+## 🔑 Phân quyền (4 Roles)
 
-```mermaid
-graph LR
-    subgraph Admin
-        A1["Worklist"]
-        A2["Upload DICOM"]
-        A3["Xem anh"]
-        A4["Viet bao cao"]
-        A5["RAG Search"]
-        A6["Admin Panel"]
-    end
-
-    subgraph Doctor
-        D1["Worklist"]
-        D2["Xem anh"]
-        D3["Viet bao cao"]
-        D4["RAG Search"]
-    end
-
-    subgraph Technician
-        T1["Worklist"]
-        T2["Upload DICOM"]
-        T3["Xem anh"]
-        T4["Xem bao cao"]
-    end
-
-    subgraph Patient
-        P1["My Studies"]
-        P2["Xem anh cua minh"]
-        P3["Xem bao cao cua minh"]
-    end
-```
+| Chức năng | 👑 Admin | 👨‍⚕️ Doctor | 🔧 Technician | 🧑 Patient |
+|---|:---:|:---:|:---:|:---:|
+| Xem Worklist | ✅ | ✅ | ✅ | ❌ |
+| Upload DICOM | ✅ | ❌ | ✅ | ❌ |
+| Xem ảnh DICOM | ✅ | ✅ | ✅ | Của mình |
+| Viết báo cáo | ✅ | ✅ | ❌ | ❌ |
+| Xem báo cáo | ✅ | ✅ | ✅ (readonly) | Của mình |
+| AI Search | ✅ | ✅ | ❌ | ❌ |
+| Admin Panel | ✅ | ❌ | ❌ | ❌ |
+| My Studies | ❌ | ❌ | ❌ | ✅ |
 
 ---
 
-## Cau truc du an
+## 📁 Cấu trúc dự án
 
 ```
 pacs_rag_system/
-|-- docker-compose.yml
-|-- orthanc/orthanc.json
-|
-|-- backend-v2/                     # FastAPI Backend
-|   |-- main.py                     # Entry point - port 8000
-|   |-- config.py                   # .env reader
-|   |-- requirements.txt
-|   |-- api/
-|   |   |-- auth.py                 # Login + JWT
-|   |   |-- worklist.py             # Worklist + stats + filter
-|   |   |-- dicom.py                # Upload + WADO
-|   |   |-- report.py               # CRUD bao cao
-|   |   |-- search.py               # RAG search
-|   |   |-- ask.py                  # NL2SQL
-|   |   +-- patient_portal.py       # Patient: lich su kham
-|   |-- core/
-|   |   |-- auth_utils.py           # JWT + bcrypt
-|   |   |-- dicom_parser.py         # pydicom metadata
-|   |   |-- orthanc_client.py       # Orthanc REST client
-|   |   |-- embeddings.py           # BGE-M3 encoder
-|   |   |-- rag_engine.py           # Dense + BM25 + Hybrid
-|   |   |-- nl2sql_engine.py        # NL -> SQL (Ollama)
-|   |   +-- query_router.py         # Intent classifier
-|   |-- database/
-|   |   |-- connection.py           # Connection pool
-|   |   +-- init_db.sql             # Schema + pgvector
-|   +-- scripts/
-|       |-- seed_data.py            # Seed staff accounts
-|       |-- edit_names.py           # Edit DICOM names
-|       +-- bulk_upload.py          # Bulk upload 13K files
-|
-|-- frontend-react/                 # React 18 Frontend
-|   |-- vite.config.js              # Proxy /api -> :8000
-|   +-- src/
-|       |-- App.jsx                 # Router + Auth guard
-|       |-- api/                    # API wrappers
-|       |-- hooks/useAuth.js        # JWT state
-|       |-- components/             # Shared components
-|       |-- pages/Login/            # Login page (done)
-|       +-- styles/                 # Hospital dark theme
-|
-+-- docs/                           # 8 tai lieu thiet ke
+├── docker-compose.yml                # PostgreSQL + Orthanc
+├── orthanc/orthanc.json              # Orthanc config
+│
+├── backend-v2/                       # ⚙️ FastAPI Backend (Python 3.12)
+│   ├── main.py                       # Entry point — 8 routers
+│   ├── config.py                     # .env reader
+│   ├── .env                          # DB, JWT, Ollama config
+│   ├── requirements.txt              # Dependencies
+│   │
+│   ├── api/                          # API Endpoints (8 routers)
+│   │   ├── auth.py                   # /api/auth — JWT login/register/refresh
+│   │   ├── worklist.py               # /api/worklist — CRUD + filter + stats
+│   │   ├── dicom.py                  # /api/dicom — Upload/download/instances
+│   │   ├── report.py                 # /api/report — CRUD + PDF export
+│   │   ├── search.py                 # /api/search — RAG search (UC12-14)
+│   │   ├── ask.py                    # /api/ask — NL2SQL hỏi đáp (UC15)
+│   │   ├── admin.py                  # /api/admin — User management
+│   │   └── dicom_editor.py           # /api/editor — Sửa metadata DICOM
+│   │
+│   ├── core/                         # Business Logic
+│   │   ├── auth_utils.py             # JWT + bcrypt hashing
+│   │   ├── embeddings.py             # multilingual-e5-large (1024d)
+│   │   ├── rag_engine.py             # Keyword + Dense + Hybrid + Patient search
+│   │   ├── query_router.py           # Intent classifier (semantic similarity)
+│   │   ├── nl2sql_engine.py          # NL → SQL (Ollama/Gemini)
+│   │   ├── orthanc_client.py         # Orthanc REST client
+│   │   └── dicom_parser.py           # pydicom tag parser
+│   │
+│   ├── database/                     # Database
+│   │   ├── connection.py             # Connection pool (psycopg2)
+│   │   ├── base.py                   # CRUD helpers
+│   │   └── init_db.sql               # Schema: 5 tables + pgvector
+│   │
+│   ├── models/                       # Data Models
+│   │   ├── patient.py, study.py, report.py, user.py, refresh_token.py
+│   │
+│   └── scripts/                      # Utility Scripts
+│       ├── seed_data.py              # Seed accounts + patients
+│       ├── seed_reports.py           # Seed 75 báo cáo y tế
+│       ├── embed_existing.py         # Batch embed reports → vector
+│       ├── bulk_upload.py            # Bulk upload DICOM
+│       └── benchmark_embeddings.py   # Benchmark models
+│
+├── frontend-react/                   # 🖥️ React 18 Frontend (Vite 5)
+│   ├── vite.config.js                # Proxy /api → :8000
+│   └── src/
+│       ├── App.jsx                   # Router + Auth guard
+│       ├── api/                      # 6 API wrappers (auth, worklist, dicom, report, search, patient)
+│       ├── hooks/useAuth.js          # JWT state management
+│       ├── components/               # Layout (Sidebar, Topbar) + Shared (FilterBar, StatusBadge...)
+│       ├── pages/                    # 8 pages: Login, Worklist, Viewer, Report, Search, MyStudies, Admin, Compare
+│       └── styles/                   # Hospital dark theme (variables, base, layout, components)
+│
+└── docs/                             # 📚 Tài liệu thiết kế (11 files)
+    ├── 00_project_overview.md        # Tổng quan dự án
+    ├── 01_system_overview.md         # Kiến trúc + tech stack
+    ├── 02_erd_database.md            # Database schema
+    ├── 03_backend_architecture.md    # Backend API + RAG engine
+    ├── 04_frontend_architecture.md   # Frontend pages + components
+    ├── 05_sprint_roadmap.md          # Lộ trình phát triển
+    ├── 06_ui_wireframes.md           # Wireframes
+    ├── 07_feature_list.md            # 75 chức năng
+    ├── 08_use_cases.md               # 18 use cases (UC01-UC18)
+    ├── 09_graph_rag_plan.md          # [PLANNED] Graph RAG
+    └── 10_graph_rag_analysis.md      # Phân tích Graph RAG
 ```
 
 ---
 
-## Frontend Pages
+## 🌐 Frontend Pages
 
 ```mermaid
 graph LR
-    LOGIN["/login<br/>Dang nhap"] --> |Admin/Doctor/Tech| WORKLIST["/worklist<br/>Danh sach ca chup"]
-    LOGIN --> |Patient| MYSTUDIES["/my-studies<br/>Lich su kham"]
+    LOGIN["/login<br/>🔐 Đăng nhập"] -->|Staff| WORKLIST["/worklist<br/>📋 Worklist"]
+    LOGIN -->|Patient| MYSTUDIES["/my-studies<br/>🧑 Lịch sử khám"]
 
-    WORKLIST --> VIEWER["/viewer/:id<br/>Xem anh DICOM"]
-    WORKLIST --> REPORT["/report/:id<br/>Bao cao"]
-    WORKLIST --> SEARCH["/search<br/>Tim kiem RAG"]
+    WORKLIST --> VIEWER["/viewer<br/>🖼️ DICOM Viewer"]
+    WORKLIST --> REPORT["/report<br/>📝 Báo cáo"]
+    WORKLIST --> SEARCH["/search<br/>🔍 AI Search"]
+    WORKLIST -->|Admin| ADMIN["/admin<br/>👑 Quản trị"]
 
     MYSTUDIES --> VIEWER
     MYSTUDIES --> REPORT
-
-    WORKLIST --> |Admin only| ADMIN["/admin<br/>Quan ly users"]
 
     style LOGIN fill:#4CAF50,color:#fff
     style WORKLIST fill:#2196F3,color:#fff
@@ -297,64 +296,64 @@ graph LR
 
 ---
 
-## API Endpoints
+## 📡 API Endpoints
 
-### Auth
-| Method | Endpoint | Auth | Mo ta |
+### Auth (`/api/auth`)
+| Method | Endpoint | Auth | Mô tả |
 |---|---|---|---|
-| POST | /api/auth/login | No | Dang nhap, tra JWT token |
-| GET | /api/auth/me | Yes | Thong tin user hien tai |
+| POST | `/api/auth/login` | ❌ | Đăng nhập → access + refresh token |
+| POST | `/api/auth/register` | ❌ | Đăng ký tài khoản |
+| POST | `/api/auth/refresh` | ✅ | Refresh access token |
+| GET | `/api/auth/me` | ✅ | Thông tin user hiện tại |
 
-### Worklist
-| Method | Endpoint | Auth | Mo ta |
+### Worklist & DICOM
+| Method | Endpoint | Auth | Mô tả |
 |---|---|---|---|
-| GET | /api/worklist | Yes | Danh sach ca chup (+ filter) |
-| GET | /api/worklist/stats/dashboard | Yes | Thong ke dashboard |
-| GET | /api/worklist/{id} | Yes | Chi tiet 1 ca chup |
-
-### DICOM
-| Method | Endpoint | Auth | Mo ta |
-|---|---|---|---|
-| POST | /api/dicom/upload | Yes | Upload file .dcm |
-| GET | /api/dicom/wado?objectId=xxx | Yes | Stream anh DICOM |
+| GET | `/api/worklist` | ✅ | Danh sách ca chụp (filter, sort, paginate) |
+| GET | `/api/worklist/stats/dashboard` | ✅ | Thống kê: total, pending, reported, verified |
+| GET | `/api/worklist/{id}` | ✅ | Chi tiết 1 ca chụp |
+| POST | `/api/dicom/upload` | ✅ | Upload file .dcm → Orthanc |
+| GET | `/api/dicom/instances/{id}` | ✅ | Lấy DICOM instances |
 
 ### Report
-| Method | Endpoint | Auth | Mo ta |
+| Method | Endpoint | Auth | Mô tả |
 |---|---|---|---|
-| GET | /api/report/{study_id} | Yes | Xem bao cao |
-| POST | /api/report | Yes | Tao bao cao |
-| PUT | /api/report/{id} | Yes | Cap nhat bao cao |
+| POST | `/api/report` | ✅ | Tạo báo cáo (auto-embed vector) |
+| PUT | `/api/report/{id}` | ✅ | Cập nhật báo cáo |
+| GET | `/api/report/{study_id}` | ✅ | Xem báo cáo |
+| GET | `/api/report/{id}/pdf` | ✅ | Xuất PDF |
 
-### RAG Search
-| Method | Endpoint | Auth | Mo ta |
+### AI Search
+| Method | Endpoint | Auth | Mô tả |
 |---|---|---|---|
-| POST | /api/search | Yes | Tim kiem: keyword, dense, hybrid |
-| POST | /api/ask | Yes | Hoi dap NL2SQL + RAG |
+| GET | `/api/search/keyword?q=` | ✅ | UC12: Keyword search (ILIKE) |
+| POST | `/api/search` | ✅ | UC13-14: Dense / Hybrid search |
+| POST | `/api/ask` | ✅ | UC15: NL2SQL + RAG hỏi đáp |
 
-### Other
-| Method | Endpoint | Auth | Mo ta |
+### Admin & Other
+| Method | Endpoint | Auth | Mô tả |
 |---|---|---|---|
-| GET | /api/my-studies | Yes | Patient: lich su kham |
-| GET | /api/admin/users | Yes | Admin: danh sach users |
-| GET | /health | No | Health check |
+| GET | `/api/admin/users` | ✅👑 | Danh sách users |
+| PUT | `/api/admin/users/{id}` | ✅👑 | Cập nhật user |
+| GET | `/health` | ❌ | Health check |
 
-Swagger UI: http://localhost:8000/docs
+📖 Swagger UI: http://localhost:8000/docs
 
 ---
 
-## Huong dan cai dat
+## 🚀 Hướng dẫn cài đặt
 
-### Yeu cau
-
+### Yêu cầu
 - Python 3.12+
 - Node.js 18+
 - Docker Desktop
+- Ollama
 
-### 1. Khoi dong Docker
+### 1. Khởi động Docker
 
 ```bash
 cd pacs_rag_system
-docker-compose up -d
+docker-compose up -d          # PostgreSQL 16 + Orthanc
 ```
 
 ### 2. Setup Backend
@@ -362,10 +361,10 @@ docker-compose up -d
 ```bash
 cd backend-v2
 python -m venv venv
-venv\Scripts\activate
+venv\Scripts\activate         # Windows
 pip install -r requirements.txt
-python scripts/seed_data.py
-python main.py
+python scripts/seed_data.py   # Tạo data mẫu
+python main.py                # → http://localhost:8000
 ```
 
 ### 3. Setup Frontend
@@ -373,56 +372,84 @@ python main.py
 ```bash
 cd frontend-react
 npm install
-npm run dev
+npm run dev                   # → http://localhost:5173
+```
+
+### 4. Setup Ollama (AI)
+
+```bash
+ollama serve                  # → http://localhost:11434
+ollama pull gemma4:e4b        # Entity extraction
+ollama pull qwen2.5-coder:7b  # NL2SQL (legacy)
 ```
 
 ---
 
-## Test Accounts
+## 🔑 Test Accounts
 
 | Username | Password | Role |
 |---|---|---|
-| admin | admin123 | Admin |
-| dr.nam | doctor123 | Doctor |
-| dr.lan | doctor123 | Doctor |
-| tech.hung | tech123 | Technician |
-| tech.mai | tech123 | Technician |
+| admin | admin123 | 👑 Admin |
+| dr.nam | doctor123 | 👨‍⚕️ Doctor |
+| dr.lan | doctor123 | 👨‍⚕️ Doctor |
+| tech.hung | tech123 | 🔧 Technician |
+| tech.mai | tech123 | 🔧 Technician |
 
-Patient: {PatientID} / {PatientID}@
-
----
-
-## Tech Stack
-
-### Backend
-- FastAPI, PostgreSQL 16 + pgvector, Orthanc, pydicom, python-jose, bcrypt
-
-### RAG Engine
-- BGE-M3 (BAAI/bge-m3), FlagEmbedding, pgvector, Ollama (qwen2.5-coder:7b), BM25, RRF
-
-### Frontend
-- React 18, Vite 5, React Router v6, Vanilla CSS, Cornerstone.js
-
-### Infrastructure
-- Docker Compose, Orthanc REST API, Ollama
+Patient accounts: `{PatientID}` / `{PatientID}@`
 
 ---
 
-## Roadmap
+## 🛠️ Tech Stack
 
-- [x] Sprint 1: Backend core (Auth, Worklist, DICOM, Report APIs)
-- [x] Sprint 1: Data pipeline (DICOM name editor + bulk upload 13K files)
-- [x] Sprint 1: Login page (React)
-- [x] Sprint 2: Frontend pages (Worklist, Viewer, Report, Admin, MyStudies)
-- [ ] Sprint 3: RAG Engine (BGE-M3 embedding, Dense/Hybrid search, NL2SQL)
-- [ ] Sprint 4: Polish, testing, documentation
+| Layer | Công nghệ |
+|---|---|
+| **Backend** | FastAPI, Python 3.12, Uvicorn |
+| **Database** | PostgreSQL 16 + pgvector (1024d vectors) |
+| **DICOM Server** | Orthanc (Docker) |
+| **Embedding** | multilingual-e5-large (intfloat) |
+| **NL2SQL** | Ollama (gemma4:e4b) / Gemini 2.0 Flash (fallback) |
+| **Search** | BM25 (rank-bm25) + pgvector cosine + RRF fusion |
+| **Auth** | JWT (python-jose) + bcrypt |
+| **Frontend** | React 18 + Vite 5 + React Router v6 |
+| **CSS** | Vanilla CSS — Hospital Dark Theme |
+| **PDF** | ReportLab |
+| **Infrastructure** | Docker Compose |
 
 ---
 
-## Tac gia
+## 📈 Dữ liệu hiện có
 
-Hoang Duc Long — JAVIS AI
+| Bảng | Số lượng |
+|---|---|
+| patients | 21 bệnh nhân |
+| users | 26 tài khoản (5 staff + 21 patient) |
+| studies | 75 ca chụp |
+| diagnostic_reports | 75 báo cáo (100% embedded) |
+| DICOM files (Orthanc) | 13,495 ảnh |
 
-## License
+---
+
+## ✅ Roadmap
+
+- [x] Sprint 0: Infrastructure (Docker, PostgreSQL, Orthanc, Ollama)
+- [x] Sprint 1: Backend core (Auth, Worklist, DICOM, Report, Seed data, Bulk upload 13K DICOM)
+- [x] Sprint 2: Frontend 8 pages (Login, Worklist, Viewer, Report, Search, MyStudies, Admin, Compare)
+- [x] Sprint 3: RAG Engine (e5-large embedding, Dense/Hybrid search, NL2SQL, Query Router)
+- [x] Sprint 4: Polish (PDF export, Admin CRUD, Responsive layout)
+- [ ] Sprint 5: Graph RAG (NetworkX + Gemma 4 entity extraction) — [planned](docs/09_graph_rag_plan.md)
+
+---
+
+## 📚 Tài liệu
+
+Xem thư mục [docs/](docs/) cho 11 file tài liệu thiết kế chi tiết.
+
+---
+
+## 👤 Tác giả
+
+**Hoàng Đức Long** — JAVIS AI
+
+## 📄 License
 
 This project is for educational purposes.

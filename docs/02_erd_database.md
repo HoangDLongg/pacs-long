@@ -49,7 +49,7 @@ erDiagram
         text conclusion "Kết luận"
         text recommendation "Đề nghị"
         date report_date
-        vector embedding "BGE-M3 1024 dims"
+        vector embedding "e5-large 1024 dims"
         timestamp created_at
         timestamp updated_at
     }
@@ -134,7 +134,7 @@ erDiagram
 | `conclusion` | TEXT | NOT NULL | Kết luận chẩn đoán |
 | `recommendation` | TEXT | | Đề nghị xử trí |
 | `report_date` | DATE | DEFAULT NOW() | Ngày báo cáo |
-| `embedding` | VECTOR(1024) | | BGE-M3 vector của findings+conclusion |
+| `embedding` | VECTOR(1024) | | e5-large vector của findings+conclusion |
 | `created_at` | TIMESTAMP | DEFAULT NOW() | Ngày tạo |
 | `updated_at` | TIMESTAMP | | Ngày cập nhật |
 
@@ -156,6 +156,7 @@ users (1) ──────────── (0 hoặc 1) patients  [linked_pa
 ## Ghi chú kỹ thuật
 
 - Extension cần bật trong PostgreSQL: `CREATE EXTENSION IF NOT EXISTS vector;`
-- Embedding được tạo bằng `BGEM3FlagModel` từ `FlagEmbedding`, dimension = **1024**
-- Khi báo cáo được lưu → trigger tự động update `studies.status` = `'REPORTED'`
+- Embedding được tạo bằng `multilingual-e5-large` (intfloat), dimension = **1024**
+- Khi báo cáo được lưu → tự động update `studies.status` = `'REPORTED'`
 - `orthanc_id` lưu UUID do Orthanc sinh ra sau khi upload DICOM, dùng để lấy ảnh qua WADO protocol
+- Bảng `refresh_tokens` quản lý JWT refresh token rotation
