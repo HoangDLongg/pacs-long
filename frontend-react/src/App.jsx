@@ -4,10 +4,11 @@
    ================================================ */
 
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { useAuth }     from '@/hooks/useAuth'
-import LoadingScreen   from '@/components/LoadingScreen'
-import AppLayout       from '@/components/layout/AppLayout'
-import RoleGuard       from '@/components/shared/RoleGuard'
+import { useAuth }      from '@/hooks/useAuth'
+import LoadingScreen    from '@/components/LoadingScreen'
+import ErrorBoundary    from '@/components/ErrorBoundary'
+import AppLayout        from '@/components/layout/AppLayout'
+import RoleGuard        from '@/components/shared/RoleGuard'
 
 // Pages
 import LoginPage       from '@/pages/Login/index'
@@ -42,6 +43,7 @@ function DefaultRedirect() {
 
 export default function App() {
   return (
+    <ErrorBoundary>
     <HashRouter>
       <Routes>
         {/* Public */}
@@ -109,5 +111,6 @@ export default function App() {
         <Route path="*" element={<DefaultRedirect />} />
       </Routes>
     </HashRouter>
+    </ErrorBoundary>
   )
 }

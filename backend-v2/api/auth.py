@@ -7,6 +7,7 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 
 from core.auth_utils import AuthUtils
+from core.audit_logger import log_action, AuditAction
 from database.connection import get_db
 from models.user import User
 from models.refresh_token import RefreshToken
@@ -45,12 +46,14 @@ def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
     ).first()
     
     if not user:
+        log_action(request, AuditAction.LOGIN_FAILED, detail=f"username={body.username} (not found)")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Sai tài khoản hoặc mật khẩu"
         )
 
     if not AuthUtils.verify_password(body.password, user.password_hash):
+        log_action(request, AuditAction.LOGIN_FAILED, detail=f"username={body.username} (wrong password)", user_id=user.id)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Sai tài khoản hoặc mật khẩu"
@@ -59,6 +62,9 @@ def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
     # Tạo tokens
     access_token = AuthUtils.create_access_token(user)
     refresh_token = AuthUtils.create_refresh_token(user.id, db)
+
+    # Audit log
+    log_action(request, AuditAction.LOGIN, user_id=user.id, username=user.username, role=user.role)
 
     return {
         "access_token": access_token,
