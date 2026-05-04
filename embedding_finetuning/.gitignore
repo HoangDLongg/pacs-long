@@ -1,0 +1,5 @@
+# Ignore fine-tuned model weights (large files)
+models/
+data/*.json
+__pycache__/
+*.pyc
