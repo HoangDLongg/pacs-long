@@ -40,12 +40,14 @@ def _read_db_schema() -> str:
     cursor = conn.cursor(cursor_factory=RealDictCursor)
     try:
         # 1. Đọc tất cả tables + columns từ information_schema
+        # CHỈ cho LLM thấy các bảng AN TOÀN — KHÔNG bao gồm users, refresh_tokens
         cursor.execute("""
             SELECT table_name, column_name, data_type, is_nullable,
                    column_default
             FROM information_schema.columns
             WHERE table_schema = 'public'
-              AND table_name IN ('patients', 'studies', 'diagnostic_reports', 'users')
+              AND table_name IN ('patients', 'studies', 'diagnostic_reports')
+              AND column_name NOT IN ('embedding', 'password_hash', 'token_hash')
             ORDER BY table_name, ordinal_position
         """)
         columns = cursor.fetchall()
@@ -91,8 +93,6 @@ def _read_db_schema() -> str:
             cursor.execute("SELECT DISTINCT status FROM studies WHERE status IS NOT NULL LIMIT 10")
             samples["statuses"] = [r["status"] for r in cursor.fetchall()]
 
-            cursor.execute("SELECT DISTINCT role FROM users WHERE role IS NOT NULL LIMIT 10")
-            samples["roles"] = [r["role"] for r in cursor.fetchall()]
 
             cursor.execute("SELECT COUNT(*) as total FROM patients")
             samples["total_patients"] = cursor.fetchone()["total"]
@@ -140,30 +140,46 @@ TABLE users: id, username VARCHAR, full_name VARCHAR, role VARCHAR"""
 # 3. LLM-based NL2SQL — Ollama / Gemini (đọc schema DB thật)
 # ============================================================
 
+# Bảng + cột nhạy cảm — KHÔNG cho phép truy cập qua NL2SQL
+_BLOCKED_TABLES = {'users', 'refresh_tokens', 'pg_catalog', 'information_schema'}
+_BLOCKED_COLUMNS = {'password_hash', 'token_hash', 'embedding', 'is_active'}
+
+
 def llm_nl2sql(question: str) -> Optional[Dict]:
     """Dùng LLM để sinh SQL từ câu hỏi tự nhiên.
-    LLM đọc schema thật từ DB trước khi sinh query."""
+    LLM chỉ thấy schema an toàn (patients, studies, diagnostic_reports).
+    SQL được validate: chặn truy cập bảng users, refresh_tokens, cột password."""
 
-    # Đọc schema thật từ database
+    # Đọc schema an toàn từ database (đã filter bảng nhạy cảm)
     schema_text, sample_text = _read_db_schema()
 
-    prompt = f"""Bạn là chuyên gia SQL cho hệ thống PACS (Picture Archiving and Communication System) y tế.
-Hãy chuyển đổi câu hỏi của người dùng thành câu SQL PostgreSQL chính xác.
+    prompt = f"""Bạn là chuyên gia SQL cho hệ thống PACS y tế.
+Chuyển đổi câu hỏi thành SQL PostgreSQL.
 
 {schema_text}
 {sample_text}
 
-COMMON JOINS:
+JOINS:
   studies JOIN patients ON studies.patient_id = patients.id
   diagnostic_reports JOIN studies ON diagnostic_reports.study_id = studies.id
-  diagnostic_reports JOIN users ON diagnostic_reports.doctor_id = users.id
 
-QUY TẮC BẮT BUỘC:
-1. Chỉ dùng SELECT (KHÔNG INSERT/UPDATE/DELETE/DROP)
+QUY TẮC:
+1. Chỉ SELECT — KHÔNG INSERT/UPDATE/DELETE/DROP
 2. LIMIT 20 nếu trả về danh sách
 3. Dùng ILIKE cho tìm kiếm text tiếng Việt
-4. JOIN bảng khi cần thông tin liên quan
-5. Trả về CHỈ SQL thuần — không giải thích, không markdown
+4. CHỈ truy vấn 3 bảng: patients, studies, diagnostic_reports
+5. KHÔNG truy cập bảng users hay refresh_tokens
+6. Trả về CHỈ SQL thuần — không giải thích
+
+VÍ DỤ:
+Q: bao nhiêu ca CT hôm nay?
+SQL: SELECT COUNT(*) as total FROM studies WHERE modality='CT' AND study_date=CURRENT_DATE
+
+Q: danh sách ca chưa đọc
+SQL: SELECT p.full_name, p.patient_id, s.modality, s.study_date, s.body_part FROM studies s JOIN patients p ON s.patient_id=p.id WHERE s.status='PENDING' ORDER BY s.study_date DESC LIMIT 20
+
+Q: tìm ca chụp ngực
+SQL: SELECT p.full_name, s.modality, s.study_date, s.body_part, s.status FROM studies s JOIN patients p ON s.patient_id=p.id WHERE s.body_part ILIKE '%CHEST%' OR s.description ILIKE '%ngực%' LIMIT 20
 
 Câu hỏi: {question}
 
@@ -174,15 +190,18 @@ SQL:"""
         import requests
         resp = requests.post(
             "http://localhost:11434/api/generate",
-            json={"model": "gemma3:4b", "prompt": prompt, "stream": False},
-            timeout=30
+            json={"model": "gemma4:e4b", "prompt": prompt, "stream": False},
+            timeout=60
         )
         if resp.status_code == 200:
-            sql = resp.json().get("response", "").strip()
-            sql = _extract_sql(sql)
+            raw_response = resp.json().get("response", "").strip()
+            logger.debug(f"[NL2SQL] Ollama raw: {raw_response[:200]}")
+            sql = _extract_sql(raw_response)
             if sql and _validate_sql(sql):
-                logger.info(f"[NL2SQL] Ollama generated SQL: {sql[:80]}")
+                logger.info(f"[NL2SQL] Ollama generated SQL: {sql[:100]}")
                 return {'sql': sql, 'source': 'ollama'}
+            else:
+                logger.warning(f"[NL2SQL] Ollama SQL rejected by validator: {sql[:100]}")
     except Exception as e:
         logger.warning(f"[NL2SQL] Ollama failed: {e}")
 
@@ -195,10 +214,14 @@ SQL:"""
             genai.configure(api_key=api_key)
             model = genai.GenerativeModel("gemini-2.0-flash")
             resp = model.generate_content(prompt)
-            sql = _extract_sql(resp.text)
+            raw_response = resp.text
+            logger.debug(f"[NL2SQL] Gemini raw: {raw_response[:200]}")
+            sql = _extract_sql(raw_response)
             if sql and _validate_sql(sql):
-                logger.info(f"[NL2SQL] Gemini generated SQL: {sql[:80]}")
+                logger.info(f"[NL2SQL] Gemini generated SQL: {sql[:100]}")
                 return {'sql': sql, 'source': 'gemini'}
+            else:
+                logger.warning(f"[NL2SQL] Gemini SQL rejected by validator: {sql[:100]}")
     except Exception as e:
         logger.warning(f"[NL2SQL] Gemini failed: {e}")
 
@@ -220,15 +243,45 @@ def _extract_sql(text: str) -> str:
 
 
 def _validate_sql(sql: str) -> bool:
-    """Validate SQL: chỉ cho phép SELECT"""
+    """Validate SQL nghiêm ngặt:
+    - Chỉ cho phép SELECT
+    - Chặn DML/DDL
+    - Chặn truy cập bảng nhạy cảm (users, refresh_tokens)
+    - Chặn truy cập cột nhạy cảm (password_hash, token_hash, embedding)
+    """
     sql_upper = sql.upper().strip()
+
+    # 1. Chỉ cho SELECT
     if not sql_upper.startswith('SELECT'):
+        logger.warning(f"[NL2SQL] SQL rejected: not SELECT")
         return False
-    # Block dangerous keywords
-    dangerous = ['DROP', 'DELETE', 'INSERT', 'UPDATE', 'ALTER', 'TRUNCATE', 'CREATE', 'EXEC']
+
+    # 2. Block DML/DDL
+    dangerous = ['DROP', 'DELETE', 'INSERT', 'UPDATE', 'ALTER', 'TRUNCATE', 'CREATE', 'EXEC', 'GRANT', 'REVOKE']
     for kw in dangerous:
-        if kw in sql_upper:
+        # Kiểm tra keyword riêng biệt (không match substring)
+        if re.search(rf'\b{kw}\b', sql_upper):
+            logger.warning(f"[NL2SQL] SQL rejected: contains {kw}")
             return False
+
+    # 3. Block bảng nhạy cảm
+    sql_lower = sql.lower()
+    for table in _BLOCKED_TABLES:
+        if re.search(rf'\b{table}\b', sql_lower):
+            logger.warning(f"[NL2SQL] SQL rejected: accesses blocked table '{table}'")
+            return False
+
+    # 4. Block cột nhạy cảm
+    for col in _BLOCKED_COLUMNS:
+        if re.search(rf'\b{col}\b', sql_lower):
+            logger.warning(f"[NL2SQL] SQL rejected: accesses blocked column '{col}'")
+            return False
+
+    # 5. Block subquery vào information_schema (chống schema leak)
+    if 'information_schema' in sql_lower or 'pg_' in sql_lower:
+        logger.warning(f"[NL2SQL] SQL rejected: accesses system catalog")
+        return False
+
     return True
 
 
@@ -237,30 +290,51 @@ def _validate_sql(sql: str) -> bool:
 # ============================================================
 
 def execute_sql(sql: str, params: tuple = None) -> Dict:
-    """Execute validated SQL with parameterized query and return results"""
+    """Execute validated SQL trong sandbox an toàn:
+    - Statement timeout 5 giây (chống DoS)
+    - Read-only transaction (chống ghi dữ liệu)
+    - Giới hạn 100 rows
+    """
     conn = get_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
     try:
+        # Sandbox: timeout 5s + read-only
+        cursor.execute("SET statement_timeout = '5s'")
+        cursor.execute("SET TRANSACTION READ ONLY")
+
         if params:
             cursor.execute(sql, params)
         else:
             cursor.execute(sql)
         rows = cursor.fetchall()
+
+        # Giới hạn 100 rows để tránh trả về quá nhiều data
+        rows = rows[:100]
+
         # Convert to serializable format
         results = []
         for row in rows:
             d = {}
             for k, v in dict(row).items():
+                # Loại bỏ cột nhạy cảm khỏi kết quả (defense in depth)
+                if k in ('password_hash', 'token_hash', 'embedding', 'is_active'):
+                    continue
                 if isinstance(v, (date, datetime)):
                     d[k] = v.isoformat()
                 else:
                     d[k] = v
             results.append(d)
+
         return {'data': results, 'count': len(results)}
     except Exception as e:
         logger.error(f"[NL2SQL] SQL execution error: {e}")
-        return {'error': str(e), 'data': [], 'count': 0}
+        return {'error': 'Truy vấn không hợp lệ hoặc quá thời gian.', 'data': [], 'count': 0}
     finally:
+        # Reset timeout
+        try:
+            cursor.execute("RESET statement_timeout")
+        except Exception:
+            pass
         cursor.close()
         release_connection(conn)
 

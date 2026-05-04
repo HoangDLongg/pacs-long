@@ -1,12 +1,17 @@
 # api/auth.py
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 from core.auth_utils import AuthUtils
 from database.connection import get_db
 from models.user import User
 from models.refresh_token import RefreshToken
+
+limiter = Limiter(key_func=get_remote_address)
 
 # ====================== Pydantic Schemas ======================
 class LoginRequest(BaseModel):
@@ -30,7 +35,8 @@ router = APIRouter(prefix="/api/auth", tags=["Auth"])
 
 
 @router.post("/login", response_model=TokenResponse)
-def login(body: LoginRequest, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")  # Chống brute force: tối đa 5 lần đăng nhập/phút/IP
+def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
     """POST /api/auth/login - Đăng nhập"""
     
     user = db.query(User).filter(
@@ -68,7 +74,8 @@ def login(body: LoginRequest, db: Session = Depends(get_db)):
 
 
 @router.post("/refresh", response_model=TokenResponse)
-def refresh_token(body: RefreshRequest, db: Session = Depends(get_db)):
+@limiter.limit("10/minute")  # Giới hạn refresh token
+def refresh_token(request: Request, body: RefreshRequest, db: Session = Depends(get_db)):
     """POST /api/auth/refresh - Làm mới Access Token"""
     
     user = AuthUtils.verify_refresh_token(body.refresh_token, db)

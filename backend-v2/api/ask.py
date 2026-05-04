@@ -10,14 +10,18 @@ Tách riêng theo kiến trúc README:
 import os
 import sys
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel, Field
+
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from core.auth_utils import AuthUtils
 from models.user import User
 
 router = APIRouter(prefix="/api", tags=["Ask"])
+limiter = Limiter(key_func=get_remote_address)
 
 
 class AskRequest(BaseModel):
@@ -26,7 +30,9 @@ class AskRequest(BaseModel):
 
 
 @router.post("/ask")
+@limiter.limit("10/minute")  # Giới hạn 10 câu hỏi/phút/IP (tốn tài nguyên LLM)
 def ask_endpoint(
+    request: Request,
     body: AskRequest,
     current_user: User = Depends(AuthUtils.get_current_user),
 ):
@@ -38,8 +44,11 @@ def ask_endpoint(
       3. SEMANTIC → hybrid_search (dense + BM25)
       4. HYBRID → cả SQL + RAG
 
+    Rate limit: 10 requests/minute/IP
+
     Returns:
       intent, confidence, sql, source, data[], rag_results[], answer, router_debug
     """
     from core.nl2sql_engine import ask
     return ask(body.question)
+

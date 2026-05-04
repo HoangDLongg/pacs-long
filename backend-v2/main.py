@@ -1,10 +1,14 @@
 # main.py
 import uvicorn
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 import os
+
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from database.connection import (
     init_db,
@@ -29,13 +33,20 @@ async def lifespan(app):
     print("[PACS++] All database connections closed.")
 
 
+# ====================== Rate Limiter ======================
+limiter = Limiter(key_func=get_remote_address, default_limits=["60/minute"])
+
 # Tạo FastAPI app
 app = FastAPI(
     title="PACS++ API",
     version="2.0",
-    description="Backend cho hệ thống PACS với Auth + DICOM",
+    description="Backend cho hệ thống PACS với Auth + DICOM + RAG",
     lifespan=lifespan,
 )
+
+# Gắn rate limiter vào app
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # CORS - Nên giới hạn origin ở production
 app.add_middleware(
