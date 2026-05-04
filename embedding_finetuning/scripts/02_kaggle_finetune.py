@@ -1,17 +1,17 @@
 """
-02_kaggle_finetune.py — Fine-tune e5-large trên Kaggle GPU T4
-Copy toàn bộ code này vào 1 Kaggle notebook cell
+02_kaggle_finetune.py — LoRA Fine-tune BGE-M3 cho PACS++
+Chạy trên Kaggle GPU T4 (16GB VRAM)
 
-Setup Kaggle:
-  1. New Notebook → Settings → Accelerator → GPU T4 x2
-  2. Thêm cell đầu: !pip install -q sentence-transformers datasets
-  3. Paste code này → Run All (~30 phút)
+Setup:
+  1. Kaggle → New Notebook → GPU T4 x2
+  2. Cell đầu tiên:
+     !pip install -q sentence-transformers datasets peft
+  3. Paste code này → Run All (~15-20 phút)
 """
 
 # ============================================================
-# INSTALL (chạy trong cell riêng trên Kaggle)
+# !pip install -q sentence-transformers datasets peft
 # ============================================================
-# !pip install -q sentence-transformers datasets
 
 import json
 import time
@@ -21,10 +21,22 @@ from sentence_transformers import SentenceTransformer, InputExample, losses
 from torch.utils.data import DataLoader
 
 # ============================================================
-# STEP 1: Download data
+# CONFIG
+# ============================================================
+BASE_MODEL = "BAAI/bge-m3"          # Best multilingual embedding
+BATCH_SIZE = 32                      # T4 handles 32 easily with LoRA
+EPOCHS = 3
+WARMUP_RATIO = 0.1
+LORA_R = 16                         # LoRA rank
+LORA_ALPHA = 32                     # LoRA alpha
+LORA_DROPOUT = 0.1
+OUTPUT_PATH = "/kaggle/working/bge-m3-medical-lora"
+
+# ============================================================
+# STEP 1: Download Vietnamese Medical QA
 # ============================================================
 print("=" * 60)
-print("  STEP 1: Download Vietnamese Medical QA (7506 pairs)")
+print("  STEP 1: Download data (hungnm/vietnamese-medical-qa)")
 print("=" * 60)
 
 ds = load_dataset("hungnm/vietnamese-medical-qa", split="train")
@@ -43,16 +55,17 @@ eval_data = train_examples[split_idx:]
 print(f"Train: {len(train_data)}, Eval: {len(eval_data)}")
 
 # ============================================================
-# STEP 2: Load model + benchmark BEFORE
+# STEP 2: Load model + Benchmark BEFORE
 # ============================================================
 print(f"\n{'=' * 60}")
-print("  STEP 2: Benchmark BEFORE fine-tune")
+print(f"  STEP 2: Load {BASE_MODEL} + Benchmark BEFORE")
 print("=" * 60)
 
-BASE_MODEL = "intfloat/multilingual-e5-large"
 model = SentenceTransformer(BASE_MODEL)
-print(f"Model: {BASE_MODEL} ({model.get_sentence_embedding_dimension()}d)")
+print(f"Model: {BASE_MODEL}")
+print(f"Embedding dim: {model.get_sentence_embedding_dimension()}")
 
+# Medical benchmark queries
 BENCH = [
     ("tổn thương phổi kẽ", "Phổi hai bên kém sáng mờ kính rải rác. Hình ảnh nghĩ nhiều đến tổn thương phổi kẽ."),
     ("bóng tim to trên phim ngực", "Bóng mờ tim to các cung tim rộng. Hình ảnh bóng tim to."),
@@ -76,16 +89,21 @@ NEGS = [
 
 
 def benchmark(m):
+    """Tính cosine similarity: positive vs negative"""
     pos, neg = [], []
     for q, p in BENCH:
-        qe = m.encode([f"query: {q}"], normalize_embeddings=True)[0]
-        pe = m.encode([f"passage: {p}"], normalize_embeddings=True)[0]
+        qe = m.encode([q], normalize_embeddings=True)[0]
+        pe = m.encode([p], normalize_embeddings=True)[0]
         pos.append(float(np.dot(qe, pe)))
         for n in NEGS:
-            ne = m.encode([f"passage: {n}"], normalize_embeddings=True)[0]
+            ne = m.encode([n], normalize_embeddings=True)[0]
             neg.append(float(np.dot(qe, ne)))
-    return {"pos": round(np.mean(pos), 4), "neg": round(np.mean(neg), 4),
-            "margin": round(np.mean(pos) - np.mean(neg), 4), "details": [round(s, 4) for s in pos]}
+    return {
+        "pos": round(np.mean(pos), 4),
+        "neg": round(np.mean(neg), 4),
+        "margin": round(np.mean(pos) - np.mean(neg), 4),
+        "details": [round(s, 4) for s in pos],
+    }
 
 
 before = benchmark(model)
@@ -94,54 +112,95 @@ print(f"  Negative sim: {before['neg']}")
 print(f"  Margin:       {before['margin']}")
 
 # ============================================================
-# STEP 3: Fine-tune
+# STEP 3: Setup LoRA
 # ============================================================
 print(f"\n{'=' * 60}")
-print("  STEP 3: Fine-tuning ({} pairs, 3 epochs)")
+print(f"  STEP 3: Setup LoRA (r={LORA_R}, alpha={LORA_ALPHA})")
 print("=" * 60)
 
-BATCH_SIZE = 32
-EPOCHS = 3
-OUTPUT = "/kaggle/working/e5-large-medical-finetuned"
+from peft import LoraConfig, get_peft_model, TaskType
+import torch
+
+# Get the transformer model inside SentenceTransformer
+transformer = model[0]  # First module is the transformer
+base_model = transformer.auto_model
+
+# Count params before LoRA
+total_params = sum(p.numel() for p in base_model.parameters())
+print(f"  Base model params: {total_params:,}")
+
+# Apply LoRA
+lora_config = LoraConfig(
+    task_type=TaskType.FEATURE_EXTRACTION,
+    r=LORA_R,
+    lora_alpha=LORA_ALPHA,
+    lora_dropout=LORA_DROPOUT,
+    target_modules=["query", "key", "value", "dense"],  # attention layers
+    inference_mode=False,
+)
+
+base_model = get_peft_model(base_model, lora_config)
+transformer.auto_model = base_model
+
+trainable_params = sum(p.numel() for p in base_model.parameters() if p.requires_grad)
+print(f"  Trainable params: {trainable_params:,} ({trainable_params/total_params*100:.2f}%)")
+print(f"  Reduction: {total_params/trainable_params:.0f}x fewer params")
+
+# ============================================================
+# STEP 4: Fine-tune with LoRA
+# ============================================================
+print(f"\n{'=' * 60}")
+print(f"  STEP 4: LoRA Fine-tuning ({len(train_data)} pairs, {EPOCHS} epochs)")
+print("=" * 60)
 
 loader = DataLoader(train_data, shuffle=True, batch_size=BATCH_SIZE)
 loss_fn = losses.MultipleNegativesRankingLoss(model=model)
-warmup = int(len(loader) * EPOCHS * 0.1)
+warmup = int(len(loader) * EPOCHS * WARMUP_RATIO)
 
-print(f"  Batches: {len(loader)}, Warmup: {warmup}")
+print(f"  Batches/epoch: {len(loader)}")
+print(f"  Total steps: {len(loader) * EPOCHS}")
+print(f"  Warmup: {warmup}")
 
 t0 = time.time()
 model.fit(
     train_objectives=[(loader, loss_fn)],
     epochs=EPOCHS,
     warmup_steps=warmup,
-    output_path=OUTPUT,
+    output_path=OUTPUT_PATH,
     save_best_model=True,
     show_progress_bar=True,
     use_amp=True,
 )
 train_min = (time.time() - t0) / 60
-print(f"\n  Done in {train_min:.1f} minutes")
+print(f"\n  LoRA training done in {train_min:.1f} minutes")
 
 # ============================================================
-# STEP 4: Benchmark AFTER
+# STEP 5: Benchmark AFTER
 # ============================================================
 print(f"\n{'=' * 60}")
-print("  STEP 4: Benchmark AFTER fine-tune")
+print("  STEP 5: Benchmark AFTER LoRA fine-tune")
 print("=" * 60)
 
-model_ft = SentenceTransformer(OUTPUT)
+# Save and reload to test
+model.save(OUTPUT_PATH)
+model_ft = SentenceTransformer(OUTPUT_PATH)
+
 after = benchmark(model_ft)
 print(f"  Positive sim: {after['pos']}")
 print(f"  Negative sim: {after['neg']}")
 print(f"  Margin:       {after['margin']}")
 
 # ============================================================
-# STEP 5: Comparison
+# STEP 6: Results
 # ============================================================
 print(f"\n{'=' * 60}")
-print("  RESULTS: Before vs After")
+print("  RESULTS: Before vs After LoRA Fine-tune")
 print("=" * 60)
+print(f"  Model: {BASE_MODEL}")
+print(f"  LoRA: r={LORA_R}, alpha={LORA_ALPHA}")
+print(f"  Data: {len(train_data)} medical QA pairs (Vietnamese)")
+print(f"  Trainable: {trainable_params:,} / {total_params:,} params ({trainable_params/total_params*100:.2f}%)")
+print()
 print(f"{'Metric':<25} {'Before':>8} {'After':>8} {'Change':>8}")
 print("-" * 50)
 print(f"{'Positive Similarity':<25} {before['pos']:>8.4f} {after['pos']:>8.4f} {after['pos']-before['pos']:>+8.4f}")
@@ -149,18 +208,40 @@ print(f"{'Negative Similarity':<25} {before['neg']:>8.4f} {after['neg']:>8.4f} {
 print(f"{'Margin':<25} {before['margin']:>8.4f} {after['margin']:>8.4f} {after['margin']-before['margin']:>+8.4f}")
 print(f"{'Training Time':<25} {'':>8} {train_min:>7.1f}m")
 
-print(f"\nPer-query:")
-print(f"{'Query':<40} {'Before':>8} {'After':>8}")
-print("-" * 58)
+print(f"\nPer-query positive similarity:")
+print(f"{'Query':<40} {'Before':>8} {'After':>8} {'Δ':>8}")
+print("-" * 65)
 for i, (q, _) in enumerate(BENCH):
-    print(f"{q[:39]:<40} {before['details'][i]:>8.4f} {after['details'][i]:>8.4f}")
+    b = before['details'][i]
+    a = after['details'][i]
+    marker = "↑" if a > b else ("↓" if a < b else "=")
+    print(f"{q[:39]:<40} {b:>8.4f} {a:>8.4f} {a-b:>+7.4f} {marker}")
 
-# Save
-results = {"before": before, "after": after, "train_min": round(train_min, 1),
-           "train_pairs": len(train_data), "model": BASE_MODEL}
+# Save results
+results = {
+    "base_model": BASE_MODEL,
+    "method": "LoRA",
+    "lora_r": LORA_R,
+    "lora_alpha": LORA_ALPHA,
+    "trainable_params": trainable_params,
+    "total_params": total_params,
+    "train_pairs": len(train_data),
+    "epochs": EPOCHS,
+    "train_min": round(train_min, 1),
+    "before": before,
+    "after": after,
+    "improvement": {
+        "pos": round(after['pos'] - before['pos'], 4),
+        "neg": round(after['neg'] - before['neg'], 4),
+        "margin": round(after['margin'] - before['margin'], 4),
+    }
+}
+
 with open("/kaggle/working/finetune_results.json", "w") as f:
     json.dump(results, f, indent=2, ensure_ascii=False)
 
 print(f"\n{'=' * 60}")
-print("  Download model từ Output panel bên phải Kaggle")
+print("  Model saved: /kaggle/working/bge-m3-medical-lora/")
+print("  Results: /kaggle/working/finetune_results.json")
+print("  → Download từ Output panel bên phải Kaggle")
 print("=" * 60)
