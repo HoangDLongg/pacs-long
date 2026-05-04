@@ -15,10 +15,13 @@ Setup:
 
 import json
 import time
+import random
 import numpy as np
 from datasets import load_dataset
 from sentence_transformers import SentenceTransformer, InputExample, losses
 from torch.utils.data import DataLoader
+
+random.seed(42)
 
 # ============================================================
 # CONFIG
@@ -42,12 +45,33 @@ print("=" * 60)
 ds = load_dataset("hungnm/vietnamese-medical-qa", split="train")
 print(f"Downloaded: {len(ds)} QA pairs")
 
-train_examples = []
+# Collect raw QA pairs
+raw_pairs = []
 for item in ds:
     q = item["question"].strip()
     a = item["answer"].strip()
     if 10 < len(q) < 500 and 20 < len(a) < 1000:
-        train_examples.append(InputExample(texts=[q, a[:500]]))
+        raw_pairs.append((q, a[:500]))
+
+print(f"Valid QA pairs: {len(raw_pairs)}")
+
+# Build ContrastiveLoss data: positive (label=1) + negative (label=0)
+train_examples = []
+
+# Positive pairs: question → correct answer (label=1)
+for q, a in raw_pairs:
+    train_examples.append(InputExample(texts=[q, a], label=1.0))
+
+# Negative pairs: question → WRONG answer (label=0)
+all_answers = [a for _, a in raw_pairs]
+for q, correct_a in raw_pairs:
+    wrong_a = random.choice(all_answers)
+    while wrong_a == correct_a:
+        wrong_a = random.choice(all_answers)
+    train_examples.append(InputExample(texts=[q, wrong_a], label=0.0))
+
+random.shuffle(train_examples)
+print(f"Total pairs: {len(train_examples)} (50% positive, 50% negative)")
 
 split_idx = int(len(train_examples) * 0.9)
 train_data = train_examples[:split_idx]
@@ -154,7 +178,7 @@ print(f"  STEP 4: LoRA Fine-tuning ({len(train_data)} pairs, {EPOCHS} epochs)")
 print("=" * 60)
 
 loader = DataLoader(train_data, shuffle=True, batch_size=BATCH_SIZE)
-loss_fn = losses.MultipleNegativesRankingLoss(model=model)
+loss_fn = losses.ContrastiveLoss(model=model)
 warmup = int(len(loader) * EPOCHS * WARMUP_RATIO)
 
 print(f"  Batches/epoch: {len(loader)}")
