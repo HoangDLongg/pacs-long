@@ -4,6 +4,7 @@ __pycache__/
 *.pyo
 venv/
 .env
+.pytest_cache/
 
 # Node.js
 node_modules/
@@ -30,6 +31,8 @@ desktop.ini
 
 # Logs
 *.log
+logs/
 
 # Specify
 .specify/
+
