@@ -1,0 +1,506 @@
+{
+  "summary": {
+    "Keyword": {
+      "P@5": 0.2,
+      "MRR": 0.333,
+      "nDCG@5": 0.333
+    },
+    "Dense": {
+      "P@5": 0.767,
+      "MRR": 1.0,
+      "nDCG@5": 1.0
+    },
+    "BM25": {
+      "P@5": 0.683,
+      "MRR": 0.933,
+      "nDCG@5": 0.936
+    },
+    "Hybrid": {
+      "P@5": 0.75,
+      "MRR": 1.0,
+      "nDCG@5": 0.996
+    }
+  },
+  "details": [
+    {
+      "method": "Keyword",
+      "query": "tổn thương phổi kẽ",
+      "cat": "chest",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Dense",
+      "query": "tổn thương phổi kẽ",
+      "cat": "chest",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 132.4
+    },
+    {
+      "method": "BM25",
+      "query": "tổn thương phổi kẽ",
+      "cat": "chest",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Hybrid",
+      "query": "tổn thương phổi kẽ",
+      "cat": "chest",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 120.1
+    },
+    {
+      "method": "Keyword",
+      "query": "mờ kính rải rác hai phổi",
+      "cat": "chest",
+      "P@5": 0.2,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 1,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Dense",
+      "query": "mờ kính rải rác hai phổi",
+      "cat": "chest",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 132.8
+    },
+    {
+      "method": "BM25",
+      "query": "mờ kính rải rác hai phổi",
+      "cat": "chest",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Hybrid",
+      "query": "mờ kính rải rác hai phổi",
+      "cat": "chest",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 135.2
+    },
+    {
+      "method": "Keyword",
+      "query": "bóng tim to trên phim",
+      "cat": "chest",
+      "P@5": 0.0,
+      "MRR": 0.0,
+      "nDCG@5": 0.0,
+      "hits": 0,
+      "time_ms": 0.5
+    },
+    {
+      "method": "Dense",
+      "query": "bóng tim to trên phim",
+      "cat": "chest",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 120.6
+    },
+    {
+      "method": "BM25",
+      "query": "bóng tim to trên phim",
+      "cat": "chest",
+      "P@5": 0.4,
+      "MRR": 1.0,
+      "nDCG@5": 0.85,
+      "hits": 2,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Hybrid",
+      "query": "bóng tim to trên phim",
+      "cat": "chest",
+      "P@5": 0.8,
+      "MRR": 1.0,
+      "nDCG@5": 0.956,
+      "hits": 4,
+      "time_ms": 123.2
+    },
+    {
+      "method": "Keyword",
+      "query": "vôi hóa thành quai động mạch chủ",
+      "cat": "chest",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Dense",
+      "query": "vôi hóa thành quai động mạch chủ",
+      "cat": "chest",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 128.2
+    },
+    {
+      "method": "BM25",
+      "query": "vôi hóa thành quai động mạch chủ",
+      "cat": "chest",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Hybrid",
+      "query": "vôi hóa thành quai động mạch chủ",
+      "cat": "chest",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 126.9
+    },
+    {
+      "method": "Keyword",
+      "query": "tràn dịch màng phổi",
+      "cat": "chest",
+      "P@5": 0.2,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 1,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Dense",
+      "query": "tràn dịch màng phổi",
+      "cat": "chest",
+      "P@5": 0.2,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 1,
+      "time_ms": 124.6
+    },
+    {
+      "method": "BM25",
+      "query": "tràn dịch màng phổi",
+      "cat": "chest",
+      "P@5": 0.2,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 1,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Hybrid",
+      "query": "tràn dịch màng phổi",
+      "cat": "chest",
+      "P@5": 0.2,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 1,
+      "time_ms": 123.0
+    },
+    {
+      "method": "Keyword",
+      "query": "khối u gan nghi HCC ác tính",
+      "cat": "abdomen",
+      "P@5": 0.0,
+      "MRR": 0.0,
+      "nDCG@5": 0.0,
+      "hits": 0,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Dense",
+      "query": "khối u gan nghi HCC ác tính",
+      "cat": "abdomen",
+      "P@5": 0.6,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 3,
+      "time_ms": 131.1
+    },
+    {
+      "method": "BM25",
+      "query": "khối u gan nghi HCC ác tính",
+      "cat": "abdomen",
+      "P@5": 0.2,
+      "MRR": 0.2,
+      "nDCG@5": 0.387,
+      "hits": 1,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Hybrid",
+      "query": "khối u gan nghi HCC ác tính",
+      "cat": "abdomen",
+      "P@5": 0.6,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 3,
+      "time_ms": 131.3
+    },
+    {
+      "method": "Keyword",
+      "query": "sỏi túi mật viêm mạn",
+      "cat": "abdomen",
+      "P@5": 0.0,
+      "MRR": 0.0,
+      "nDCG@5": 0.0,
+      "hits": 0,
+      "time_ms": 0.6
+    },
+    {
+      "method": "Dense",
+      "query": "sỏi túi mật viêm mạn",
+      "cat": "abdomen",
+      "P@5": 0.6,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 3,
+      "time_ms": 124.0
+    },
+    {
+      "method": "BM25",
+      "query": "sỏi túi mật viêm mạn",
+      "cat": "abdomen",
+      "P@5": 0.6,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 3,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Hybrid",
+      "query": "sỏi túi mật viêm mạn",
+      "cat": "abdomen",
+      "P@5": 0.6,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 3,
+      "time_ms": 126.6
+    },
+    {
+      "method": "Keyword",
+      "query": "sỏi thận ứ nước giãn đài bể thận",
+      "cat": "abdomen",
+      "P@5": 0.0,
+      "MRR": 0.0,
+      "nDCG@5": 0.0,
+      "hits": 0,
+      "time_ms": 2.6
+    },
+    {
+      "method": "Dense",
+      "query": "sỏi thận ứ nước giãn đài bể thận",
+      "cat": "abdomen",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 133.4
+    },
+    {
+      "method": "BM25",
+      "query": "sỏi thận ứ nước giãn đài bể thận",
+      "cat": "abdomen",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Hybrid",
+      "query": "sỏi thận ứ nước giãn đài bể thận",
+      "cat": "abdomen",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 133.2
+    },
+    {
+      "method": "Keyword",
+      "query": "thoát vị đĩa đệm chèn ép rễ thần kinh",
+      "cat": "spine",
+      "P@5": 0.0,
+      "MRR": 0.0,
+      "nDCG@5": 0.0,
+      "hits": 0,
+      "time_ms": 4.5
+    },
+    {
+      "method": "Dense",
+      "query": "thoát vị đĩa đệm chèn ép rễ thần kinh",
+      "cat": "spine",
+      "P@5": 0.6,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 3,
+      "time_ms": 129.5
+    },
+    {
+      "method": "BM25",
+      "query": "thoát vị đĩa đệm chèn ép rễ thần kinh",
+      "cat": "spine",
+      "P@5": 0.6,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 3,
+      "time_ms": 5.5
+    },
+    {
+      "method": "Hybrid",
+      "query": "thoát vị đĩa đệm chèn ép rễ thần kinh",
+      "cat": "spine",
+      "P@5": 0.6,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 3,
+      "time_ms": 137.6
+    },
+    {
+      "method": "Keyword",
+      "query": "gãy lún đốt sống thắt lưng",
+      "cat": "spine",
+      "P@5": 0.0,
+      "MRR": 0.0,
+      "nDCG@5": 0.0,
+      "hits": 0,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Dense",
+      "query": "gãy lún đốt sống thắt lưng",
+      "cat": "spine",
+      "P@5": 0.4,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 2,
+      "time_ms": 129.1
+    },
+    {
+      "method": "BM25",
+      "query": "gãy lún đốt sống thắt lưng",
+      "cat": "spine",
+      "P@5": 0.4,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 2,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Hybrid",
+      "query": "gãy lún đốt sống thắt lưng",
+      "cat": "spine",
+      "P@5": 0.4,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 2,
+      "time_ms": 128.3
+    },
+    {
+      "method": "Keyword",
+      "query": "u vú BI-RADS 5 nghi ác tính hạch nách",
+      "cat": "breast",
+      "P@5": 0.0,
+      "MRR": 0.0,
+      "nDCG@5": 0.0,
+      "hits": 0,
+      "time_ms": 0.2
+    },
+    {
+      "method": "Dense",
+      "query": "u vú BI-RADS 5 nghi ác tính hạch nách",
+      "cat": "breast",
+      "P@5": 0.8,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 4,
+      "time_ms": 149.8
+    },
+    {
+      "method": "BM25",
+      "query": "u vú BI-RADS 5 nghi ác tính hạch nách",
+      "cat": "breast",
+      "P@5": 0.8,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 4,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Hybrid",
+      "query": "u vú BI-RADS 5 nghi ác tính hạch nách",
+      "cat": "breast",
+      "P@5": 0.8,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 4,
+      "time_ms": 146.3
+    },
+    {
+      "method": "Keyword",
+      "query": "vi vôi hóa dạng đa hình tuyến vú",
+      "cat": "breast",
+      "P@5": 0.0,
+      "MRR": 0.0,
+      "nDCG@5": 0.0,
+      "hits": 0,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Dense",
+      "query": "vi vôi hóa dạng đa hình tuyến vú",
+      "cat": "breast",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 129.4
+    },
+    {
+      "method": "BM25",
+      "query": "vi vôi hóa dạng đa hình tuyến vú",
+      "cat": "breast",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 0.0
+    },
+    {
+      "method": "Hybrid",
+      "query": "vi vôi hóa dạng đa hình tuyến vú",
+      "cat": "breast",
+      "P@5": 1.0,
+      "MRR": 1.0,
+      "nDCG@5": 1.0,
+      "hits": 5,
+      "time_ms": 137.6
+    }
+  ]
+}
