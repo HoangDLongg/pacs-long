@@ -130,7 +130,7 @@ export default function SearchPage() {
             <span className="search-card__modality">{r.modality}</span>
             {r.method && (
               <span className={`search-card__method search-card__method--${r.method}`}>
-                {r.method === 'keyword' ? '🔤' : r.method === 'dense' ? '🧠' : '⚡'} {r.method}
+                {r.method === 'keyword' ? 'KW' : r.method === 'dense' ? 'AI' : 'HB'} {r.method}
               </span>
             )}
             <span className="search-card__date">{formatDate(r.study_date)}</span>
@@ -206,7 +206,7 @@ export default function SearchPage() {
     <div className="search-page">
       {/* Header */}
       <div className="page-header">
-        <h2 className="page-header__title"> Tìm kiếm thông minh</h2>
+        <h2 className="page-header__title">Tìm kiếm thông minh</h2>
         <p className="page-header__subtitle">
           Nhập bất kỳ nội dung gì — tên bệnh nhân, triệu chứng, câu hỏi thống kê — hệ thống tự nhận diện
         </p>
@@ -232,7 +232,7 @@ export default function SearchPage() {
             className="btn btn--primary search-btn"
             disabled={loading || !query.trim()}
           >
-            {loading ? ' Đang xử lý...' : ' Tìm kiếm'}
+            {loading ? 'Đang xử lý...' : 'Tìm kiếm'}
           </button>
         </div>
 
@@ -240,8 +240,8 @@ export default function SearchPage() {
         <div className="search-hints">
           <span className="search-hint" onClick={() => setQuery('bao nhiêu ca CT hôm nay?')}>Thống kê</span>
           <span className="search-hint" onClick={() => setQuery('tổn thương phổi dạng nốt')}>Nội dung y khoa</span>
-          <span className="search-hint" onClick={() => setQuery('ca nào chưa đọc?')}> Tra cứu trạng thái</span>
-          <span className="search-hint" onClick={() => setQuery('thống kê theo modality')}> Phân tích</span>
+          <span className="search-hint" onClick={() => setQuery('ca nào chưa đọc?')}>Tra cứu trạng thái</span>
+          <span className="search-hint" onClick={() => setQuery('thống kê theo modality')}>Phân tích</span>
         </div>
       </form>
 
@@ -267,7 +267,7 @@ export default function SearchPage() {
 
       {/* Error */}
       {error && (
-        <div className="alert alert--error">❌ {error}</div>
+        <div className="alert alert--error">{error}</div>
       )}
 
       {/* NL2SQL Answer Panel — hiện khi có data từ SQL */}
@@ -275,9 +275,9 @@ export default function SearchPage() {
         <div className="ask-panel">
           <div className="ask-panel__header">
             <span className="ask-panel__intent">
-              {askResult.intent === 'STRUCTURED' ? ' Kết quả thống kê' :
-                askResult.intent === 'HYBRID' ? ' Kết quả phân tích' :
-                  ' Tìm kiếm ngữ nghĩa'}
+              {askResult.intent === 'STRUCTURED' ? 'Kết quả thống kê' :
+                askResult.intent === 'HYBRID' ? 'Kết quả phân tích' :
+                  'Tìm kiếm ngữ nghĩa'}
             </span>
           </div>
 
