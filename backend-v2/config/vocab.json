@@ -37,7 +37,8 @@
   "listing_keywords": [
     "danh sách", "danh sach", "liệt kê", "liet ke",
     "cho xem", "cho tôi xem", "show", "list", "hiển thị", "hien thi",
-    "ca nào", "ca nao", "những ca", "nhung ca", "các ca", "cac ca"
+    "ca nào", "ca nao", "những ca", "nhung ca", "các ca", "cac ca",
+    "lọc", "loc", "filter", "báo cáo", "bao cao"
   ],
   "stats_keywords": [
     "thống kê", "thong ke", "tỷ lệ", "ty le",
@@ -99,7 +100,13 @@
     "hẹp niệu quản", "sỏi niệu quản", "thận ứ nước",
     "tổn thương", "di căn", "ung thư", "u ác tính",
     "u lành tính", "viêm", "áp xe", "nang", "sỏi",
-    "xuất huyết", "hoại tử"
+    "xuất huyết", "hoại tử",
+    "thoat vi", "viem xoang", "dot quy", "viem phoi",
+    "u gan", "gay xuong", "xuat huyet", "lao phoi",
+    "thoat vi dia dem", "viem xoang man",
+    "tran dich", "soi than", "ap xe", "u nao",
+    "nhoi mau", "ton thuong", "di can", "ung thu",
+    "gai cot song", "thoai hoa", "loang xuong"
   ],
   "medical_terms_en": [
     "pneumonia", "pleural effusion", "lung nodule", "fracture",

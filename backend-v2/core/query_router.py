@@ -58,7 +58,7 @@ W_NAME_SUPPRESS_SEMAN = 0.3   # Suppress SEMANTIC khi có tên
 
 # Thresholds
 HYBRID_MIN_SCORE = 0.5   # Score tối thiểu để trigger HYBRID
-HYBRID_MAX_GAP = 0.15    # Gap tối đa giữa 2 intent cho HYBRID
+HYBRID_MAX_GAP = 0.35    # Gap tối đa giữa 2 intent cho HYBRID
 LOW_CONFIDENCE = 0.3     # Dưới ngưỡng này → SEMANTIC default
 DEFAULT_SEMANTIC_SCORE = 0.3  # Score mặc định cho SEMANTIC fallback
 
@@ -353,11 +353,27 @@ def compute_intent_scores(features: Dict[str, object]) -> Dict[str, float]:
 
     # ── Cross-intent interactions ────────────────────
 
-    # Tên người thật (has_vn_name) + bất kỳ context → vẫn PATIENT_LOOKUP
+    has_struct_signal = (features.get("has_counting_kw") or features.get("has_listing_kw") or
+                         features.get("has_stats_kw") or features.get("has_status_kw") or
+                         features.get("has_case_ref"))
+
+    # Tên người thật (has_vn_name) → PATIENT_LOOKUP
+    # NHƯNG chỉ suppress STRUCTURED khi KHÔNG có structured keywords
     if features.get("has_vn_name"):
         scores["PATIENT_LOOKUP"] += W_NAME_BOOST
-        scores["STRUCTURED"] = max(0, scores["STRUCTURED"] - W_NAME_SUPPRESS_STRUCT)
+        if not has_struct_signal:
+            scores["STRUCTURED"] = max(0, scores["STRUCTURED"] - W_NAME_SUPPRESS_STRUCT)
         scores["SEMANTIC"] = max(0, scores["SEMANTIC"] - W_NAME_SUPPRESS_SEMAN)
+
+    # bn_prefix (không có tên thật) + structured keywords → ưu tiên STRUCTURED
+    if features.get("has_bn_prefix") and not features.get("has_vn_name") and has_struct_signal:
+        scores["STRUCTURED"] += 0.3
+        scores["PATIENT_LOOKUP"] = max(0, scores["PATIENT_LOOKUP"] - 0.3)
+
+    # Medical + structured → HYBRID boost (cả 2 đều cao)
+    if features.get("has_medical_term") and has_struct_signal:
+        scores["SEMANTIC"] += 0.3
+        # Giữ STRUCTURED score nguyên → gap nhỏ → trigger HYBRID
 
     # Modality + medical → SEMANTIC (VD: "CT phổi" = tìm ca CT về phổi)
     if features.get("has_modality_kw") and features.get("has_medical_term"):
@@ -388,10 +404,16 @@ def select_intent(
 
     Pattern từ RAGCHATBOTV2 select_strategies()
     """
-    # Sort by score descending
-    sorted_intents = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    # Sort by score descending, tie-break: STRUCTURED > SEMANTIC > PATIENT_LOOKUP
+    _INTENT_PRIORITY = {"STRUCTURED": 2, "SEMANTIC": 1, "PATIENT_LOOKUP": 0}
+    sorted_intents = sorted(
+        scores.items(),
+        key=lambda x: (x[1], _INTENT_PRIORITY.get(x[0], 0)),
+        reverse=True
+    )
     best_intent = sorted_intents[0][0]
     best_score = sorted_intents[0][1]
+    second_intent = sorted_intents[1][0] if len(sorted_intents) > 1 else None
     second_score = sorted_intents[1][1] if len(sorted_intents) > 1 else 0.0
     gap = best_score - second_score
 
