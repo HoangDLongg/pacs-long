@@ -1,0 +1,261 @@
+[
+  {"group": "PATIENT_LOOKUP — Tên tiếng Việt (có dấu)", "cases": [
+    {"query": "Nguyễn Văn An", "expected": "PATIENT_LOOKUP"},
+    {"query": "Trần Thị Mai", "expected": "PATIENT_LOOKUP"},
+    {"query": "Lê Hoàng Minh", "expected": "PATIENT_LOOKUP"},
+    {"query": "Phạm Thị Lan", "expected": "PATIENT_LOOKUP"},
+    {"query": "Hồ Văn Tài", "expected": "PATIENT_LOOKUP"},
+    {"query": "Cao Văn Phúc", "expected": "PATIENT_LOOKUP"},
+    {"query": "Vũ Thị Hà", "expected": "PATIENT_LOOKUP"},
+    {"query": "Ngô Văn Thành", "expected": "PATIENT_LOOKUP"},
+    {"query": "Dương Thị Liên", "expected": "PATIENT_LOOKUP"},
+    {"query": "Mai Thị Dung", "expected": "PATIENT_LOOKUP"},
+    {"query": "Lương Thị Yến", "expected": "PATIENT_LOOKUP"},
+    {"query": "Tô Văn Bình", "expected": "PATIENT_LOOKUP"},
+    {"query": "Đỗ Minh Tuấn", "expected": "PATIENT_LOOKUP"},
+    {"query": "Bùi Thanh Hoa", "expected": "PATIENT_LOOKUP"},
+    {"query": "Hoàng Đức Long", "expected": "PATIENT_LOOKUP"}
+  ]},
+
+  {"group": "PATIENT_LOOKUP — Tên không dấu", "cases": [
+    {"query": "Nguyen Van A", "expected": "PATIENT_LOOKUP"},
+    {"query": "Tran Thi Mai", "expected": "PATIENT_LOOKUP"},
+    {"query": "Le Hoang Minh", "expected": "PATIENT_LOOKUP"},
+    {"query": "Pham Thi Lan", "expected": "PATIENT_LOOKUP"},
+    {"query": "Ho Van Tai", "expected": "PATIENT_LOOKUP"},
+    {"query": "Duong Thi Lien", "expected": "PATIENT_LOOKUP"},
+    {"query": "Ngo Van Thanh", "expected": "PATIENT_LOOKUP"},
+    {"query": "Cao Van Phuc", "expected": "PATIENT_LOOKUP"},
+    {"query": "Vu Thi Ha", "expected": "PATIENT_LOOKUP"},
+    {"query": "Do Minh Tuan", "expected": "PATIENT_LOOKUP"}
+  ]},
+
+  {"group": "PATIENT_LOOKUP — Có prefix tìm kiếm", "cases": [
+    {"query": "tìm bệnh nhân Nguyễn Văn An", "expected": "PATIENT_LOOKUP"},
+    {"query": "tra cứu bệnh nhân Trần Thị Mai", "expected": "PATIENT_LOOKUP"},
+    {"query": "tìm tên Phạm Thị Lan", "expected": "PATIENT_LOOKUP"},
+    {"query": "bệnh nhân tên Lê Hoàng Minh", "expected": "PATIENT_LOOKUP"},
+    {"query": "hồ sơ bệnh nhân Hồ Văn Tài", "expected": "PATIENT_LOOKUP"},
+    {"query": "tìm hồ sơ Cao Văn Phúc", "expected": "PATIENT_LOOKUP"},
+    {"query": "search patient Nguyen Van A", "expected": "PATIENT_LOOKUP"},
+    {"query": "tìm kiếm Vũ Thị Hà", "expected": "PATIENT_LOOKUP"},
+    {"query": "xem hồ sơ Bùi Thanh Hoa", "expected": "PATIENT_LOOKUP"},
+    {"query": "tìm BN Đỗ Minh Tuấn", "expected": "PATIENT_LOOKUP"}
+  ]},
+
+  {"group": "PATIENT_LOOKUP — Mã bệnh nhân", "cases": [
+    {"query": "mã bệnh nhân A000801", "expected": "PATIENT_LOOKUP"},
+    {"query": "patient ID 1781655154", "expected": "PATIENT_LOOKUP"},
+    {"query": "bệnh nhân 10250", "expected": "PATIENT_LOOKUP"},
+    {"query": "mã BN A001234", "expected": "PATIENT_LOOKUP"},
+    {"query": "ID bệnh nhân 99887", "expected": "PATIENT_LOOKUP"},
+    {"query": "tìm mã BN P12345", "expected": "PATIENT_LOOKUP"}
+  ]},
+
+  {"group": "STRUCTURED — Đếm ca theo modality", "cases": [
+    {"query": "bao nhiêu ca CT hôm nay", "expected": "STRUCTURED"},
+    {"query": "có bao nhiêu ca MR", "expected": "STRUCTURED"},
+    {"query": "đếm ca CT", "expected": "STRUCTURED"},
+    {"query": "mấy ca CR hôm nay", "expected": "STRUCTURED"},
+    {"query": "tổng số ca US", "expected": "STRUCTURED"},
+    {"query": "số lượng ca DX tuần này", "expected": "STRUCTURED"},
+    {"query": "hôm nay có mấy ca CT", "expected": "STRUCTURED"},
+    {"query": "số ca chụp CT ngày hôm nay", "expected": "STRUCTURED"},
+    {"query": "bao nhiêu ca MG tháng này", "expected": "STRUCTURED"},
+    {"query": "tổng ca chụp MR tuần trước", "expected": "STRUCTURED"},
+    {"query": "đếm tất cả ca CT từ đầu tháng", "expected": "STRUCTURED"},
+    {"query": "hôm qua có bao nhiêu ca US", "expected": "STRUCTURED"}
+  ]},
+
+  {"group": "STRUCTURED — Đếm ca theo status", "cases": [
+    {"query": "mấy ca chưa đọc", "expected": "STRUCTURED"},
+    {"query": "tổng cộng bao nhiều ca pending", "expected": "STRUCTURED"},
+    {"query": "bao nhiêu ca đã báo cáo", "expected": "STRUCTURED"},
+    {"query": "số ca verified hôm nay", "expected": "STRUCTURED"},
+    {"query": "còn bao nhiêu ca chưa báo cáo", "expected": "STRUCTURED"},
+    {"query": "đếm ca REPORTED", "expected": "STRUCTURED"},
+    {"query": "mấy ca đang chờ đọc", "expected": "STRUCTURED"},
+    {"query": "tổng ca pending hiện tại", "expected": "STRUCTURED"}
+  ]},
+
+  {"group": "STRUCTURED — Đếm chung", "cases": [
+    {"query": "đếm số bệnh nhân", "expected": "STRUCTURED"},
+    {"query": "tổng số ca chụp tháng 3", "expected": "STRUCTURED"},
+    {"query": "bao nhiêu bệnh nhân tất cả", "expected": "STRUCTURED"},
+    {"query": "tổng số báo cáo", "expected": "STRUCTURED"},
+    {"query": "có bao nhiêu ca chụp", "expected": "STRUCTURED"},
+    {"query": "đếm tổng số ca", "expected": "STRUCTURED"},
+    {"query": "số lượng bệnh nhân nam", "expected": "STRUCTURED"},
+    {"query": "bao nhiêu ca chụp tuần này", "expected": "STRUCTURED"}
+  ]},
+
+  {"group": "STRUCTURED — Thống kê / phân tích", "cases": [
+    {"query": "thống kê theo modality", "expected": "STRUCTURED"},
+    {"query": "tỷ lệ ca đã báo cáo", "expected": "STRUCTURED"},
+    {"query": "thống kê ca chụp theo loại", "expected": "STRUCTURED"},
+    {"query": "phân bố ca theo modality", "expected": "STRUCTURED"},
+    {"query": "tỷ lệ pending vs reported", "expected": "STRUCTURED"},
+    {"query": "thống kê ca theo trạng thái", "expected": "STRUCTURED"},
+    {"query": "biểu đồ ca chụp theo tháng", "expected": "STRUCTURED"},
+    {"query": "phân tích số ca theo ngày", "expected": "STRUCTURED"},
+    {"query": "thống kê ca CR và CT", "expected": "STRUCTURED"},
+    {"query": "so sánh số ca giữa các modality", "expected": "STRUCTURED"}
+  ]},
+
+  {"group": "STRUCTURED — Danh sách ca", "cases": [
+    {"query": "ca nào chưa đọc", "expected": "STRUCTURED"},
+    {"query": "danh sách ca hôm nay", "expected": "STRUCTURED"},
+    {"query": "liệt kê ca CT tuần này", "expected": "STRUCTURED"},
+    {"query": "những ca chưa báo cáo", "expected": "STRUCTURED"},
+    {"query": "cho tôi xem danh sách bệnh nhân", "expected": "STRUCTURED"},
+    {"query": "ca reported hôm nay", "expected": "STRUCTURED"},
+    {"query": "những ca đã verified", "expected": "STRUCTURED"},
+    {"query": "danh sách ca MR tháng 5", "expected": "STRUCTURED"},
+    {"query": "ca nào chụp hôm qua", "expected": "STRUCTURED"},
+    {"query": "liệt kê ca chưa verified", "expected": "STRUCTURED"},
+    {"query": "ca chụp ngày 15 tháng 3", "expected": "STRUCTURED"},
+    {"query": "danh sách ca pending của bác sĩ", "expected": "STRUCTURED"},
+    {"query": "ca US hôm nay", "expected": "STRUCTURED"},
+    {"query": "xem các ca DX tuần trước", "expected": "STRUCTURED"}
+  ]},
+
+  {"group": "STRUCTURED — Tra cứu entity (BN/BS cụ thể)", "cases": [
+    {"query": "bệnh nhân Nguyễn Văn A chụp gì", "expected": "STRUCTURED"},
+    {"query": "ai chụp CT hôm qua", "expected": "STRUCTURED"},
+    {"query": "bác sĩ Nam viết bao nhiêu báo cáo", "expected": "STRUCTURED"},
+    {"query": "ca số 123 trạng thái gì", "expected": "STRUCTURED"},
+    {"query": "ca nào chụp ngày 15 tháng 3", "expected": "STRUCTURED"},
+    {"query": "bệnh nhân Trần Thị Mai có mấy ca chụp", "expected": "STRUCTURED"},
+    {"query": "ai là bác sĩ đọc ca nhiều nhất", "expected": "STRUCTURED"},
+    {"query": "bệnh nhân nào chụp CT nhiều nhất", "expected": "STRUCTURED"},
+    {"query": "bác sĩ Hùng đã đọc bao nhiêu ca", "expected": "STRUCTURED"},
+    {"query": "ca của bệnh nhân ID A000801", "expected": "STRUCTURED"}
+  ]},
+
+  {"group": "SEMANTIC — Bệnh phổi", "cases": [
+    {"query": "tổn thương phổi dạng nốt đơn độc", "expected": "SEMANTIC"},
+    {"query": "hình ảnh mờ kính rải rác hai phổi", "expected": "SEMANTIC"},
+    {"query": "kết luận viêm phổi thùy dưới phải", "expected": "SEMANTIC"},
+    {"query": "dịch màng phổi hai bên", "expected": "SEMANTIC"},
+    {"query": "xẹp thùy dưới phổi trái", "expected": "SEMANTIC"},
+    {"query": "u phổi nghi ác tính", "expected": "SEMANTIC"},
+    {"query": "COPD với tổn thương kẽ", "expected": "SEMANTIC"},
+    {"query": "tìm ca tương tự tổn thương phổi kẽ", "expected": "SEMANTIC"},
+    {"query": "nốt mờ sát màng phổi", "expected": "SEMANTIC"},
+    {"query": "viêm phổi kèm bóng tim to", "expected": "SEMANTIC"},
+    {"query": "tràn khí màng phổi tự phát", "expected": "SEMANTIC"},
+    {"query": "phổi ứ khí hai bên", "expected": "SEMANTIC"},
+    {"query": "đông đặc thùy trên phổi phải", "expected": "SEMANTIC"},
+    {"query": "tổn thương dạng hang phổi trái", "expected": "SEMANTIC"},
+    {"query": "di căn phổi nhiều nốt", "expected": "SEMANTIC"}
+  ]},
+
+  {"group": "SEMANTIC — Bệnh tim mạch", "cases": [
+    {"query": "vôi hóa thành quai động mạch chủ", "expected": "SEMANTIC"},
+    {"query": "hẹp động mạch vành", "expected": "SEMANTIC"},
+    {"query": "bóng tim to", "expected": "SEMANTIC"},
+    {"query": "tràn dịch màng ngoài tim", "expected": "SEMANTIC"},
+    {"query": "phình động mạch chủ bụng", "expected": "SEMANTIC"},
+    {"query": "suy tim sung huyết", "expected": "SEMANTIC"},
+    {"query": "xơ vữa động mạch", "expected": "SEMANTIC"}
+  ]},
+
+  {"group": "SEMANTIC — Bệnh xương khớp", "cases": [
+    {"query": "gãy xương sườn bên phải", "expected": "SEMANTIC"},
+    {"query": "thoát vị đĩa đệm cột sống thắt lưng", "expected": "SEMANTIC"},
+    {"query": "loãng xương cột sống", "expected": "SEMANTIC"},
+    {"query": "di căn xương", "expected": "SEMANTIC"},
+    {"query": "thoái hóa khớp gối", "expected": "SEMANTIC"},
+    {"query": "gãy xương đùi bên trái", "expected": "SEMANTIC"},
+    {"query": "trật khớp vai phải", "expected": "SEMANTIC"},
+    {"query": "viêm khớp dạng thấp", "expected": "SEMANTIC"}
+  ]},
+
+  {"group": "SEMANTIC — Bệnh gan / ổ bụng", "cases": [
+    {"query": "chẩn đoán u gan HCC", "expected": "SEMANTIC"},
+    {"query": "sỏi túi mật", "expected": "SEMANTIC"},
+    {"query": "gan nhiễm mỡ", "expected": "SEMANTIC"},
+    {"query": "u nang thận đơn giản", "expected": "SEMANTIC"},
+    {"query": "viêm tụy cấp", "expected": "SEMANTIC"},
+    {"query": "tắc ruột cơ học", "expected": "SEMANTIC"},
+    {"query": "áp xe gan do amip", "expected": "SEMANTIC"},
+    {"query": "lách to bất thường", "expected": "SEMANTIC"}
+  ]},
+
+  {"group": "SEMANTIC — Bệnh não / thần kinh", "cases": [
+    {"query": "nhồi máu não cấp", "expected": "SEMANTIC"},
+    {"query": "xuất huyết não", "expected": "SEMANTIC"},
+    {"query": "u não vùng thái dương", "expected": "SEMANTIC"},
+    {"query": "teo não lan tỏa", "expected": "SEMANTIC"},
+    {"query": "phù não cấp tính", "expected": "SEMANTIC"},
+    {"query": "tụ máu ngoài màng cứng", "expected": "SEMANTIC"},
+    {"query": "dị dạng mạch máu não", "expected": "SEMANTIC"}
+  ]},
+
+  {"group": "SEMANTIC — Vú / tuyến", "cases": [
+    {"query": "BI-RADS 4 tuyến vú", "expected": "SEMANTIC"},
+    {"query": "u xơ tuyến vú", "expected": "SEMANTIC"},
+    {"query": "nang tuyến vú đơn giản", "expected": "SEMANTIC"},
+    {"query": "vôi hóa vi thể tuyến vú", "expected": "SEMANTIC"},
+    {"query": "BI-RADS 5 nghi ung thư vú", "expected": "SEMANTIC"}
+  ]},
+
+  {"group": "SEMANTIC — Tìm ca tương tự", "cases": [
+    {"query": "tìm báo cáo tương tự tổn thương phổi kẽ", "expected": "SEMANTIC"},
+    {"query": "ca nào giống tràn dịch màng phổi", "expected": "SEMANTIC"},
+    {"query": "trường hợp viêm phổi kèm bóng tim to", "expected": "SEMANTIC"},
+    {"query": "tìm các ca có nốt mờ sát màng phổi", "expected": "SEMANTIC"},
+    {"query": "ca tương tự gãy xương sườn", "expected": "SEMANTIC"},
+    {"query": "có ca nào giống u gan HCC không", "expected": "SEMANTIC"},
+    {"query": "tìm ca giống nhồi máu não", "expected": "SEMANTIC"},
+    {"query": "báo cáo nào giống viêm phổi thùy", "expected": "SEMANTIC"}
+  ]},
+
+  {"group": "EDGE CASES — Queries ngắn / mập mờ", "cases": [
+    {"query": "CT phổi", "expected": "SEMANTIC"},
+    {"query": "MR não", "expected": "SEMANTIC"},
+    {"query": "CT", "expected": "STRUCTURED"},
+    {"query": "pending", "expected": "STRUCTURED"},
+    {"query": "viêm phổi 3 ca", "expected": "SEMANTIC"},
+    {"query": "xương", "expected": "SEMANTIC"},
+    {"query": "phổi", "expected": "SEMANTIC"},
+    {"query": "tim", "expected": "SEMANTIC"},
+    {"query": "PENDING", "expected": "STRUCTURED"},
+    {"query": "VERIFIED", "expected": "STRUCTURED"},
+    {"query": "MR", "expected": "STRUCTURED"},
+    {"query": "hôm nay", "expected": "STRUCTURED"},
+    {"query": "hôm qua", "expected": "STRUCTURED"},
+    {"query": "tháng 5", "expected": "STRUCTURED"}
+  ]},
+
+  {"group": "EDGE CASES — Câu hỏi tiếng Anh", "cases": [
+    {"query": "how many CT today", "expected": "STRUCTURED"},
+    {"query": "list pending studies", "expected": "STRUCTURED"},
+    {"query": "lung nodule", "expected": "SEMANTIC"},
+    {"query": "pleural effusion bilateral", "expected": "SEMANTIC"},
+    {"query": "find patient Nguyen Van A", "expected": "PATIENT_LOOKUP"},
+    {"query": "count all patients", "expected": "STRUCTURED"}
+  ]},
+
+  {"group": "EDGE CASES — Câu hỏi tự nhiên dài", "cases": [
+    {"query": "hôm nay tôi muốn biết có bao nhiêu ca chụp CT", "expected": "STRUCTURED"},
+    {"query": "cho tôi xem tất cả các ca chưa được đọc báo cáo", "expected": "STRUCTURED"},
+    {"query": "tôi cần tìm bệnh nhân tên Nguyễn Văn An", "expected": "PATIENT_LOOKUP"},
+    {"query": "tìm cho tôi những ca có tổn thương phổi giống như tràn dịch", "expected": "SEMANTIC"},
+    {"query": "bao nhiêu ca chụp trong tuần này chia theo modality", "expected": "STRUCTURED"},
+    {"query": "tôi muốn xem thống kê ca chụp theo từng ngày trong tháng", "expected": "STRUCTURED"},
+    {"query": "có ca nào chẩn đoán viêm phổi kèm theo tràn dịch không", "expected": "SEMANTIC"},
+    {"query": "liệt kê tất cả bệnh nhân đã chụp MR trong tháng 5", "expected": "STRUCTURED"}
+  ]},
+
+  {"group": "EDGE CASES — Typo / viết tắt", "cases": [
+    {"query": "bao nhiu ca CT", "expected": "STRUCTURED"},
+    {"query": "may ca chua doc", "expected": "STRUCTURED"},
+    {"query": "viem phoi", "expected": "SEMANTIC"},
+    {"query": "ton thuong phoi", "expected": "SEMANTIC"},
+    {"query": "bn Nguyen Van A", "expected": "PATIENT_LOOKUP"},
+    {"query": "bs Nam", "expected": "STRUCTURED"},
+    {"query": "ds ca hom nay", "expected": "STRUCTURED"},
+    {"query": "tk theo modality", "expected": "STRUCTURED"}
+  ]}
+]
