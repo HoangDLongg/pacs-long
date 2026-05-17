@@ -1,0 +1,130 @@
+{
+  "vn_surnames": [
+    "nguyen", "tran", "le", "pham", "huynh", "hoang", "phan", "vu",
+    "vo", "dang", "bui", "do", "ho", "ngo", "duong", "ly", "cao",
+    "luong", "trinh", "to", "dinh", "mai", "truong", "lam", "ta",
+    "dam", "ha", "la", "tong", "doan", "van",
+    "nguyễn", "trần", "lê", "phạm", "huỳnh", "hoàng", "phan", "vũ",
+    "võ", "đặng", "bùi", "đỗ", "hồ", "ngô", "dương", "lý", "cao",
+    "lương", "trịnh", "tô", "đinh", "mai", "trương", "lâm", "tạ",
+    "đàm", "hà", "la", "tống", "đoàn", "văn"
+  ],
+  "vn_middle_names": [
+    "văn", "thị", "hữu", "đức", "minh", "quang", "công", "tiến",
+    "xuân", "thu", "thanh", "bá", "tấn", "thái", "quốc", "phúc",
+    "bảo", "ngọc", "hoàng", "đình", "la", "tất", "lương", "anh"
+  ],
+  "vn_given_names": [
+    "hải", "trang", "đạt", "ngọc", "phong", "nghĩa", "đức", "linh",
+    "sơn", "mai", "hương", "thắng", "thảo", "hà", "bích", "nam",
+    "trâm", "long", "hùng", "dũng", "lan", "hoa", "thủy", "tuấn",
+    "minh", "anh", "phương", "thành", "quân", "khoa", "hiếu",
+    "khang", "trúc", "nở", "nguyệt", "hậu", "châu", "phúc", "hinh",
+    "kiên", "tâm", "lộc", "thịnh", "cường", "việt", "hạnh", "yến",
+    "uyên", "tuyết", "xuân", "thư", "an", "bình", "cúc", "dương",
+    "giang", "hưng", "khánh", "lâm", "nhân", "phát", "quý",
+    "thương", "tiến", "trọng", "văn", "viên", "vũ", "danh",
+    "huy", "trinh", "nga", "nhung", "oanh", "quyên", "tú",
+    "vy", "yên", "hiền", "hồng", "huệ", "lệ", "lợi", "nhật",
+    "quỳnh", "trung", "tùng", "ý", "đào", "cẩm", "diễm", "đông",
+    "hằng", "khanh", "liễu", "mỹ", "ni", "phượng", "thoa", "trâm"
+  ],
+  "counting_keywords": [
+    "bao nhiêu", "bao nhiu", "mấy", "may", "đếm", "dem", "tổng", "tong",
+    "số lượng", "so luong", "count", "how many", "total",
+    "tổng số", "tong so", "tổng cộng", "tong cong"
+  ],
+  "listing_keywords": [
+    "danh sách", "danh sach", "liệt kê", "liet ke",
+    "cho xem", "cho tôi xem", "show", "list", "hiển thị", "hien thi",
+    "ca nào", "ca nao", "những ca", "nhung ca", "các ca", "cac ca"
+  ],
+  "stats_keywords": [
+    "thống kê", "thong ke", "tỷ lệ", "ty le",
+    "phân bố", "phan bo", "biểu đồ", "bieu do",
+    "so sánh", "so sanh", "phân tích", "phan tich",
+    "statistics", "chart", "graph"
+  ],
+  "status_keywords": [
+    "pending", "reported", "verified",
+    "chưa đọc", "chua doc", "đã đọc", "da doc",
+    "đã báo cáo", "da bao cao", "đã xác nhận", "da xac nhan",
+    "chưa báo cáo", "chua bao cao"
+  ],
+  "modality_terms": ["CT", "MR", "MRI", "CR", "US", "DX", "MG"],
+  "time_keywords": [
+    "hôm nay", "hom nay", "hôm qua", "hom qua",
+    "tuần này", "tuan nay", "tuần trước", "tuan truoc",
+    "tháng này", "thang nay", "tháng trước", "thang truoc",
+    "từ đầu năm", "tu dau nam", "7 ngày qua", "7 ngay qua",
+    "today", "this week", "this month", "yesterday"
+  ],
+  "medical_terms_vn": [
+    "viêm phổi", "tràn dịch", "tràn khí", "xẹp phổi", "u phổi",
+    "nốt mờ", "đông đặc", "giãn phế quản", "lao phổi", "phù phổi",
+    "khí phế thũng", "xơ phổi", "áp xe phổi", "nấm phổi",
+    "nhồi máu phổi", "bụi phổi", "nang phổi", "kén khí",
+    "viêm phế quản", "hạch rốn phổi", "COPD", "ARDS",
+    "tổn thương phổi", "tổn thương kẽ", "vôi hóa nhu mô",
+    "dày màng phổi", "tràn dịch màng phổi", "tràn dịch rãnh",
+    "dấu hiệu bóng mờ", "dấu hiệu viền halo",
+    "dấu hiệu lát đá", "dấu hiệu cành cây",
+    "nốt vôi hóa", "mờ kính", "kính mờ", "kính chướng",
+    "vôi hóa", "phình", "hẹp van", "suy tim", "nhồi máu",
+    "bóng tim to", "tràn dịch màng tim", "phình động mạch",
+    "hẹp động mạch", "hẹp eo", "viêm cơ tim", "ép tim",
+    "giãn gốc", "còn ống", "tứ chứng", "nhồi máu cơ tim",
+    "gãy xương", "gãy cổ", "gãy mâm", "gãy đầu dưới",
+    "thoát vị", "loãng xương", "thoái hóa", "trật khớp",
+    "viêm khớp", "xẹp đốt sống", "trượt đốt sống",
+    "viêm cột sống", "u xương", "sarcoma", "di căn xương",
+    "viêm xương", "nang xương", "đứt dây chằng", "rách sụn",
+    "gãy xương đòn", "hoại tử vô khuẩn", "gout", "gai xương",
+    "hẹp ống sống", "gãy xương chậu", "vỡ xương sọ",
+    "chấn thương cột sống", "vẹo cột sống",
+    "u gan", "HCC", "sỏi túi mật", "viêm tụy", "gan nhiễm mỡ",
+    "u nang", "tắc ruột", "áp xe gan", "lách to", "xơ gan",
+    "u máu", "đường mật", "sỏi ống mật", "viêm túi mật",
+    "polyp túi mật", "ung thư đường mật", "di căn gan", "nang gan",
+    "cholangiocarcinoma", "tràn dịch ổ bụng", "lồng ruột",
+    "xuất huyết não", "u não", "teo não", "phù não",
+    "nhồi máu não", "não úng thủy", "u tuyến yên",
+    "dị dạng mạch", "viêm màng não", "áp xe não",
+    "máu tụ ngoài màng cứng", "máu tụ dưới màng cứng",
+    "tụ dịch dưới màng cứng", "thoát vị não",
+    "BI-RADS", "BIRADS", "u xơ tuyến vú", "u vú",
+    "nang vú", "vôi hóa vi thể", "ung thư vú",
+    "u xơ tử cung",
+    "sỏi thận", "u bàng quang", "ứ nước thận",
+    "hẹp niệu quản", "sỏi niệu quản", "thận ứ nước",
+    "tổn thương", "di căn", "ung thư", "u ác tính",
+    "u lành tính", "viêm", "áp xe", "nang", "sỏi",
+    "xuất huyết", "hoại tử"
+  ],
+  "medical_terms_en": [
+    "pneumonia", "pleural effusion", "lung nodule", "fracture",
+    "hepatocellular carcinoma", "brain tumor", "stroke",
+    "pulmonary embolism", "aortic aneurysm", "subdural hematoma",
+    "breast cancer", "kidney stone", "appendicitis", "liver cirrhosis",
+    "pancreatitis", "osteoporosis", "disc herniation", "hydrocephalus",
+    "cholecystitis", "ovarian cyst", "tuberculosis"
+  ],
+  "anatomy_terms": [
+    "phổi", "gan", "não", "tim", "xương", "thận", "vú", "tuyến",
+    "mạch", "ruột", "tụy", "lách", "bàng quang", "tử cung",
+    "cột sống", "khớp", "đầu", "ngực", "bụng", "chậu",
+    "sọ", "cổ", "vai", "háng", "gối", "mắt",
+    "lung", "liver", "brain", "heart", "bone", "kidney", "breast"
+  ],
+  "similar_keywords": [
+    "tương tự", "tuong tu", "giống", "giong",
+    "tìm ca", "tim ca", "ca nào giống", "trường hợp tương tự",
+    "ca tương tự", "những ca giống", "báo cáo tương tự",
+    "báo cáo nào giống", "trường hợp giống"
+  ],
+  "abbreviations": {
+    "tk": "thống kê", "ds": "danh sách", "sl": "số lượng",
+    "bs": "bác sĩ", "bc": "báo cáo", "bn": "bệnh nhân",
+    "hn": "hôm nay", "hq": "hôm qua"
+  }
+}

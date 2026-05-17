@@ -11,25 +11,99 @@ Intents:
     HYBRID:         mập mờ giữa STRUCTURED & SEMANTIC → chạy cả 2
 
 SEMANTIC = default fallback vì đây là core use case (bác sĩ tìm ca tương tự).
+
+Vocab data loaded from config/vocab.json (tách data khỏi logic).
 """
 
 import re
+import json
 import logging
+from pathlib import Path
 from typing import Tuple, Dict
 
 logger = logging.getLogger(__name__)
 
 
 # ============================================================
-# Abbreviation expansion
+# Scoring weights — named constants (không dùng magic numbers)
 # ============================================================
 
-ABBREV_MAP = {
-    'tk': 'thống kê', 'ds': 'danh sách', 'sl': 'số lượng',
-    'bs': 'bác sĩ', 'bc': 'báo cáo', 'bn': 'bệnh nhân',
-    'hn': 'hôm nay', 'hq': 'hôm qua',
-}
+# PATIENT_LOOKUP weights
+W_VN_NAME = 0.8          # Tên người VN detected
+W_PATIENT_ID = 0.9       # Mã BN (A000801, P12345)
+W_BN_PREFIX = 0.6        # Prefix BN/B.N/bệnh nhân + tên
+W_NAME_INITIALS = 0.7    # Viết tắt tên: L.T.H
 
+# STRUCTURED weights
+W_COUNTING = 0.7         # bao nhiêu, mấy, đếm
+W_LISTING = 0.6          # danh sách, liệt kê
+W_STATS = 0.7            # thống kê, tỷ lệ
+W_STATUS = 0.5           # pending, reported, verified
+W_TIME = 0.3             # hôm nay, tuần này
+W_MODALITY = 0.2         # CT, MR (khi không có medical)
+W_DOCTOR = 0.4           # bác sĩ X
+W_CASE_REF = 0.6         # ca số 123
+
+# SEMANTIC weights
+W_MEDICAL_VN = 0.7       # thuật ngữ y khoa VN
+W_MEDICAL_EN = 0.6       # thuật ngữ y khoa EN
+W_SIMILAR = 0.5          # tìm ca tương tự
+W_ANATOMY = 0.3          # phổi, gan, não...
+W_DIAGNOSIS = 0.3        # chẩn đoán, kết luận
+
+# Cross-intent
+W_NAME_BOOST = 0.3       # Boost PL khi có tên thật
+W_NAME_SUPPRESS_STRUCT = 0.5  # Suppress STRUCT khi có tên
+W_NAME_SUPPRESS_SEMAN = 0.3   # Suppress SEMANTIC khi có tên
+
+# Thresholds
+HYBRID_MIN_SCORE = 0.5   # Score tối thiểu để trigger HYBRID
+HYBRID_MAX_GAP = 0.15    # Gap tối đa giữa 2 intent cho HYBRID
+LOW_CONFIDENCE = 0.3     # Dưới ngưỡng này → SEMANTIC default
+DEFAULT_SEMANTIC_SCORE = 0.3  # Score mặc định cho SEMANTIC fallback
+
+
+# ============================================================
+# Load vocab from config/vocab.json
+# ============================================================
+
+def _load_vocab() -> dict:
+    """Load vocabulary từ config/vocab.json."""
+    vocab_path = Path(__file__).parent.parent / "config" / "vocab.json"
+    try:
+        with open(vocab_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        logger.warning(f"[Router] vocab.json not found at {vocab_path}, using empty vocab")
+        return {}
+
+
+_VOCAB = _load_vocab()
+
+# Frozen sets từ vocab
+_VN_SURNAMES = frozenset(_VOCAB.get("vn_surnames", []))
+_VN_MIDDLE_NAMES = frozenset(_VOCAB.get("vn_middle_names", []))
+_VN_GIVEN_NAMES = frozenset(_VOCAB.get("vn_given_names", []))
+_COUNTING_KW = frozenset(_VOCAB.get("counting_keywords", []))
+_LISTING_KW = frozenset(_VOCAB.get("listing_keywords", []))
+_STATS_KW = frozenset(_VOCAB.get("stats_keywords", []))
+_STATUS_KW = frozenset(_VOCAB.get("status_keywords", []))
+_MODALITY_TERMS = frozenset(_VOCAB.get("modality_terms", []))
+_TIME_KW = frozenset(_VOCAB.get("time_keywords", []))
+_MEDICAL_TERMS_VN = frozenset(_VOCAB.get("medical_terms_vn", []))
+_MEDICAL_TERMS_EN = frozenset(_VOCAB.get("medical_terms_en", []))
+_ANATOMY_TERMS = frozenset(_VOCAB.get("anatomy_terms", []))
+_SIMILAR_KW = frozenset(_VOCAB.get("similar_keywords", []))
+ABBREV_MAP = _VOCAB.get("abbreviations", {})
+
+logger.info(f"[Router] Loaded vocab: {len(_VN_SURNAMES)} surnames, "
+            f"{len(_MEDICAL_TERMS_VN)} medical terms VN, "
+            f"{len(_VN_GIVEN_NAMES)} given names")
+
+
+# ============================================================
+# Abbreviation expansion
+# ============================================================
 
 def _expand_abbrev(text: str) -> str:
     """Mở rộng viết tắt VN phổ biến.
@@ -40,21 +114,8 @@ def _expand_abbrev(text: str) -> str:
 
 
 # ============================================================
-# Feature: PATIENT_LOOKUP
+# Feature: PATIENT_LOOKUP — Name detection
 # ============================================================
-
-# Họ Việt Nam phổ biến (không dấu + có dấu)
-_VN_SURNAMES = frozenset({
-    'nguyen', 'tran', 'le', 'pham', 'huynh', 'hoang', 'phan', 'vu',
-    'vo', 'dang', 'bui', 'do', 'ho', 'ngo', 'duong', 'ly', 'cao',
-    'luong', 'trinh', 'to', 'dinh', 'mai', 'truong', 'lam', 'ta',
-    'dam', 'ha', 'la', 'tong', 'doan', 'van',
-    # Có dấu
-    'nguyễn', 'trần', 'lê', 'phạm', 'huỳnh', 'hoàng', 'phan', 'vũ',
-    'võ', 'đặng', 'bùi', 'đỗ', 'hồ', 'ngô', 'dương', 'lý', 'cao',
-    'lương', 'trịnh', 'tô', 'đinh', 'mai', 'trương', 'lâm', 'tạ',
-    'đàm', 'hà', 'la', 'tống', 'đoàn', 'văn',
-})
 
 # Prefix tìm kiếm BN
 _NAME_PREFIXES = re.compile(
@@ -89,88 +150,84 @@ _PATIENT_ID = re.compile(
     re.IGNORECASE
 )
 
-# VN name initials pattern: L.T.H, P.V.D, N.A
+# VN name initials: L.T.H, P.V.D
 _NAME_INITIALS = re.compile(r'^(?:BN\s+|B/N\s+|B\.N\s+|bn\s+)?[A-Z]\.[A-Z](?:\.[A-Z])*$')
 
-
-# Tên đệm / tên lót VN phổ biến (dùng để detect tên 2 từ không có họ)
-_VN_MIDDLE_NAMES = frozenset({
-    'văn', 'thị', 'hữu', 'đức', 'minh', 'quang', 'công', 'tiến',
-    'xuân', 'thu', 'thanh', 'bá', 'tấn', 'thái', 'quốc', 'phúc',
-    'bảo', 'ngọc', 'hoàng', 'đình', 'la', 'tất', 'lương', 'anh',
+# Structured/generic words — dùng để loại trừ false positive name detection
+_STRUCT_WORDS = frozenset({
+    'ca', 'danh', 'sách', 'liệt', 'kê', 'tổng', 'số', 'lượng',
+    'thống', 'báo', 'cáo', 'pending', 'verified', 'reported',
+    'studies', 'hôm', 'nay', 'qua', 'tuần', 'tháng', 'nam', 'nữ',
+    'bệnh', 'nhân', 'mấy', 'bao', 'nhiêu', 'tất', 'cả',
+    'cho', 'xem', 'tôi', 'biết', 'đã', 'đến', 'khám',
+    'show', 'list', 'all', 'the', 'hiển', 'thị', 'vui', 'lòng',
 })
 
-# Tên VN phổ biến (dùng khi chỉ có 2 từ)
-_VN_GIVEN_NAMES = frozenset({
-    'hải', 'trang', 'đạt', 'ngọc', 'phong', 'nghĩa', 'đức', 'linh',
-    'sơn', 'mai', 'hương', 'thắng', 'thảo', 'hà', 'bích', 'nam',
-    'trâm', 'long', 'hùng', 'dũng', 'lan', 'hoa', 'thủy', 'tuấn',
-    'minh', 'anh', 'phương', 'thành', 'quân', 'khoa', 'hiếu',
-    # Thêm từ round 3 errors
-    'khang', 'trúc', 'nở', 'nguyệt', 'hậu', 'châu', 'phúc', 'hinh',
-    'kiên', 'tâm', 'lộc', 'thịnh', 'cường', 'việt', 'hạnh', 'yến',
-    'uyên', 'tuyết', 'xuân', 'thư', 'an', 'bình', 'cúc', 'dương',
-    'giang', 'hưng', 'khánh', 'lâm', 'nhân', 'phát', 'quý',
-    'thương', 'tiến', 'trọng', 'văn', 'viên', 'vũ', 'xâm',
+# Context keywords cần strip (dùng word boundary để tránh cắt nhầm tên)
+_CONTEXT_STRIP = re.compile(
+    r'\b(?:số điện thoại|sđt|ngày sinh|thông tin liên hệ|thông tin chi tiết|'
+    r'lịch sử khám|lịch sử bệnh nhân|lịch sử ca chụp|'
+    r'đã chụp|chụp gì|có bao nhiêu|có mấy|danh sách|trạng thái|'
+    r'có ca|báo cáo|hôm nay|hôm qua|từ đầu năm|7 ngày qua|'
+    r'chụp CT|chụp MR|chụp CR|chụp US|chụp DX|chụp MG|'
+    r'ca pending|ca reported|ca verified|'
+    r'khi nào)\b\s*',
+    re.IGNORECASE
+)
+
+# Các từ đơn lẻ cần strip (dùng word boundary)
+_SINGLE_WORD_STRIP = re.compile(
+    r'\b(?:tháng|tuần|ngày|chưa|không|nào|gì|của)\b\s*',
+    re.IGNORECASE
+)
+
+# Medical terms dùng loại trừ false positive capitalized names
+_MEDICAL_EXCLUDE = frozenset({
+    'viêm', 'tràn', 'gãy', 'sỏi', 'hẹp', 'xẹp',
+    'nhồi máu', 'di căn', 'xuất huyết', 'tổn thương',
 })
 
 
 def _detect_vn_name(text: str) -> bool:
-    """Kiểm tra text có chứa tên người Việt không."""
+    """Kiểm tra text có chứa tên người Việt không.
+
+    Hỗ trợ cả tên viết hoa và không viết hoa.
+    """
     # Bỏ prefix tìm kiếm
     clean = _NAME_PREFIXES.sub('', text).strip()
     # Bỏ BN prefix
     clean = _BN_PREFIX.sub('', clean).strip()
-    # Bỏ thêm context keywords (số điện thoại, ngày sinh, lịch sử, thông tin...)
-    clean = re.sub(
-        r'(?:số điện thoại|sđt|ngày sinh|thông tin liên hệ|thông tin chi tiết|'
-        r'lịch sử khám|lịch sử bệnh nhân|lịch sử ca chụp|'
-        r'đã chụp|chụp gì|có bao nhiêu|có mấy|danh sách|trạng thái|'
-        r'có ca|báo cáo|tháng|tuần|hôm nay|hôm qua|ngày|từ đầu năm|7 ngày qua|'
-        r'chụp CT|chụp MR|chụp CR|chụp US|chụp DX|chụp MG|'
-        r'ca pending|ca reported|ca verified|'
-        r'chưa|không|nào|gì|khi nào|của)\s*',
-        ' ', clean, flags=re.IGNORECASE
-    ).strip()
+    # Bỏ context keywords (dùng word boundary, tránh cắt nhầm tên)
+    clean = _CONTEXT_STRIP.sub(' ', clean).strip()
+    clean = _SINGLE_WORD_STRIP.sub(' ', clean).strip()
     clean = re.sub(r'\s+', ' ', clean).strip()
 
     parts = clean.split()
     if len(parts) < 2 or len(parts) > 6:
         return False
 
-    # Loại trừ: nếu toàn bộ là structured/generic keywords
-    struct_words = {'ca', 'danh', 'sách', 'liệt', 'kê', 'tổng', 'số', 'lượng',
-                    'thống', 'báo', 'cáo', 'pending', 'verified', 'reported',
-                    'studies', 'hôm', 'nay', 'qua', 'tuần', 'tháng', 'nam', 'nữ',
-                    'bệnh', 'nhân', 'mấy', 'bao', 'nhiêu', 'tất', 'cả',
-                    'cho', 'xem', 'tôi', 'biết', 'đã', 'đến', 'khám',
-                    'show', 'list', 'all', 'the', 'hiển', 'thị', 'vui', 'lòng'}
-    if all(p.lower() in struct_words for p in parts):
+    # Loại trừ: toàn bộ là structured/generic keywords
+    if all(p.lower() in _STRUCT_WORDS for p in parts):
         return False
 
     first = parts[0].lower()
 
-    # Họ VN đứng đầu
+    # Họ VN đứng đầu (có dấu hoặc không dấu)
     if first in _VN_SURNAMES:
         return True
 
-    # Tên 2 từ (không có họ): kiểm tra tên đệm + tên
+    # Tên 2 từ: kiểm tra trong dictionary (KHÔNG bắt buộc viết hoa)
     if len(parts) == 2:
         p0 = parts[0].lower()
         p1 = parts[1].lower()
         if (p0 in _VN_MIDDLE_NAMES and p1 in _VN_GIVEN_NAMES) or \
            (p0 in _VN_GIVEN_NAMES and p1 in _VN_GIVEN_NAMES):
-            # Phải viết hoa
-            if parts[0][0].isupper() and parts[1][0].isupper():
-                return True
+            return True
 
-    # Mỗi từ viết hoa (Nguyen Van A pattern) - 3+ từ
+    # 3+ từ viết hoa (Nguyen Van A pattern) — vẫn cần viết hoa cho 3+ từ lạ
     if len(parts) >= 3 and all(p[0].isupper() for p in parts if p):
-        # Loại trừ nếu toàn bộ là medical terms
         medical_check = clean.lower()
-        medical_exclude = {'viêm', 'tràn', 'gãy', 'u ', 'sỏi', 'hẹp', 'xẹp',
-                          'nhồi máu', 'di căn', 'xuất huyết', 'tổn thương'}
-        if any(m in medical_check for m in medical_exclude):
+        if any(m in medical_check for m in _MEDICAL_EXCLUDE):
             return False
         return True
 
@@ -178,129 +235,13 @@ def _detect_vn_name(text: str) -> bool:
 
 
 # ============================================================
-# Feature: STRUCTURED keywords
+# Doctor reference
 # ============================================================
-
-_COUNTING_KW = frozenset({
-    'bao nhiêu', 'bao nhiu', 'mấy', 'may', 'đếm', 'dem', 'tổng', 'tong',
-    'số lượng', 'so luong', 'count', 'how many', 'total',
-    'tổng số', 'tong so', 'tổng cộng', 'tong cong',
-})
-
-_LISTING_KW = frozenset({
-    'danh sách', 'danh sach', 'liệt kê', 'liet ke',
-    'cho xem', 'cho tôi xem', 'show', 'list', 'hiển thị', 'hien thi',
-    'ca nào', 'ca nao', 'những ca', 'nhung ca', 'các ca', 'cac ca',
-})
-
-_STATS_KW = frozenset({
-    'thống kê', 'thong ke', 'tỷ lệ', 'ty le',
-    'phân bố', 'phan bo', 'biểu đồ', 'bieu do',
-    'so sánh', 'so sanh', 'phân tích', 'phan tich',
-    'statistics', 'chart', 'graph',
-})
-
-_STATUS_KW = frozenset({
-    'pending', 'reported', 'verified',
-    'chưa đọc', 'chua doc', 'đã đọc', 'da doc',
-    'đã báo cáo', 'da bao cao', 'đã xác nhận', 'da xac nhan',
-    'chưa báo cáo', 'chua bao cao',
-})
-
-_MODALITY_TERMS = frozenset({'CT', 'MR', 'MRI', 'CR', 'US', 'DX', 'MG'})
-
-_TIME_KW = frozenset({
-    'hôm nay', 'hom nay', 'hôm qua', 'hom qua',
-    'tuần này', 'tuan nay', 'tuần trước', 'tuan truoc',
-    'tháng này', 'thang nay', 'tháng trước', 'thang truoc',
-    'từ đầu năm', 'tu dau nam', '7 ngày qua', '7 ngay qua',
-    'today', 'this week', 'this month', 'yesterday',
-})
 
 _DOCTOR_KW = re.compile(
-    r'(?:bác sĩ|bac si|BS|bs|doctor|dr\.?)\s+\w+',
+    r'(?:bác sĩ|bac si|doctor|dr\.?)\s+\w+',
     re.IGNORECASE
 )
-
-
-# ============================================================
-# Feature: SEMANTIC (medical terms)
-# ============================================================
-
-_MEDICAL_TERMS_VN = frozenset({
-    # Phổi
-    'viêm phổi', 'tràn dịch', 'tràn khí', 'xẹp phổi', 'u phổi',
-    'nốt mờ', 'đông đặc', 'giãn phế quản', 'lao phổi', 'phù phổi',
-    'khí phế thũng', 'xơ phổi', 'áp xe phổi', 'nấm phổi',
-    'nhồi máu phổi', 'bụi phổi', 'nang phổi', 'kén khí',
-    'viêm phế quản', 'hạch rốn phổi', 'COPD', 'ARDS',
-    'tổn thương phổi', 'tổn thương kẽ', 'vôi hóa nhu mô',
-    'dày màng phổi', 'tràn dịch màng phổi', 'tràn dịch rãnh',
-    'dấu hiệu bóng mờ', 'dấu hiệu viền halo',
-    'dấu hiệu lát đá', 'dấu hiệu cành cây',
-    'nốt vôi hóa', 'mờ kính', 'kính mờ', 'kính chướng',
-    # Tim mạch
-    'vôi hóa', 'phình', 'hẹp van', 'suy tim', 'nhồi máu',
-    'bóng tim to', 'tràn dịch màng tim', 'phình động mạch',
-    'hẹp động mạch', 'hẹp eo', 'viêm cơ tim', 'ép tim',
-    'giãn gốc', 'còn ống', 'tứ chứng', 'nhồi máu cơ tim',
-    # Xương khớp
-    'gãy xương', 'gãy cổ', 'gãy mâm', 'gãy đầu dưới',
-    'thoát vị', 'loãng xương', 'thoái hóa', 'trật khớp',
-    'viêm khớp', 'xẹp đốt sống', 'trượt đốt sống',
-    'viêm cột sống', 'u xương', 'sarcoma', 'di căn xương',
-    'viêm xương', 'nang xương', 'đứt dây chằng', 'rách sụn',
-    'gãy xương đòn', 'hoại tử vô khuẩn', 'gout', 'gai xương',
-    'hẹp ống sống', 'gãy xương chậu', 'vỡ xương sọ',
-    'chấn thương cột sống', 'vẹo cột sống',
-    # Gan / ổ bụng
-    'u gan', 'HCC', 'sỏi túi mật', 'viêm tụy', 'gan nhiễm mỡ',
-    'u nang', 'tắc ruột', 'áp xe gan', 'lách to', 'xơ gan',
-    'u máu', 'đường mật', 'sỏi ống mật', 'viêm túi mật',
-    'polyp túi mật', 'ung thư đường mật', 'di căn gan', 'nang gan',
-    'cholangiocarcinoma', 'tràn dịch ổ bụng', 'lồng ruột',
-    # Não / thần kinh
-    'xuất huyết não', 'u não', 'teo não', 'phù não',
-    'nhồi máu não', 'não úng thủy', 'u tuyến yên',
-    'dị dạng mạch', 'viêm màng não', 'áp xe não',
-    'máu tụ ngoài màng cứng', 'máu tụ dưới màng cứng',
-    'tụ dịch dưới màng cứng', 'thoát vị não',
-    # Vú / tuyến
-    'BI-RADS', 'BIRADS', 'u xơ tuyến vú', 'u vú',
-    'nang vú', 'vôi hóa vi thể', 'ung thư vú',
-    'u xơ tử cung',
-    # Thận / tiết niệu
-    'sỏi thận', 'u bàng quang', 'ứ nước thận',
-    'hẹp niệu quản', 'sỏi niệu quản', 'thận ứ nước',
-    # Chung
-    'tổn thương', 'di căn', 'ung thư', 'u ác tính',
-    'u lành tính', 'viêm', 'áp xe', 'nang', 'sỏi',
-    'xuất huyết', 'hoại tử',
-})
-
-_MEDICAL_TERMS_EN = frozenset({
-    'pneumonia', 'pleural effusion', 'lung nodule', 'fracture',
-    'hepatocellular carcinoma', 'brain tumor', 'stroke',
-    'pulmonary embolism', 'aortic aneurysm', 'subdural hematoma',
-    'breast cancer', 'kidney stone', 'appendicitis', 'liver cirrhosis',
-    'pancreatitis', 'osteoporosis', 'disc herniation', 'hydrocephalus',
-    'cholecystitis', 'ovarian cyst', 'tuberculosis',
-})
-
-_ANATOMY_TERMS = frozenset({
-    'phổi', 'gan', 'não', 'tim', 'xương', 'thận', 'vú', 'tuyến',
-    'mạch', 'ruột', 'tụy', 'lách', 'bàng quang', 'tử cung',
-    'cột sống', 'khớp', 'đầu', 'ngực', 'bụng', 'chậu',
-    'sọ', 'cổ', 'vai', 'háng', 'gối', 'mắt',
-    'lung', 'liver', 'brain', 'heart', 'bone', 'kidney', 'breast',
-})
-
-_SIMILAR_KW = frozenset({
-    'tương tự', 'tuong tu', 'giống', 'giong',
-    'tìm ca', 'tim ca', 'ca nào giống', 'trường hợp tương tự',
-    'ca tương tự', 'những ca giống', 'báo cáo tương tự',
-    'báo cáo nào giống', 'trường hợp giống',
-})
 
 
 # ============================================================
@@ -365,71 +306,71 @@ def extract_query_features(query: str) -> Dict[str, object]:
 def compute_intent_scores(features: Dict[str, object]) -> Dict[str, float]:
     """Tính điểm cho mỗi intent dựa trên features.
 
-    Additive scoring — pattern từ RAGCHATBOTV2 strategy_router.py
+    Additive scoring — pattern từ RAGCHATBOTV2 strategy_router.py.
+    Weights = named constants, không dùng magic numbers.
     """
     scores = {"PATIENT_LOOKUP": 0.0, "STRUCTURED": 0.0, "SEMANTIC": 0.0}
 
     # ── PATIENT_LOOKUP boosters ──────────────────────
     if features.get("has_vn_name"):
-        scores["PATIENT_LOOKUP"] += 0.8
+        scores["PATIENT_LOOKUP"] += W_VN_NAME
     if features.get("has_patient_id"):
-        scores["PATIENT_LOOKUP"] += 0.9
+        scores["PATIENT_LOOKUP"] += W_PATIENT_ID
     if features.get("has_bn_prefix"):
-        scores["PATIENT_LOOKUP"] += 0.6
+        scores["PATIENT_LOOKUP"] += W_BN_PREFIX
     if features.get("has_name_initials"):
-        scores["PATIENT_LOOKUP"] += 0.7
+        scores["PATIENT_LOOKUP"] += W_NAME_INITIALS
 
     # ── STRUCTURED boosters ──────────────────────────
     if features.get("has_counting_kw"):
-        scores["STRUCTURED"] += 0.7
+        scores["STRUCTURED"] += W_COUNTING
     if features.get("has_listing_kw"):
-        scores["STRUCTURED"] += 0.6
+        scores["STRUCTURED"] += W_LISTING
     if features.get("has_stats_kw"):
-        scores["STRUCTURED"] += 0.7
+        scores["STRUCTURED"] += W_STATS
     if features.get("has_status_kw"):
-        scores["STRUCTURED"] += 0.5
+        scores["STRUCTURED"] += W_STATUS
     if features.get("has_time_kw"):
-        scores["STRUCTURED"] += 0.3
+        scores["STRUCTURED"] += W_TIME
     if features.get("has_modality_kw") and not features.get("has_medical_term"):
-        scores["STRUCTURED"] += 0.2
+        scores["STRUCTURED"] += W_MODALITY
     if features.get("has_doctor_ref"):
-        scores["STRUCTURED"] += 0.4
+        scores["STRUCTURED"] += W_DOCTOR
     if features.get("has_case_ref"):
-        scores["STRUCTURED"] += 0.6
+        scores["STRUCTURED"] += W_CASE_REF
 
     # ── SEMANTIC boosters ────────────────────────────
     if features.get("has_medical_term"):
-        scores["SEMANTIC"] += 0.7
+        scores["SEMANTIC"] += W_MEDICAL_VN
     if features.get("has_medical_en"):
-        scores["SEMANTIC"] += 0.6
+        scores["SEMANTIC"] += W_MEDICAL_EN
     if features.get("has_similar_kw"):
-        scores["SEMANTIC"] += 0.5
+        scores["SEMANTIC"] += W_SIMILAR
     if features.get("has_anatomy_term"):
-        scores["SEMANTIC"] += 0.3
+        scores["SEMANTIC"] += W_ANATOMY
     if features.get("has_diagnosis_kw"):
-        scores["SEMANTIC"] += 0.3
+        scores["SEMANTIC"] += W_DIAGNOSIS
 
     # ── Cross-intent interactions ────────────────────
 
     # Tên người thật (has_vn_name) + bất kỳ context → vẫn PATIENT_LOOKUP
-    # CHỈ khi has_vn_name=True (có tên thật), KHÔNG phải chỉ từ 'bệnh nhân' generic
     if features.get("has_vn_name"):
-        scores["PATIENT_LOOKUP"] += 0.3
-        scores["STRUCTURED"] = max(0, scores["STRUCTURED"] - 0.5)
-        scores["SEMANTIC"] = max(0, scores["SEMANTIC"] - 0.3)
+        scores["PATIENT_LOOKUP"] += W_NAME_BOOST
+        scores["STRUCTURED"] = max(0, scores["STRUCTURED"] - W_NAME_SUPPRESS_STRUCT)
+        scores["SEMANTIC"] = max(0, scores["SEMANTIC"] - W_NAME_SUPPRESS_SEMAN)
 
     # Modality + medical → SEMANTIC (VD: "CT phổi" = tìm ca CT về phổi)
     if features.get("has_modality_kw") and features.get("has_medical_term"):
-        scores["SEMANTIC"] += 0.2
+        scores["SEMANTIC"] += W_MODALITY
 
     # Stats/counting + modality (không có medical) → STRUCTURED
     if (features.get("has_counting_kw") or features.get("has_stats_kw")) and features.get("has_modality_kw"):
         if not features.get("has_medical_term"):
-            scores["STRUCTURED"] += 0.2
+            scores["STRUCTURED"] += W_MODALITY
 
     # ── Default fallback: SEMANTIC (core use case) ───
     if all(v == 0.0 for v in scores.values()):
-        scores["SEMANTIC"] = 0.3
+        scores["SEMANTIC"] = DEFAULT_SEMANTIC_SCORE
 
     logger.debug(f"Intent scores: {scores} | features: {features}")
     return scores
@@ -462,8 +403,10 @@ def select_intent(
     }
 
     # HYBRID: chỉ khi 2 intent cao VÀ gap rất nhỏ (không phải PATIENT_LOOKUP)
-    if best_intent != "PATIENT_LOOKUP" and best_score > 0.5 and second_score > 0.5 and gap < 0.15:
-        # Nhưng nếu PATIENT_LOOKUP là 1 trong 2 → không HYBRID
+    if best_intent != "PATIENT_LOOKUP" and \
+       best_score > HYBRID_MIN_SCORE and \
+       second_score > HYBRID_MIN_SCORE and \
+       gap < HYBRID_MAX_GAP:
         if sorted_intents[1][0] != "PATIENT_LOOKUP":
             logger.info(
                 f"[Router] HYBRID triggered: {sorted_intents[0]} vs {sorted_intents[1]} (gap={gap:.2f})"
@@ -471,9 +414,9 @@ def select_intent(
             return "HYBRID", best_score, debug_info
 
     # Default fallback khi score quá thấp → SEMANTIC (core use case)
-    if best_score < 0.3:
+    if best_score < LOW_CONFIDENCE:
         logger.info(f"[Router] Low confidence ({best_score:.2f}) → default SEMANTIC")
-        return "SEMANTIC", 0.3, debug_info
+        return "SEMANTIC", DEFAULT_SEMANTIC_SCORE, debug_info
 
     logger.info(
         f"[Router] → {best_intent} (score={best_score:.2f}, gap={gap:.2f})"
