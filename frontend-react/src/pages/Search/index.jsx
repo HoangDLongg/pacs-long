@@ -11,19 +11,19 @@ import { searchKeyword, askQuestion } from '@/api/search'
 import './search.css'
 
 const INTENT_LABELS = {
-  PATIENT_LOOKUP: { icon: '👤', label: 'Tìm bệnh nhân', color: 'hsl(140, 60%, 55%)' },
-  STRUCTURED: { icon: '📊', label: 'Truy vấn SQL', color: 'var(--color-primary)' },
-  SEMANTIC:   { icon: '🧠', label: 'Tìm kiếm ngữ nghĩa', color: 'hsl(280, 70%, 60%)' },
-  HYBRID:     { icon: '⚡', label: 'Hybrid (SQL + RAG)', color: 'hsl(45, 90%, 55%)' },
+  PATIENT_LOOKUP: { icon: '', label: 'Tìm bệnh nhân', color: 'hsl(140, 60%, 55%)' },
+  STRUCTURED: { icon: '', label: 'Truy vấn SQL', color: 'var(--color-primary)' },
+  SEMANTIC: { icon: '', label: 'Tìm kiếm ngữ nghĩa', color: 'hsl(280, 70%, 60%)' },
+  HYBRID: { icon: '', label: 'Hybrid (SQL + RAG)', color: 'hsl(45, 90%, 55%)' },
 }
 
 export default function SearchPage() {
   const navigate = useNavigate()
-  const [query,    setQuery]    = useState('')
+  const [query, setQuery] = useState('')
   const [kwResults, setKwResults] = useState([])   // keyword results (exact match)
   const [ragResults, setRagResults] = useState([])  // RAG/semantic results
-  const [loading,  setLoading]  = useState(false)
-  const [error,    setError]    = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
   const [searched, setSearched] = useState(false)
   const [compareIds, setCompareIds] = useState([])
   const [askResult, setAskResult] = useState(null)
@@ -52,7 +52,7 @@ export default function SearchPage() {
 
       // Process ask result
       const ask = askData.status === 'fulfilled' ? askData.value : null
-      const kw  = kwData.status === 'fulfilled' ? kwData.value : null
+      const kw = kwData.status === 'fulfilled' ? kwData.value : null
 
       if (ask) {
         setAskResult(ask)
@@ -181,21 +181,21 @@ export default function SearchPage() {
             onClick={() => navigate(`/viewer/${r.study_id}`)}
             title="Xem DICOM"
           >
-            🖼️ Xem
+            Xem
           </button>
           <button
             className="btn btn--outline btn--sm"
             onClick={() => navigate(`/report/${r.study_id}`)}
             title="Xem báo cáo"
           >
-            📄 Báo cáo
+            Báo cáo
           </button>
           <button
             className={`btn btn--sm ${compareIds.includes(r.study_id) ? 'btn--primary' : 'btn--ghost'}`}
             onClick={() => toggleCompare(r.study_id)}
             title="Chọn để so sánh"
           >
-            {compareIds.includes(r.study_id) ? '✓ Đã chọn' : '⊞ So sánh'}
+            {compareIds.includes(r.study_id) ? '✓ Đã chọn' : ' So sánh'}
           </button>
         </div>
       </div>
@@ -206,7 +206,7 @@ export default function SearchPage() {
     <div className="search-page">
       {/* Header */}
       <div className="page-header">
-        <h2 className="page-header__title">🔍 Tìm kiếm thông minh</h2>
+        <h2 className="page-header__title"> Tìm kiếm thông minh</h2>
         <p className="page-header__subtitle">
           Nhập bất kỳ nội dung gì — tên bệnh nhân, triệu chứng, câu hỏi thống kê — hệ thống tự nhận diện
         </p>
@@ -216,7 +216,7 @@ export default function SearchPage() {
       <form className="search-form" onSubmit={handleSearch}>
         <div className="search-input-group">
           <div className="search-input-wrapper">
-            <span className="search-input-icon">🔍</span>
+            <span className="search-input-icon"></span>
             <input
               id="search-query-input"
               type="text"
@@ -232,16 +232,16 @@ export default function SearchPage() {
             className="btn btn--primary search-btn"
             disabled={loading || !query.trim()}
           >
-            {loading ? '⏳ Đang xử lý...' : '🔍 Tìm kiếm'}
+            {loading ? ' Đang xử lý...' : ' Tìm kiếm'}
           </button>
         </div>
 
         {/* Hint chips */}
         <div className="search-hints">
-          <span className="search-hint" onClick={() => setQuery('bao nhiêu ca CT hôm nay?')}>📊 Thống kê</span>
-          <span className="search-hint" onClick={() => setQuery('tổn thương phổi dạng nốt')}>🧠 Nội dung y khoa</span>
-          <span className="search-hint" onClick={() => setQuery('ca nào chưa đọc?')}>📋 Tra cứu trạng thái</span>
-          <span className="search-hint" onClick={() => setQuery('thống kê theo modality')}>📈 Phân tích</span>
+          <span className="search-hint" onClick={() => setQuery('bao nhiêu ca CT hôm nay?')}>Thống kê</span>
+          <span className="search-hint" onClick={() => setQuery('tổn thương phổi dạng nốt')}>Nội dung y khoa</span>
+          <span className="search-hint" onClick={() => setQuery('ca nào chưa đọc?')}> Tra cứu trạng thái</span>
+          <span className="search-hint" onClick={() => setQuery('thống kê theo modality')}> Phân tích</span>
         </div>
       </form>
 
@@ -275,9 +275,9 @@ export default function SearchPage() {
         <div className="ask-panel">
           <div className="ask-panel__header">
             <span className="ask-panel__intent">
-              {askResult.intent === 'STRUCTURED' ? '📊 Kết quả thống kê' :
-               askResult.intent === 'HYBRID' ? '⚡ Kết quả phân tích' :
-               '🧠 Tìm kiếm ngữ nghĩa'}
+              {askResult.intent === 'STRUCTURED' ? ' Kết quả thống kê' :
+                askResult.intent === 'HYBRID' ? ' Kết quả phân tích' :
+                  ' Tìm kiếm ngữ nghĩa'}
             </span>
           </div>
 
@@ -322,7 +322,7 @@ export default function SearchPage() {
           {kwResults.length > 0 ? (
             <div className="search-section">
               <div className="search-section__header search-section__header--keyword">
-                <span className="search-section__icon">🎯</span>
+                <span className="search-section__icon"></span>
                 <span className="search-section__title">
                   Khớp chính xác — {kwResults.length} kết quả
                 </span>
@@ -334,7 +334,7 @@ export default function SearchPage() {
             </div>
           ) : (
             <div className="search-no-exact">
-              <span>🔤 Không tìm thấy kết quả khớp chính xác với "<strong>{query}</strong>"</span>
+              <span>Không tìm thấy kết quả khớp chính xác với "<strong>{query}</strong>"</span>
             </div>
           )}
 
@@ -342,7 +342,7 @@ export default function SearchPage() {
           {ragResults.length > 0 && (
             <div className="search-section">
               <div className="search-section__header search-section__header--rag">
-                <span className="search-section__icon">🧠</span>
+                <span className="search-section__icon"></span>
                 <span className="search-section__title">
                   AI gợi ý — {ragResults.length} kết quả tương tự
                 </span>
@@ -363,7 +363,7 @@ export default function SearchPage() {
           {/* No results at all */}
           {kwResults.length === 0 && ragResults.length === 0 && !askResult?.data?.length && (
             <div className="search-empty">
-              <div className="search-empty__icon">🔍</div>
+              <div className="search-empty__icon"></div>
               <p>Không tìm thấy kết quả nào cho "<strong>{query}</strong>"</p>
               <p className="search-empty__hint">Thử tìm kiếm bằng từ khóa khác hoặc mô tả triệu chứng</p>
             </div>
