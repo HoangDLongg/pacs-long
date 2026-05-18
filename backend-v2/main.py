@@ -13,8 +13,11 @@ from slowapi.errors import RateLimitExceeded
 from database.connection import (
     init_db,
     close_all_connections,
+    get_connection,
+    release_connection,
 )
 from api import auth, worklist, dicom, report, dicom_editor, admin, search, ask
+from config import ORTHANC_URL
 
 
 # ====================== Lifespan (thay on_event deprecated) ======================
@@ -75,13 +78,56 @@ app.include_router(ask.router)           # prefix=/api/ask (UC15)
 
 
 # ====================== Health Check ======================
+def _check_database() -> dict:
+    """Ping PostgreSQL bằng SELECT 1."""
+    conn = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1")
+        cursor.fetchone()
+        cursor.close()
+        return {"status": "ok"}
+    except Exception as e:
+        return {"status": "down", "error": str(e)[:200]}
+    finally:
+        if conn is not None:
+            release_connection(conn)
+
+
+def _check_orthanc() -> dict:
+    """Ping Orthanc REST API. Orthanc tùy chọn → 'degraded' thay vì 'down'."""
+    try:
+        import requests
+        resp = requests.get(f"{ORTHANC_URL}/system", timeout=2)
+        if resp.ok:
+            return {"status": "ok"}
+        return {"status": "degraded", "http": resp.status_code}
+    except Exception as e:
+        return {"status": "degraded", "error": str(e)[:200]}
+
+
 @app.get("/health")
 def health_check():
-    return {
-        "status": "ok", 
+    """Health check: DB bắt buộc OK, Orthanc optional.
+
+    Returns 200 nếu DB OK (kể cả Orthanc degraded).
+    Returns 503 nếu DB down.
+    """
+    db = _check_database()
+    orthanc = _check_orthanc()
+
+    overall_ok = db["status"] == "ok"
+    body = {
+        "status": "ok" if overall_ok else "degraded",
         "service": "PACS++ API v2",
-        "version": "2.0"
+        "version": "2.0",
+        "checks": {
+            "database": db,
+            "orthanc": orthanc,
+        },
     }
+    return JSONResponse(status_code=200 if overall_ok else 503, content=body)
 
 
 # ====================== Editor Page ======================
