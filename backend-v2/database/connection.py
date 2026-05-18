@@ -1,4 +1,11 @@
 # database/connection.py
+"""
+Single source of truth cho database access:
+  - SQLAlchemy engine + SessionLocal + get_db (dùng cho auth/ORM models)
+  - psycopg2 pool + get_connection/release_connection (dùng cho raw SQL trong core/ và api/)
+
+`Base` được re-export để code cũ `from database.connection import Base` vẫn chạy.
+"""
 import os
 import sys
 from contextlib import contextmanager
@@ -10,11 +17,11 @@ from psycopg2.extras import RealDictCursor
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 
-from database.base import Base
-import config
-
-# Thêm path để import config và models
+# Thêm path để import config từ workspace root
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+import config
+from database.base import Base  # re-export
 
 # ====================== SQLAlchemy Setup ======================
 DATABASE_URL = f"postgresql://{config.DB_USER}:{config.DB_PASS}@{config.DB_HOST}:{config.DB_PORT}/{config.DB_NAME}"
