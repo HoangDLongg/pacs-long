@@ -163,6 +163,27 @@ class AuthUtils:
             return None
 
     @staticmethod
+    def require_roles(*roles: str):
+        """Tạo dependency yêu cầu user phải có một trong các role chỉ định.
+
+        Usage:
+            @router.post("/foo")
+            def foo(user: User = Depends(AuthUtils.require_roles("admin", "doctor"))):
+                ...
+        """
+        allowed = set(roles)
+
+        def _checker(user: User = Depends(AuthUtils.get_current_user)) -> User:
+            if user.role not in allowed:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail=f"Không có quyền (yêu cầu: {', '.join(sorted(allowed))})",
+                )
+            return user
+
+        return _checker
+
+    @staticmethod
     def validate_token_string(token: str, db: Session = None) -> User:
         """Validate raw token string (không qua Depends) — dùng cho query param token
         Dùng khi Cornerstone.js gửi token qua ?token= URL param

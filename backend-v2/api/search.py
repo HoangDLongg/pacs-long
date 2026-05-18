@@ -36,7 +36,7 @@ class SearchRequest(BaseModel):
 def search_keyword(
     q: str = Query(..., min_length=1, description="Từ khóa tìm kiếm"),
     limit: int = Query(default=10, ge=1, le=50),
-    current_user: User = Depends(AuthUtils.get_current_user),
+    current_user: User = Depends(AuthUtils.require_roles("admin", "doctor")),
 ):
     """GET /api/search/keyword?q=tổn+thương+phổi
     Spec UC12: tìm kiếm từ khóa bằng ILIKE
@@ -56,7 +56,7 @@ def search_keyword(
 @router.post("")
 def search_reports(
     body: SearchRequest,
-    current_user: User = Depends(AuthUtils.get_current_user),
+    current_user: User = Depends(AuthUtils.require_roles("admin", "doctor")),
 ):
     """POST /api/search — Tìm kiếm báo cáo
     method: "keyword" | "dense" | "hybrid" (default)

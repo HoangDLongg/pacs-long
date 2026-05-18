@@ -34,7 +34,7 @@ class AskRequest(BaseModel):
 def ask_endpoint(
     request: Request,
     body: AskRequest,
-    current_user: User = Depends(AuthUtils.get_current_user),
+    current_user: User = Depends(AuthUtils.require_roles("admin", "doctor")),
 ):
     """POST /api/ask — Hỏi đáp tự nhiên (UC15)
 
