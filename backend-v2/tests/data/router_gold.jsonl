@@ -1,0 +1,74 @@
+{"id": "R001", "question": "Nguyen Van An", "expected_intent": "PATIENT_LOOKUP", "tags": ["vn_name", "ascii"]}
+{"id": "R002", "question": "Tran Thi Mai Lan", "expected_intent": "PATIENT_LOOKUP", "tags": ["vn_name", "ascii", "4_parts"]}
+{"id": "R003", "question": "Le Minh", "expected_intent": "PATIENT_LOOKUP", "tags": ["vn_name", "2_parts"]}
+{"id": "R004", "question": "Nguyễn Văn An", "expected_intent": "PATIENT_LOOKUP", "tags": ["vn_name", "diacritics"]}
+{"id": "R005", "question": "Phạm Thị Lan", "expected_intent": "PATIENT_LOOKUP", "tags": ["vn_name", "diacritics"]}
+{"id": "R006", "question": "Hoang Minh Tuan", "expected_intent": "PATIENT_LOOKUP", "tags": ["vn_name", "ascii"]}
+{"id": "R007", "question": "Ho Van Tai", "expected_intent": "PATIENT_LOOKUP", "tags": ["vn_name", "surname_ho"]}
+{"id": "R008", "question": "Cao Van Phuc", "expected_intent": "PATIENT_LOOKUP", "tags": ["vn_name", "surname_cao"]}
+{"id": "R009", "question": "tìm Nguyen Van An", "expected_intent": "PATIENT_LOOKUP", "tags": ["vn_name", "prefix_tim"]}
+{"id": "R010", "question": "tim benh nhan Pham Thi Lan", "expected_intent": "PATIENT_LOOKUP", "tags": ["vn_name", "prefix_bn", "ascii"]}
+{"id": "R011", "question": "bệnh nhân Tran Van Hung", "expected_intent": "PATIENT_LOOKUP", "tags": ["vn_name", "prefix_bn"]}
+{"id": "R012", "question": "hồ sơ Vu Thi Hoa", "expected_intent": "PATIENT_LOOKUP", "tags": ["vn_name", "prefix_hoso"]}
+{"id": "R013", "question": "tên Nguyen Thi B", "expected_intent": "PATIENT_LOOKUP", "tags": ["vn_name", "prefix_ten"]}
+{"id": "R014", "question": "A000801", "expected_intent": "PATIENT_LOOKUP", "tags": ["patient_id"]}
+{"id": "R015", "question": "P12345", "expected_intent": "PATIENT_LOOKUP", "tags": ["patient_id"]}
+{"id": "R016", "question": "tìm A000801", "expected_intent": "PATIENT_LOOKUP", "tags": ["patient_id", "prefix_tim"]}
+{"id": "R017", "question": "bn A000801", "expected_intent": "PATIENT_LOOKUP", "tags": ["patient_id", "prefix_bn"]}
+{"id": "R018", "question": "L.T.H", "expected_intent": "PATIENT_LOOKUP", "tags": ["initials"]}
+{"id": "S001", "question": "bao nhiêu ca CT hôm nay", "expected_intent": "STRUCTURED", "tags": ["counting", "modality", "time"]}
+{"id": "S002", "question": "có bao nhiêu bệnh nhân", "expected_intent": "STRUCTURED", "tags": ["counting"]}
+{"id": "S003", "question": "đếm ca chụp MR tuần này", "expected_intent": "STRUCTURED", "tags": ["counting", "modality", "time"]}
+{"id": "S004", "question": "danh sách ca chưa đọc", "expected_intent": "STRUCTURED", "tags": ["listing", "status"]}
+{"id": "S005", "question": "liệt kê ca PENDING", "expected_intent": "STRUCTURED", "tags": ["listing", "status"]}
+{"id": "S006", "question": "ca đã verified", "expected_intent": "STRUCTURED", "tags": ["status"]}
+{"id": "S007", "question": "ca REPORTED tháng này", "expected_intent": "STRUCTURED", "tags": ["status", "time"]}
+{"id": "S008", "question": "thống kê theo modality", "expected_intent": "STRUCTURED", "tags": ["stats", "modality"]}
+{"id": "S009", "question": "tỷ lệ ca đã có báo cáo", "expected_intent": "STRUCTURED", "tags": ["stats"]}
+{"id": "S010", "question": "tổng số báo cáo", "expected_intent": "STRUCTURED", "tags": ["counting", "stats"]}
+{"id": "S011", "question": "ca chụp tháng 1", "expected_intent": "STRUCTURED", "tags": ["time"]}
+{"id": "S012", "question": "ca chụp ngày 1/5", "expected_intent": "STRUCTURED", "tags": ["time", "date_format"]}
+{"id": "S013", "question": "ca số 123", "expected_intent": "STRUCTURED", "tags": ["case_ref"]}
+{"id": "S014", "question": "trạng thái ca 456", "expected_intent": "STRUCTURED", "tags": ["case_ref", "status"]}
+{"id": "S015", "question": "chi tiết ca chụp số 78", "expected_intent": "STRUCTURED", "tags": ["case_ref"]}
+{"id": "S016", "question": "có mấy ca X-quang ngực", "expected_intent": "STRUCTURED", "tags": ["counting", "modality"]}
+{"id": "S017", "question": "danh sách ca CT", "expected_intent": "STRUCTURED", "tags": ["listing", "modality"]}
+{"id": "S018", "question": "modality nào nhiều nhất", "expected_intent": "STRUCTURED", "tags": ["stats", "modality"]}
+{"id": "S019", "question": "đếm theo bác sĩ", "expected_intent": "STRUCTURED", "tags": ["counting", "doctor"]}
+{"id": "S020", "question": "bao nhiêu ca tuần trước", "expected_intent": "STRUCTURED", "tags": ["counting", "time"]}
+{"id": "S021", "question": "ca chưa có báo cáo", "expected_intent": "STRUCTURED", "tags": ["listing", "status"]}
+{"id": "M001", "question": "tổn thương phổi dạng nốt", "expected_intent": "SEMANTIC", "tags": ["medical_vn", "anatomy"]}
+{"id": "M002", "question": "viêm phổi", "expected_intent": "SEMANTIC", "tags": ["medical_vn"]}
+{"id": "M003", "question": "tràn dịch màng phổi", "expected_intent": "SEMANTIC", "tags": ["medical_vn", "anatomy"]}
+{"id": "M004", "question": "u gan", "expected_intent": "SEMANTIC", "tags": ["medical_vn", "anatomy"]}
+{"id": "M005", "question": "nhồi máu não", "expected_intent": "SEMANTIC", "tags": ["medical_vn", "anatomy"]}
+{"id": "M006", "question": "gãy xương đùi", "expected_intent": "SEMANTIC", "tags": ["medical_vn", "anatomy"]}
+{"id": "M007", "question": "hẹp động mạch vành", "expected_intent": "SEMANTIC", "tags": ["medical_vn", "anatomy"]}
+{"id": "M008", "question": "xuất huyết não", "expected_intent": "SEMANTIC", "tags": ["medical_vn", "anatomy"]}
+{"id": "M009", "question": "di căn xương", "expected_intent": "SEMANTIC", "tags": ["medical_vn"]}
+{"id": "M010", "question": "sỏi thận", "expected_intent": "SEMANTIC", "tags": ["medical_vn", "anatomy"]}
+{"id": "M011", "question": "xẹp phổi", "expected_intent": "SEMANTIC", "tags": ["medical_vn", "anatomy"]}
+{"id": "M012", "question": "ca có triệu chứng đau ngực", "expected_intent": "SEMANTIC", "tags": ["medical_vn", "symptom"]}
+{"id": "M013", "question": "kết luận về u tuyến tiền liệt", "expected_intent": "SEMANTIC", "tags": ["medical_vn", "diagnosis"]}
+{"id": "M014", "question": "ca tương tự ca này", "expected_intent": "SEMANTIC", "tags": ["similar"]}
+{"id": "M015", "question": "findings nodule", "expected_intent": "SEMANTIC", "tags": ["medical_en", "diagnosis"]}
+{"id": "M016", "question": "chest pneumonia", "expected_intent": "SEMANTIC", "tags": ["medical_en", "anatomy"]}
+{"id": "M017", "question": "hemorrhage brain", "expected_intent": "SEMANTIC", "tags": ["medical_en", "anatomy"]}
+{"id": "M018", "question": "lesion liver", "expected_intent": "SEMANTIC", "tags": ["medical_en", "anatomy"]}
+{"id": "M019", "question": "ca có findings tổn thương gan", "expected_intent": "SEMANTIC", "tags": ["medical_vn", "diagnosis"]}
+{"id": "M020", "question": "chẩn đoán xơ gan", "expected_intent": "SEMANTIC", "tags": ["medical_vn", "diagnosis"]}
+{"id": "H001", "question": "bao nhiêu ca CT có tổn thương phổi", "expected_intent": "HYBRID", "tags": ["counting", "modality", "medical_vn"]}
+{"id": "H002", "question": "thống kê ca viêm phổi tháng này", "expected_intent": "HYBRID", "tags": ["stats", "medical_vn", "time"]}
+{"id": "H003", "question": "danh sách ca chưa đọc có nốt phổi", "expected_intent": "HYBRID", "tags": ["listing", "status", "medical_vn"]}
+{"id": "H004", "question": "có mấy ca tràn dịch màng phổi", "expected_intent": "HYBRID", "tags": ["counting", "medical_vn"]}
+{"id": "H005", "question": "ca MR đầu xuất huyết não", "expected_intent": "HYBRID", "tags": ["modality", "medical_vn", "anatomy"]}
+{"id": "H006", "question": "đếm ca có chẩn đoán u gan", "expected_intent": "HYBRID", "tags": ["counting", "diagnosis", "medical_vn"]}
+{"id": "H007", "question": "danh sách ca CT phổi tuần này", "expected_intent": "HYBRID", "tags": ["listing", "modality", "medical_vn", "time"]}
+{"id": "H008", "question": "thống kê findings u phổi", "expected_intent": "HYBRID", "tags": ["stats", "medical_vn", "diagnosis"]}
+{"id": "H009", "question": "bao nhiêu ca PENDING có findings nốt phổi", "expected_intent": "HYBRID", "tags": ["counting", "status", "medical_vn"]}
+{"id": "H010", "question": "ca chụp ngực có tràn dịch màng phổi", "expected_intent": "HYBRID", "tags": ["anatomy", "medical_vn"]}
+{"id": "E001", "question": "phổi", "expected_intent": "SEMANTIC", "tags": ["edge", "single_anatomy", "low_confidence"]}
+{"id": "E002", "question": "CT", "expected_intent": "STRUCTURED", "tags": ["edge", "modality_only", "ambiguous"]}
+{"id": "E003", "question": "hello world", "expected_intent": "SEMANTIC", "tags": ["edge", "noise", "fallback"]}
+{"id": "E004", "question": "?", "expected_intent": "SEMANTIC", "tags": ["edge", "single_char", "fallback"]}
+{"id": "E005", "question": "tìm", "expected_intent": "SEMANTIC", "tags": ["edge", "prefix_only", "fallback"]}
