@@ -406,7 +406,7 @@ Patient accounts: `{PatientID}` / `{PatientID}@`
 | **Backend** | FastAPI, Python 3.12, Uvicorn |
 | **Database** | PostgreSQL 16 + pgvector (1024d vectors) |
 | **DICOM Server** | Orthanc (Docker) |
-| **Embedding** | multilingual-e5-large (intfloat) |
+| **Embedding** | multilingual-e5-large (intfloat) — *source of truth, xem mục dưới* |
 | **NL2SQL** | Ollama (gemma4:e4b) / Gemini 2.0 Flash (fallback) |
 | **Search** | BM25 (rank-bm25) + pgvector cosine + RRF fusion |
 | **Auth** | JWT (python-jose) + bcrypt |
@@ -414,6 +414,30 @@ Patient accounts: `{PatientID}` / `{PatientID}@`
 | **CSS** | Vanilla CSS — Hospital Dark Theme |
 | **PDF** | ReportLab |
 | **Infrastructure** | Docker Compose |
+
+---
+
+## 🧠 Embedding model — Source of Truth
+
+> **Model production hiện tại: `intfloat/multilingual-e5-large` (1024 dim).**
+>
+> Mọi tài liệu cũ đề cập **BGE-M3** đã **deprecated** — chỉ giữ lại để tham khảo lịch sử benchmark.
+> Thư mục `embedding_finetuning/` có thể fine-tune nhánh khác nhưng **không** được swap vào production
+> mà không re-embed toàn bộ `diagnostic_reports` + cập nhật mục này.
+
+| | Giá trị |
+|---|---|
+| Model | `intfloat/multilingual-e5-large` |
+| Dim | 1024 |
+| Prefix document | `passage: {findings} {conclusion}` |
+| Prefix query | `query: {text}` |
+| Normalize | `True` (cosine = dot product) |
+| File code | `backend-v2/core/embeddings.py` |
+
+Khi đổi model → bắt buộc:
+1. Cập nhật mục này + bảng tech stack ở trên.
+2. Chạy `scripts/embed_existing.py` re-embed 100% báo cáo.
+3. Drop + tạo lại index pgvector (`idx_reports_embedding`).
 
 ---
 
