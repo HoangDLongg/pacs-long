@@ -1,0 +1,48 @@
+name: backend-tests
+
+on:
+  push:
+    branches: [main, "phase-*"]
+    paths:
+      - "backend-v2/**"
+      - ".github/workflows/backend-tests.yml"
+  pull_request:
+    paths:
+      - "backend-v2/**"
+      - ".github/workflows/backend-tests.yml"
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend-v2
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend-v2/requirements-dev.txt
+
+      - name: Install dev deps
+        env:
+          # Tests hiện tại là unit (router + nl2sql validator) — không cần ML/DB lib nặng.
+          # Cài requirements-dev.txt sẽ kéo cả requirements.txt (sentence-transformers,
+          # psycopg2-binary…) → tốn ~3-5 phút trên CI.
+          # Phase 1+ sẽ tách tests/unit vs tests/integration để cài đặt nhẹ hơn.
+          PIP_DISABLE_PIP_VERSION_CHECK: "1"
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run pytest
+        env:
+          # Test stub — không thật sự dùng để encode, nhưng config.py yêu cầu JWT_SECRET >= 32 ký tự
+          JWT_SECRET: "ci_dummy_jwt_secret_at_least_64_chars_for_passing_config_validation_xxxxx"
+          APP_ENV: "test"
+        run: |
+          python -m pytest tests/ -v
