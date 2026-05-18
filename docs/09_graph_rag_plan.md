@@ -1,5 +1,17 @@
 # Graph RAG Pipeline cho PACS++ — Implementation Plan v2
 
+> **⚠️ STATUS: DEFERRED — không nằm trong roadmap hiện tại (2026-05-19).**
+>
+> **Lý do loại:** corpus 75 báo cáo chưa đủ ngưỡng (~1.000+) để Graph RAG có lợi, chi phí entity extraction + maintain NetworkX cao, ~80% câu hỏi pattern đã giải được bằng **Light KG JSONB + SQL** rẻ hơn nhiều.
+>
+> **Phương án thay thế đang chọn:** Phase 3 trong [DEVELOPMENT_ROADMAP.md](./DEVELOPMENT_ROADMAP.md) — `entities JSONB` + GIN index + NL2SQL bổ sung.
+>
+> **Khi nào revisit:** sau pilot Phase 2, nếu log câu hỏi ủng hộ + corpus ≥ 1.000 báo cáo.
+>
+> Tài liệu dưới giữ nguyên để **tham khảo thiết kế**, không phải kế hoạch triển khai.
+
+---
+
 ## Mục tiêu
 
 Thêm **Graph RAG** vào hệ thống PACS++ hiện tại để hỗ trợ:
